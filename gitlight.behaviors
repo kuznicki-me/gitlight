@@ -1,0 +1,2 @@
+{:+ {:app [(:lt.objs.plugins/load-js "gitlight_compiled.js" true)]
+     :gitlight.hello [:lt.plugins.gitlight/on-close-destroy]}}
