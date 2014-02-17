@@ -5,7 +5,7 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defui hello-panel [this]
-  [:h1 "Hello from gitlight"])
+  [:h1 "testing 1 2 3"])
 
 (object/object* ::gitlight.hello
                 :tags [:gitlight.hello]
