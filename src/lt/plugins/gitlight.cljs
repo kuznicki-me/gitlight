@@ -4,30 +4,52 @@
             [lt.objs.proc :as proc]
             [lt.objs.notifos :as notifos]
             [lt.objs.editor.pool :as pool]
-            [lt.objs.command :as cmd])
+            [lt.objs.files :as files]
+            [lt.objs.command :as cmd]
+            [clojure.string :as string])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
-(defui hello-panel [this]
-  (let [filename (-> @(pool/last-active) :info :path)]
-  [:h1 (str filename)]))
+(defn get-cwd []
+  (let
+    [filename (-> @(pool/last-active) :info :path)]
+    (files/parent filename)))
 
-(object/object* ::gitlight.hello
-                :tags [:gitlight.hello]
-                :name "gitlight"
-                :init (fn [this]
-                        (hello-panel this)))
+(defn get-branch [fist-line]
+  (second (string/split first-line #"On branch ")))
 
-(behavior ::on-close-destroy
-          :triggers #{:close}
-          :reaction (fn [this]
-                      (when-let [ts (:lt.objs.tabs/tabset @this)]
-                        (when (= (count (:objs @ts)) 1)
-                          (tabs/rem-tabset ts)))
-                      (object/raise this :destroy)))
+(defn git-status []
+  (let [dir (get-cwd)]
+    (proc/exec {:command "/usr/bin/git"
+                :args    [:status]
+                :cwd     dir
+                :obj     shell-git-out})))
 
-(def hello (object/create ::gitlight.hello))
+(defui git-output [this]
+  [:h1 "asdf"])
 
-(cmd/command {:command ::say-hello
-              :desc "gitlight: Say Hello"
-              :exec (fn []
-                      (tabs/add-or-focus! hello))})
+(defn mangle-data [data]
+  (let [splitted (string/split (.toString data) #"#")]
+    (do
+      (println (get-branch (second splitted)))
+      )))
+
+(behavior ::shell-git.out
+          :desc "When git command is executed, show its out"
+          :triggers #{:proc.out}
+          :reaction (fn [ obj data ]
+                      (mangle-data data)))
+                      ;(println (get-branch (second (string/split (.toString data) #"#")))))))
+                      ;(notifos/set-msg! (.toString data))))
+
+(def shell-git-out ;shell out object
+  (object/create
+   (object/object*
+    ::shell-git-out
+    :tags [:shell-git-out]
+    :behaviors [::shell-git.out])))
+
+
+(cmd/command
+ {:command  ::git-status
+  :desc     "git: status"
+  :exec     git-status})
