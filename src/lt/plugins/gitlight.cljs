@@ -14,8 +14,15 @@
     [filename (-> @(pool/last-active) :info :path)]
     (files/parent filename)))
 
-(defn get-branch [fist-line]
-  (second (string/split first-line #"On branch ")))
+(defn get-branch [data]
+  (second (string/split data #"On branch ")))
+
+(defn delete-inside-parens [data]
+  (string/replace (string/trim data) #"^\(.*\)$" ""))
+
+(defn get-files [data]
+  (let [splitted (string/split data #"#")]
+    (map delete-inside-parens splitted)))
 
 (defn git-status []
   (let [dir (get-cwd)]
@@ -24,13 +31,18 @@
                 :cwd     dir
                 :obj     shell-git-out})))
 
+
 (defui git-output [this]
   [:h1 "asdf"])
 
+
 (defn mangle-data [data]
-  (let [splitted (string/split (.toString data) #"#")]
+  (let [splitted (string/split (.toString data) #"#" 3)
+        branch-line (second splitted)
+        splitted-by-changes (string/split (nth splitted 2) "Changes")]
     (do
-      (println (get-branch (second splitted)))
+      (println (get-branch branch-line))
+      (println (rest (map get-files splitted-by-changes "Changes")))
       )))
 
 (behavior ::shell-git.out
@@ -38,8 +50,8 @@
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
                       (mangle-data data)))
-                      ;(println (get-branch (second (string/split (.toString data) #"#")))))))
-                      ;(notifos/set-msg! (.toString data))))
+;(println (get-branch (second (string/split (.toString data) #"#")))))))
+;(notifos/set-msg! (.toString data))))
 
 (def shell-git-out ;shell out object
   (object/create
