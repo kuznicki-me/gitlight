@@ -38,9 +38,6 @@
                 :obj     shell-git-out})))
 
 
-(defui git-output [this]
-  [:h1 "asdf"])
-
 (defn split-and-swap [filename]
   (let [[a b] (string/split filename #":" 2)]
     [(string/trim b) (keyword a)]))
@@ -75,8 +72,6 @@
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
                       (println (mangle-data data))))
-;(println (get-branch (second (string/split (.toString data) #"#")))))))
-;(notifos/set-msg! (.toString data))))
 
 (def shell-git-out ;shell out object
   (object/create
