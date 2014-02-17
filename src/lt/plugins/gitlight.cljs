@@ -1,11 +1,15 @@
 (ns lt.plugins.gitlight
   (:require [lt.object :as object]
             [lt.objs.tabs :as tabs]
+            [lt.objs.proc :as proc]
+            [lt.objs.notifos :as notifos]
+            [lt.objs.editor.pool :as pool]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defui hello-panel [this]
-  [:h1 "testing 1 2 3"])
+  (let [filename (-> @(pool/last-active) :info :path)]
+  [:h1 (str filename)]))
 
 (object/object* ::gitlight.hello
                 :tags [:gitlight.hello]
