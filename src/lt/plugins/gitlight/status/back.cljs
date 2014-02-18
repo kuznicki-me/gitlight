@@ -6,14 +6,19 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.command :as cmd]
+            [lt.objs.popup :as popup]
             [clojure.string :as string])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
 (defn get-cwd []
-  (let
-    [filename (-> @(pool/last-active) :info :path)]
-    (files/parent filename)))
+  (if (nil? pool/last-active)
+    (let
+      [filename (-> @(pool/last-active) :info :path)]
+      (files/parent filename))
+    (popup/popup! {:header "We couldn't guess git root"
+                   :body "Please run `git: status' again with file under git repo in editor tab"
+                   :buttons [{:label "ok"}]})))
 
 
 (defn get-branch [data]
