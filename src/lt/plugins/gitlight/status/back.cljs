@@ -12,10 +12,9 @@
 
 
 (defn get-cwd []
-  (if (nil? pool/last-active)
-    (let
-      [filename (-> @(pool/last-active) :info :path)]
-      (files/parent filename))
+  (if-let [l (pool/last-active)] (do
+                                   [filename (-> @l :info :path)]
+                                   (files/parent filename))
     (popup/popup! {:header "We couldn't guess git root"
                    :body "Please run `git: status' again with file under git repo in editor tab"
                    :buttons [{:label "ok"}]})))

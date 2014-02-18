@@ -59,7 +59,7 @@
 
 
 (defui wrapper [this]
-  [:div.git-status {:style "overflow: scroll;"}])
+  [:div.git-status {:style "overflow: scroll;"} "Waiting for git..."])
 
 
 

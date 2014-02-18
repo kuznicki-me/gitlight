@@ -31,8 +31,9 @@ goog.require('lt.objs.proc');
 goog.require('lt.objs.tabs');
 goog.require('lt.objs.editor.pool');
 goog.require('lt.objs.command');
-lt.plugins.gitlight.status.back.get_cwd = (function get_cwd(){if((lt.objs.editor.pool.last_active == null))
-{var filename = new cljs.core.Keyword(null,"path","path",1017337751).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"info","info",1017141280).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.objs.editor.pool.last_active.call(null))));return lt.objs.files.parent.call(null,filename);
+lt.plugins.gitlight.status.back.get_cwd = (function get_cwd(){var temp__4090__auto__ = lt.objs.editor.pool.last_active.call(null);if(cljs.core.truth_(temp__4090__auto__))
+{var l = temp__4090__auto__;new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lt.plugins.gitlight.status.back.filename,new cljs.core.Keyword(null,"path","path",1017337751).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"info","info",1017141280).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,l)))], null);
+return lt.objs.files.parent.call(null,lt.plugins.gitlight.status.back.filename);
 } else
 {return lt.objs.popup.popup_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"header","header",4087600639),"We couldn't guess git root",new cljs.core.Keyword(null,"body","body",1016933652),"Please run `git: status' again with file under git repo in editor tab",new cljs.core.Keyword(null,"buttons","buttons",1255256819),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"label","label",1116631654),"ok"], null)], null)], null));
 }
@@ -42,14 +43,14 @@ lt.plugins.gitlight.status.back.get_branch = (function get_branch(data){return c
 lt.plugins.gitlight.status.back.delete_inside_parens = (function delete_inside_parens(data){var line_with_no_hash = clojure.string.replace_first.call(null,data,/#/," ");var trimmed = clojure.string.trim.call(null,line_with_no_hash);return clojure.string.replace.call(null,[cljs.core.str(trimmed)].join(''),/^\(.*\)$/,"");
 });
 lt.plugins.gitlight.status.back.get_files = (function get_files(data){var first_line_fix = [cljs.core.str("#"),cljs.core.str(data)].join('');var splitted = clojure.string.split_lines.call(null,first_line_fix);var filtered = cljs.core.filter.call(null,((function (first_line_fix,splitted){
-return (function (p1__8567_SHARP_){return p1__8567_SHARP_.startsWith("#");
+return (function (p1__8806_SHARP_){return p1__8806_SHARP_.startsWith("#");
 });})(first_line_fix,splitted))
-,splitted);var no_parens = cljs.core.map.call(null,lt.plugins.gitlight.status.back.delete_inside_parens,filtered);return cljs.core.filter.call(null,(function (p1__8568_SHARP_){return cljs.core.not.call(null,clojure.string.blank_QMARK_.call(null,p1__8568_SHARP_));
+,splitted);var no_parens = cljs.core.map.call(null,lt.plugins.gitlight.status.back.delete_inside_parens,filtered);return cljs.core.filter.call(null,(function (p1__8807_SHARP_){return cljs.core.not.call(null,clojure.string.blank_QMARK_.call(null,p1__8807_SHARP_));
 }),no_parens);
 });
 lt.plugins.gitlight.status.back.git_status = (function git_status(){var dir = lt.plugins.gitlight.status.back.get_cwd.call(null);return lt.objs.proc.exec.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"command","command",1964298941),"/usr/bin/git",new cljs.core.Keyword(null,"args","args",1016906831),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"status","status",4416389988)], null),new cljs.core.Keyword(null,"cwd","cwd",1014003170),dir,new cljs.core.Keyword(null,"obj","obj",1014014057),lt.plugins.gitlight.status.back.shell_git_out], null));
 });
-lt.plugins.gitlight.status.back.split_and_swap = (function split_and_swap(filename){var vec__8570 = clojure.string.split.call(null,filename,/:/,2);var a = cljs.core.nth.call(null,vec__8570,0,null);var b = cljs.core.nth.call(null,vec__8570,1,null);return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [clojure.string.trim.call(null,b),cljs.core.keyword.call(null,a)], null);
+lt.plugins.gitlight.status.back.split_and_swap = (function split_and_swap(filename){var vec__8809 = clojure.string.split.call(null,filename,/:/,2);var a = cljs.core.nth.call(null,vec__8809,0,null);var b = cljs.core.nth.call(null,vec__8809,1,null);return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [clojure.string.trim.call(null,b),cljs.core.keyword.call(null,a)], null);
 });
 lt.plugins.gitlight.status.back.split_property = (function split_property(filenames){return cljs.core.map.call(null,lt.plugins.gitlight.status.back.split_and_swap,filenames);
 });
@@ -399,7 +400,7 @@ break;
 }
 return e__8111__auto__;
 });
-lt.plugins.gitlight.status.ui.wrapper = (function wrapper(this$){var e__8111__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.git-status","div.git-status",3669381948),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"style","style",1123684643),"overflow: scroll;"], null)], null));var seq__8660_8769 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,cljs.core.PersistentVector.EMPTY));var chunk__8661_8770 = null;var count__8662_8771 = 0;var i__8663_8772 = 0;while(true){
+lt.plugins.gitlight.status.ui.wrapper = (function wrapper(this$){var e__8111__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.git-status","div.git-status",3669381948),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"style","style",1123684643),"overflow: scroll;"], null),"Waiting for git..."], null));var seq__8660_8769 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,cljs.core.PersistentVector.EMPTY));var chunk__8661_8770 = null;var count__8662_8771 = 0;var i__8663_8772 = 0;while(true){
 if((i__8663_8772 < count__8662_8771))
 {var vec__8664_8773 = cljs.core._nth.call(null,chunk__8661_8770,i__8663_8772);var ev__8112__auto___8774 = cljs.core.nth.call(null,vec__8664_8773,0,null);var func__8113__auto___8775 = cljs.core.nth.call(null,vec__8664_8773,1,null);lt.util.dom.on.call(null,e__8111__auto__,ev__8112__auto___8774,func__8113__auto___8775);
 {
