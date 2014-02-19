@@ -13,10 +13,6 @@
 
 (defn get-git-root [path]
   (files/parent (files/walk-up-find path ".git")))
-  ;(if-not (= (files/basename path) path)
-  ;  (if dir? (str path "/.git")
-  ;    path
-  ;    (get-git-root (files/parent path)))))
 
 (defn on-cwd? []
   (not (nil? (pool/last-active))))
@@ -40,9 +36,8 @@
 
 
 (defn in-sequence? [haystack needle]
-  (if (nil? (some #{needle} (seq haystack)))
-    nil
-    true))
+  (not (nil? (some #{needle} (seq haystack)))))
+
 
 (defn keywording-file-status [status file]
   [ (str file) (cond (= status \#) :branch-name
@@ -60,8 +55,9 @@
 (defn make-keyworded [keyword-function data]
   (let [[what-keyword test-function which-function] keyword-function]
     (let [filtered (filter test-function data)
-          keyworded (map (fn [f] (keywording-file-status (which-function f) (rest (rest f)))) filtered)]
+          keyworded (map (fn [f] (keywording-file-status (which-function f) (last f))) filtered)]
       [what-keyword keyworded])))
+
 
 (defn parse-line [line]
   (let [X (first line)
@@ -84,14 +80,16 @@
   (into {} (for [key-fun keyword-functions]
    (make-keyworded key-fun data))))
 
+
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))
         parsed (map parse-line splitted)
         branch (first parsed)]
     {:git-root    (get-git-root (get-cwd))
-     :branch-name (str (rest (rest branch)))
+     :branch-name (str (last branch))
      :status      (make-status (rest parsed))}
   ))
+
 
 (behavior ::shell-git.out
           :desc "When git command is executed, show its out"
@@ -99,6 +97,7 @@
           :reaction (fn [ obj data ]
                       (println (parse-porcelain data))
                       (object/raise obj :status (parse-porcelain data))))
+
 
 (def shell-git-out ;shell out object
   (object/create

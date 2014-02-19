@@ -29,6 +29,3 @@
 
 
 (object/add-behavior! back/shell-git-out ::refresh-ui-on-new-status)
-
-
-; (object/raise status-bar ::refresh)

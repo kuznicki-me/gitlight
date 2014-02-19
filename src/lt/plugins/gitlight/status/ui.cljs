@@ -60,7 +60,7 @@
 
 
 (defui file [g-name [f t]]
-  [:li {:class (name t)} (str t ":" f)
+  [:li {:class (name t)} (str (.toUpperCase (first (name t))) " " f)
    [:br]
    (for [bt (g-name file-ops)]
      (button bt f))
@@ -82,7 +82,8 @@
    [:br]
    [:br]
    [:ul (for [[g fs] this]
-          (group g fs))]])
+          (if-not (zero? (count fs))
+            (group g fs)))]])
 
 
 
