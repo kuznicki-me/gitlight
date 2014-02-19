@@ -1,13 +1,13 @@
 
 .gitlight-status .staged li {
-  color: green;
+  color: #07ae8f;
 }
 
 
 .gitlight-status .not-staged li.modified {
-  color: yellow;
+  color: #d7ce00;
 }
 
 .gitlight-status .untracked li.untracked {
-  color: navy;
+  color: #43acd8;
 }

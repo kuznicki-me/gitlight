@@ -16,7 +16,7 @@
 
 
 (def group-names {:not-staged "Not staged"
-                  :staged  "Staged"
+                  :staged     "Staged"
                   :untracked  "Untracked"
                   :ignored    "Ignored" })
 
@@ -69,10 +69,12 @@
 
 
 
-(defui status-ui [this branch]
+(defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 (str "Current branch: ") [:button branch]]
+   [:h1 (str "Branch: ") [:button branch]]
+   [:h2 "Root: " [:button git-root]]
+   [:br]
    (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
      [:button t])
 
@@ -93,10 +95,10 @@
 (behavior ::update
           :desc "update status view"
           :triggers #{:refresh}
-          :reaction (fn [ obj status branch]
+          :reaction (fn [ obj status branch git-root]
                       (let [bar-dom (:content @obj)]
                         (dom-trunkate bar-dom) ; clear content
-                        (dom/append bar-dom (status-ui status branch))
+                        (dom/append bar-dom (status-ui status branch git-root))
                         (resize-to-content (dom/parent bar-dom) bar-dom))))
 
 

@@ -25,7 +25,7 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (.log js/console "refresh" (clj->js data))
-                      (object/raise ui/status-bar :refresh (:status data) (:branch-name data))))
+                      (object/raise ui/status-bar :refresh (:status data) (:branch-name data) (:git-root data))))
 
 
 (object/add-behavior! back/shell-git-out ::refresh-ui-on-new-status)
