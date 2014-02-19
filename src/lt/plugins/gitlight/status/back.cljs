@@ -11,6 +11,13 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
+(defn get-git-root [path]
+  (files/parent (files/walk-up-find path ".git")))
+  ;(if-not (= (files/basename path) path)
+  ;  (if dir? (str path "/.git")
+  ;    path
+  ;    (get-git-root (files/parent path)))))
+
 (defn on-cwd? []
   (not (nil? (pool/last-active))))
 
@@ -32,84 +39,63 @@
                    :buttons [{:label "ok"}]})))
 
 
-
 (defn in-sequence? [haystack needle]
   (if (nil? (some #{needle} (seq haystack)))
     nil
     true))
 
 (defn keywording-file-status [status file]
-  [(str file) (cond (= status \#) "branch-name"
-                    (= status \A) "new file"
-                    (= status \M) "modified"
-                    (= status \D) "deleted"
-                    (= status \R) "renamed"
-                    (= status \C) "copied"
-                    (= status \?) "untracked"
-                    (= status \#) "branch"
-                    (= status \!) "ignored")])
+  [(str file) (cond (= status \#) :branch-name
+                    (= status \A) :newfile
+                    (= status \M) :modified
+                    (= status \D) :deleted
+                    (= status \R) :renamed
+                    (= status \C) :copied
+                    (= status \?) :untracked
+                    (= status \#) :branch
+                    (= status \!) :ignored
+                    :else :unknown)])
 
 
-(defn make_to_commit [data]
-  (let [filtered (filter (fn [d](in-sequence? "MADRC" (first d))) data)
-        keyworded (map (fn [f] (keywording-file-status (first f) (rest (rest f)))) filtered)]
-    [:to_commit keyworded]))
-
-(defn make_not_staged [data]
-  (let [filtered (filter (fn [d] (= \space (first d))) data)
-        keyworded (map (fn [f] (keywording-file-status (second f) (rest (rest f)))) filtered)]
-    [:not_staged keyworded]))
-
-(defn make_untracked [data]
-  (let [filtered (filter (fn [d] (= \? (first d))) data)
-        keyworded (map (fn [f] (keywording-file-status (second f) (rest (rest f)))) filtered)]
-    [:untracked keyworded]))
-
-(defn make_ignored [data]
-  (let [filtered (filter (fn [d] (= \! (first d))) data)
-        keyworded (map (fn [f] (keywording-file-status (second f) (rest (rest f)))) filtered)]
-    [:ignored keyworded]))
-
-(defn make_keyworded [what-keyword test-function which-function dat]
-  (let [filtered (filter test-function data)
-        keyworded (map (fn [f] (keywording-file-status (which-function f) (rest (rest f)))) filtered)]
-    [what-keyword keyworded]))
+(defn make-keyworded [keyword-function data]
+  (let [[what-keyword test-function which-function] keyword-function]
+    (let [filtered (filter test-function data)
+          keyworded (map (fn [f] (keywording-file-status (which-function f) (rest (rest f)))) filtered)]
+      [what-keyword keyworded])))
 
 (defn parse-line [line]
   (let [X (first line)
         Y (second line)
         filename (subs line 3)]
-    ;{(file-status X Y) filename}))
     [X Y filename]))
 
-(defn make_status [data]
-  (into {} (for [f [make_to_commit make_not_staged make_untracked make_ignored]]
-   (f data))))
 
 (def keyword-functions
-  [[:to_commit   (fn [d](in-sequence? "MADRC" (first d)))  first]
-   [:not_staged  (fn [d] (= \space (first d)))             second]
+  ; keyword      function to filter with                   which element to use for keywording
+  [[:staged      (fn [d] (in-sequence? "MADRC" (first d))) first]
+   [:not-staged  (fn [d] (not (= \space (second d))))      second]
    [:untracked   (fn [d] (= \? (first d)))                 second]
    [:ignored     (fn [d] (= \! (first d)))                 second]])
 
-(defn make_status [data]
-  (into {} (for [f [make_to_commit make_not_staged make_untracked make_ignored]]
-   (f data))))
+
+(defn make-status [data]
+  (into {} (for [key-fun keyword-functions]
+   (make-keyworded key-fun data))))
 
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))
         parsed (map parse-line splitted)
         branch (first parsed)]
-    {:branch-name (str (rest (rest branch)))
-     :status (make_status (rest parsed))}
+    {:git-root    (get-git-root (get-cwd))
+     :branch-name (str (rest (rest branch)))
+     :status      (make-status (rest parsed))}
   ))
 
 (behavior ::shell-git.out
           :desc "When git command is executed, show its out"
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
-                      (.log js/console "I'm alive")
-                      (print (parse-porcelain data))
+                      (println (parse-porcelain data))
                       (object/raise obj :status (parse-porcelain data))))
 
 (def shell-git-out ;shell out object

@@ -15,8 +15,8 @@
   (object/merge! sidebar/rightbar {:width width :max-width width}))
 
 
-(def group-names {:not_staged "Not staged"
-                  :to_commit  "Staged"
+(def group-names {:not-staged "Not staged"
+                  :staged  "Staged"
                   :untracked  "Untracked"
                   :ignored    "Ignored" })
 
@@ -53,9 +53,9 @@
 
 
 
-(def file-ops {:not_staged ["stage" "diff" "revert" "stash"]
+(def file-ops {:not-staged ["stage" "diff" "revert" "stash"]
                :untracked ["add" "ignore" "delete"]
-               :to_commit ["unstage"]})
+               :staged ["unstage"]})
 
 
 
