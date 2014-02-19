@@ -40,47 +40,6 @@
   (not (nil? (some #{needle} (seq haystack)))))
 
 
-(defn keywording-file-status [status file]
-  [ (str file) (cond (= status \#) :branch-name
-                     (= status \A) :newfile
-                     (= status \M) :modified
-                     (= status \D) :deleted
-                     (= status \R) :renamed
-                     (= status \C) :copied
-                     (= status \?) :untracked
-                     (= status \!) :ignored
-                     :else :unknown) ])
-
-
-(defn make-keyworded [keyword-function data]
-  (let [[what-keyword test-function which-function] keyword-function]
-    (let [filtered (filter test-function data)
-          keyworded (map (fn [f] (keywording-file-status (which-function f) (last f))) filtered)]
-      [what-keyword keyworded])))
-
-
-(defn parse-line [line]
-  (let [X (first line)
-        Y (second line)
-        filename (subs line 3)]
-    [X Y filename]))
-
-
-(def keyword-functions
-  ; keyword      function to filter with                   which element to use for keywording
-  [[:staged      (fn [d] (in-sequence? "MARC" (first d))) first]
-   [:not-staged  (fn [d] (and
-                          (in-sequence? " MARC" (first d))
-                          (in-sequence? "MD" (second d)))) second]
-   [:untracked   (fn [d] (= \? (first d)))                 second]
-   [:ignored     (fn [d] (= \! (first d)))                 second]])
-
-
-(defn make-status [data]
-  (into {} (for [key-fun keyword-functions]
-   (make-keyworded key-fun data))))
-
-
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))
         parsed (map parse-line splitted)
@@ -88,6 +47,52 @@
     {:git-root    (get-git-root (get-cwd))
      :branch-name (str (last branch))
      :status      (make-status (rest parsed))}))
+
+(defn keywording [status]
+  (cond (= status \A) :newfile
+        (= status \M) :modified
+        (= status \D) :deleted
+        (= status \R) :renamed
+        (= status \C) :copied
+        :else         :unknown))
+
+(defn parse-and-keyword-line [line]
+  (let [X (first line)
+        Y (second line)
+        filename (str (subs line 3))]
+    (cond
+     (and (= \space X) (in-sequence? "MD" Y)) [[filename (keywording Y) :not-staged ]]
+
+     (and (in-sequence? "MARC" X) (= \space Y))          [[filename (keywording X) :staged]]
+     (and (in-sequence? "MARC" X) (in-sequence? "MD" Y)) [[filename (keywording X) :staged]
+                                                          [filename (keywording Y) :not-staged]]
+
+     (and (= \D X) (= \space Y)) [[filename :deleted :staged]]
+     (and (= \D X) (= \M Y))     [[filename :deleted :staged]
+                                  [filename :modified :not-staged]]
+
+     (and (= \D X) (= \D Y)) [[filename :unmerged-both-deleted    :merge-conflict]]
+     (and (= \A X) (= \U Y)) [[filename :unmerged-added-by-us     :merge-conflict]]
+     (and (= \U X) (= \D Y)) [[filename :unmerged-deleted-by-them :merge-conflict]]
+     (and (= \U X) (= \A Y)) [[filename :unmerged-added-by-them   :merge-conflict]]
+     (and (= \D X) (= \U Y)) [[filename :unmerged-deleted-by-us   :merge-conflict]]
+     (and (= \A X) (= \A Y)) [[filename :unmerged-both-added      :merge-conflict]]
+     (and (= \U X) (= \U Y)) [[filename :unmerged-both-modified   :merge-conflict]]
+
+     (and (= \? X) (= \? Y)) [[filename :untracked :untracked]]
+     (and (= \! X) (= \! Y)) [[filename :ignored :ignored]]
+     :else [[filename :unknown :unknown]])))
+
+(defn parse-porcelain [data]
+  (let [splitted (string/split-lines (.toString data))
+        branch (subs(first splitted) 3)
+        parsed (map parse-and-keyword-line (rest splitted))]
+    (print parsed)
+    (print (group-by (fn [a] (nth a 2)) (apply concat parsed)))
+    {:git-root    (get-git-root (get-cwd))
+     :branch-name (str branch)
+     :status       (group-by (fn [a] (nth a 2)) (apply concat parsed))
+     }))
 
 
 (behavior ::shell-git.out
