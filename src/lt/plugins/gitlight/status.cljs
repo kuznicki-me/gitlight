@@ -3,7 +3,7 @@
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.status.ui :as ui]
             [lt.objs.sidebar :as sidebar]
-            [lt.objs.console :as console]
+            [lt.util.js :refer [wait]]
             [lt.util.dom :as dom]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -18,6 +18,8 @@
                       (object/raise sidebar/rightbar :toggle ui/status-bar))})
 
 
+
+
 (behavior ::refresh-ui-on-new-status
           :desc "refresh ui on new status"
           :triggers #{:status}
@@ -29,8 +31,22 @@
 
 
 
+
+
+(behavior ::auto-refresh-git-status
+          :desc "auto refresh git status"
+          :triggers #{:status}
+          :reaction (fn [ obj data ]
+                      (wait 1000 back/git-status)))
+
+(object/add-behavior! back/shell-git-out ::auto-refresh-git-status)
+
+
+
+
+
 (behavior ::debug-new-status
-          :desc "refresh ui on new status"
+          :desc "debug status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (.log js/console "refresh" (clj->js data))))
