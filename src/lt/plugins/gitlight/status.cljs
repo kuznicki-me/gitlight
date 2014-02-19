@@ -35,7 +35,6 @@
           :desc "refresh ui on new status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
-                      ; (.log js/console "refresh" (clj->js data))
                       (if (ui/is-open?)
                         (object/raise ui/status-bar :refresh
                                       (:status data)
