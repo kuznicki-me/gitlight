@@ -1,0 +1,13 @@
+
+.gitlight-status .to_commit li {
+  color: green;
+}
+
+
+.gitlight-status .not_staged li.modified {
+  color: yellow;
+}
+
+.gitlight-status .untracked li.untracked {
+  color: blue;
+}
