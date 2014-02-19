@@ -45,16 +45,16 @@
     true))
 
 (defn keywording-file-status [status file]
-  [(str file) (cond (= status \#) :branch-name
-                    (= status \A) :newfile
-                    (= status \M) :modified
-                    (= status \D) :deleted
-                    (= status \R) :renamed
-                    (= status \C) :copied
-                    (= status \?) :untracked
-                    (= status \#) :branch
-                    (= status \!) :ignored
-                    :else :unknown)])
+  [ (str file) (cond (= status \#) :branch-name
+                     (= status \A) :newfile
+                     (= status \M) :modified
+                     (= status \D) :deleted
+                     (= status \R) :renamed
+                     (= status \C) :copied
+                     (= status \?) :untracked
+                     (= status \#) :branch
+                     (= status \!) :ignored
+                     :else :unknown) ])
 
 
 (defn make-keyworded [keyword-function data]
@@ -72,8 +72,10 @@
 
 (def keyword-functions
   ; keyword      function to filter with                   which element to use for keywording
-  [[:staged      (fn [d] (in-sequence? "MADRC" (first d))) first]
-   [:not-staged  (fn [d] (not (= \space (second d))))      second]
+  [[:staged      (fn [d] (in-sequence? "MARC" (first d))) first]
+   [:not-staged  (fn [d] (and
+                          (in-sequence? " MARC" (first d))
+                          (in-sequence? "MD" (second d)))) second]
    [:untracked   (fn [d] (= \? (first d)))                 second]
    [:ignored     (fn [d] (= \! (first d)))                 second]])
 
