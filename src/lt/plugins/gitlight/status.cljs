@@ -25,11 +25,13 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       ; (.log js/console "refresh" (clj->js data))
-                      (object/raise ui/status-bar :refresh (:status data) (:branch-name data) (:git-root data))))
+                      (if (ui/is-open?)
+                        (object/raise ui/status-bar :refresh
+                                      (:status data)
+                                      (:branch-name data)
+                                      (:git-root data)))))
 
 (object/add-behavior! back/shell-git-out ::refresh-ui-on-new-status)
-
-
 
 
 
@@ -37,7 +39,8 @@
           :desc "auto refresh git status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
-                      (wait 1000 back/git-status)))
+                      (if (ui/is-open?)
+                        (wait 1000 back/git-status))))
 
 (object/add-behavior! back/shell-git-out ::auto-refresh-git-status)
 

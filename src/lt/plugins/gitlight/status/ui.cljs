@@ -32,8 +32,12 @@
                     (dom-scroll-width child))))
 
 
+(defn is-open? []
+  (= (:active @sidebar/rightbar)
+     status-bar))
 
-(defn dom-trunkate [node]
+
+(defn dom-truncate [node]
   (set! (.-innerHTML node) ""))
 
 
@@ -98,7 +102,7 @@
           :triggers #{:refresh}
           :reaction (fn [ obj status branch git-root]
                       (let [bar-dom (:content @obj)]
-                        (dom-trunkate bar-dom) ; clear content
+                        (dom-truncate bar-dom) ; clear content
                         (dom/append bar-dom (status-ui status branch git-root))
                         (resize-to-content (dom/parent bar-dom) bar-dom))))
 
