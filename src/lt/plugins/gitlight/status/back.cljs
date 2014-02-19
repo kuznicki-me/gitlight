@@ -47,7 +47,6 @@
                      (= status \R) :renamed
                      (= status \C) :copied
                      (= status \?) :untracked
-                     (= status \#) :branch
                      (= status \!) :ignored
                      :else :unknown) ])
 
@@ -95,7 +94,6 @@
           :desc "When git command is executed, show its out"
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
-                      (println (parse-porcelain data))
                       (object/raise obj :status (parse-porcelain data))))
 
 
