@@ -121,6 +121,3 @@
 (def status-bar (object/create ::status))
 
 
-(def sb (sidebar/add-item sidebar/rightbar status-bar))
-
-

@@ -7,6 +7,7 @@
             [lt.objs.files :as files]
             [lt.objs.command :as cmd]
             [lt.objs.popup :as popup]
+            [lt.plugins.gitlight :refer [config]]
             [clojure.string :as string])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -24,7 +25,7 @@
 
 (defn git-status []
   (if (on-cwd?)
-    (proc/exec {:command "/usr/bin/git"
+    (proc/exec {:command (:git-binary @config)
                 :args    ["status"
                           "--porcelain"
                           "--branch"]
@@ -86,8 +87,7 @@
         branch (first parsed)]
     {:git-root    (get-git-root (get-cwd))
      :branch-name (str (last branch))
-     :status      (make-status (rest parsed))}
-  ))
+     :status      (make-status (rest parsed))}))
 
 
 (behavior ::shell-git.out

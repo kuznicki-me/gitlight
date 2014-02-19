@@ -1,11 +1,22 @@
 (ns lt.plugins.gitlight
-  (:require [lt.object :as object]
-            [lt.objs.sidebar :as sidebar]
-            [lt.objs.command :as cmd])
-  (:require-macros [lt.macros :refer [defui behavior]]))
+  (:require [lt.object :as object])
+  (:require-macros [lt.macros :refer [behavior]]))
 
 
-(cmd/command {:command ::gitlight.sidebar.close
-              :desc "gitlight: sidebar close"
-              :exec (fn []
-                      (object/raise sidebar/rightbar :close!))})
+
+(def config
+  (object/create
+   (object/object*
+    ::config
+    :tags #{::config}
+    :git-status-refresh-rate 1000
+    :git-binary "/usr/bin/git")))
+
+
+
+
+(behavior ::config
+          :triggers #{:object.instant}
+          :desc "Configure gitlight"
+          :reaction (fn [this new-config]
+                      (object/merge! config new-config)))

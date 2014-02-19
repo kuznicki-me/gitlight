@@ -1,3 +1,3 @@
 {:+ {:app [(:lt.objs.plugins/load-js "gitlight_compiled.js" true)
-           (:lt.objs.plugins/load-css "gitlight.css")]
-     :gitlight.hello [:lt.plugins.gitlight/on-close-destroy]}}
+           (:lt.objs.plugins/load-css "gitlight.css")
+           :lt.plugins.gitlight.status/init]}}
