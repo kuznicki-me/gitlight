@@ -47,7 +47,7 @@
 (defui button [n f]
   [:button n]
   :click (fn [] (popup/popup!
-                 {:header "Are you sure?"
+                 {:header "Not yet implemented..."
                   :body (str "perform action " n " on " f)
                   :buttons [{:label "ok"}]})))
 
@@ -60,7 +60,7 @@
 
 
 (defui file [g-name [f t]]
-  [:li {:class (name t)} (str (.toUpperCase (first (name t))) " " f)
+  [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
    [:br]
    (for [bt (g-name file-ops)]
      (button bt f))
@@ -72,11 +72,11 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 (str "Branch: ") [:button branch]]
-   [:h2 "Root: " [:button git-root]]
+   [:h1 (str "Branch: ") (button branch (str "Branch menu"))]
+   [:h2 "Root: " (button git-root "Change repo")]
    [:br]
    (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
-     [:button t])
+     (button t git-root))
 
    [:br]
    [:br]
