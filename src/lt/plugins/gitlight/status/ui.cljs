@@ -45,7 +45,7 @@
 
 
 (defui button [n f]
-  [:button n]
+  [:button [:nobr n]]
   :click (fn [] (popup/popup!
                  {:header "Not yet implemented..."
                   :body (str "perform action " n " on " f)
