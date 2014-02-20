@@ -87,8 +87,6 @@
   (let [splitted (string/split-lines (.toString data))
         branch (subs(first splitted) 3)
         parsed (map parse-and-keyword-line (rest splitted))]
-    (print parsed)
-    (print (group-by (fn [a] (nth a 2)) (apply concat parsed)))
     {:git-root    (get-git-root (get-cwd))
      :branch-name (str branch)
      :status       (group-by (fn [a] (nth a 2)) (apply concat parsed))
