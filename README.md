@@ -1,6 +1,6 @@
 LightTable GIT integration plugin
 =================================
-Project tasks: [trello board](https://trello.com/b/kg27zMc3/lighttable-gitlight)
+### Project tasks at: [trello board](https://trello.com/b/kg27zMc3/lighttable-gitlight)
 
 
 Configuration
