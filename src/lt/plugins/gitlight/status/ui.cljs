@@ -76,8 +76,8 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 (str "Branch: ") (button branch (str "Branch menu"))]
-   [:h2 "Root: " (button git-root "Change repo")]
+   [:h1 [:nobr (str "Branch: ") (button branch (str "Branch menu"))]]
+   [:h2 [:nobr "Root: " (button git-root "Change repo")]]
    [:br]
    (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
      (button t git-root))
