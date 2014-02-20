@@ -20,3 +20,13 @@ Default config:
                                          :git-status-refresh-rate 1000}) ; for cli calls
         ]
     }
+
+You can also add shortcut in your user keymap:
+
+    {:+ {
+
+         :editor {
+              "alt-shift-s" [:gitlight-status]
+         }
+
+     }}
