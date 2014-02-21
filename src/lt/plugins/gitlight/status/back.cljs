@@ -9,11 +9,7 @@
             [lt.objs.popup :as popup]
             [lt.plugins.gitlight :refer [config]]
             [clojure.string :as string])
-  (:require-macros [lt.macros :refer [defui behavior]]))
-
-
-(defn get-git-root [path]
-  (files/parent (files/walk-up-find path ".git")))
+  (:require-macros [lt.macros :refer [behavior]]))
 
 (defn on-cwd? []
   (not (nil? (pool/last-active))))
@@ -22,31 +18,28 @@
   (files/parent
    (-> @(pool/last-active) :info :path)))
 
+(defn get-git-root []
+  (if (on-cwd?)
+    (let [cwd (files/walk-up-find (get-cwd) ".git")]
+      (if-not (nil? cwd)
+        (files/parent cwd)))))
 
 (defn git-status []
-  (if (on-cwd?)
+  (if-let [cwd (get-git-root)]
     (proc/exec {:command (:git-binary @config)
                 :args    ["status"
                           "--porcelain"
                           "--branch"]
-                :cwd     (get-cwd)
+                :cwd     cwd
                 :obj     shell-git-out})
     (popup/popup! {:header "We couldn't guess git root"
-                   :body "Please run `git: status' again with file under git repo in editor tab"
+                   :body "Please run `gitlight: Status' again on a file that is in a git repo."
                    :buttons [{:label "ok"}]})))
 
 
 (defn in-sequence? [haystack needle]
   (not (nil? (some #{needle} (seq haystack)))))
 
-
-(defn parse-porcelain [data]
-  (let [splitted (string/split-lines (.toString data))
-        parsed (map parse-line splitted)
-        branch (first parsed)]
-    {:git-root    (get-git-root (get-cwd))
-     :branch-name (str (last branch))
-     :status      (make-status (rest parsed))}))
 
 (defn keywording [status]
   (cond (= status \A) :newfile
@@ -87,9 +80,9 @@
   (let [splitted (string/split-lines (.toString data))
         branch (subs(first splitted) 3)
         parsed (map parse-and-keyword-line (rest splitted))]
-    {:git-root    (get-git-root (get-cwd))
+    {:git-root    (get-git-root)
      :branch-name (str branch)
-     :status       (group-by (fn [a] (nth a 2)) (apply concat parsed))
+     :status      (group-by (fn [a] (nth a 2)) (apply concat parsed))
      }))
 
 
