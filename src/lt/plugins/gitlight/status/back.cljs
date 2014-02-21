@@ -1,45 +1,10 @@
 (ns lt.plugins.gitlight.status.back
   (:require [lt.object :as object]
-            [lt.objs.tabs :as tabs]
-            [lt.objs.proc :as proc]
-            [lt.objs.notifos :as notifos]
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
-            [lt.objs.command :as cmd]
-            [lt.objs.popup :as popup]
-            [lt.plugins.gitlight :refer [config]]
+            [lt.plugins.gitlight.git :as git]
             [clojure.string :as string])
   (:require-macros [lt.macros :refer [behavior]]))
-
-(defn on-cwd? []
-  (not (nil? (pool/last-active))))
-
-
-(defn get-cwd []
-  (files/parent
-   (-> @(pool/last-active) :info :path)))
-
-
-(defn get-git-root []
-  (if (on-cwd?)
-    (let [cwd (files/walk-up-find (get-cwd) ".git")]
-      (if-not (nil? cwd)
-        (files/parent cwd)))))
-
-
-(defn git-command [& args]
-  (if-let [cwd (get-git-root)]
-    (proc/exec {:command (:git-binary @config)
-                :args    args
-                :cwd     cwd
-                :obj     shell-git-out})
-    (popup/popup! {:header  "We couldn't guess git root"
-                   :body    "Please rerun the command again on a file that is in a git repo."
-                   :buttons [{:label "ok"}]})))
-
-
-(defn git-status []
-  (git-command "status" "--porcelain" "--branch"))
 
 
 (defn in-sequence? [haystack needle]
@@ -81,17 +46,18 @@
      (and (= \! X) (= \! Y)) [[filename :ignored :ignored]]
      :else                   [[filename :unknown :unknown]])))
 
+
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))
         branch (subs(first splitted) 3)
         parsed (map parse-and-keyword-line (rest splitted))]
-    {:git-root    (get-git-root)
+    {;:git-root    (get-git-root)
      :branch-name (str branch)
      :status      (group-by (fn [a] (nth a 2)) (apply concat parsed))
      }))
 
 
-(behavior ::shell-git.out
+(behavior ::git-status.out
           :desc "When git command is executed, show its out"
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
@@ -103,4 +69,8 @@
    (object/object*
     ::shell-git-out
     :tags [:shell-git-out]
-    :behaviors [::shell-git.out])))
+    :behaviors [::git-status.out])))
+
+
+(defn git-status []
+  (git/git-command shell-git-out "status" "--porcelain" "--branch"))

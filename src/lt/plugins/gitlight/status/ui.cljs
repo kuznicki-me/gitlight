@@ -6,6 +6,7 @@
             [lt.objs.popup :as popup]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
+            [lt.plugins.gitlight.git :as git]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -28,7 +29,7 @@
 
 (defn resize-to-content [parent child]
   (resize-rightbar (+
-                    (- (dom/width parent) (dom/width child)) ; tipical size diff between parent and a child
+                    (- (dom/width parent) (dom/width child)) ; typical size diff between parent and a child
                     (dom-scroll-width child))))
 
 
@@ -100,10 +101,10 @@
 (behavior ::update
           :desc "update status view"
           :triggers #{:refresh}
-          :reaction (fn [ obj status branch git-root]
+          :reaction (fn [ obj status branch]
                       (let [bar-dom (:content @obj)]
                         (dom-truncate bar-dom) ; clear content
-                        (dom/append bar-dom (status-ui status branch git-root))
+                        (dom/append bar-dom (status-ui status branch (git/get-git-root)))
                         (resize-to-content (dom/parent bar-dom) bar-dom))))
 
 

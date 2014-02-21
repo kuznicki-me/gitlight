@@ -38,8 +38,7 @@
                       (if (ui/is-open?)
                         (object/raise ui/status-bar :refresh
                                       (:status data)
-                                      (:branch-name data)
-                                      (:git-root data)))))
+                                      (:branch-name data)))))
 
 
 
@@ -59,6 +58,9 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (.log js/console "refresh" (clj->js data))))
+
+
+
 
 
 ; (object/add-behavior! back/shell-git-out ::debug-new-status)
