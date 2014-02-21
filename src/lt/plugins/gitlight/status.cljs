@@ -16,8 +16,8 @@
           :desc "Init gitlight status"
           :reaction (fn [this]
                       (sidebar/add-item sidebar/rightbar ui/status-bar)
-                      (object/add-behavior! back/shell-git-out ::refresh-ui-on-new-status)
-                      (object/add-behavior! back/shell-git-out ::auto-refresh-git-status)))
+                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)
+                      (object/add-behavior! back/git-status-out ::auto-refresh-git-status)))
 
 
 

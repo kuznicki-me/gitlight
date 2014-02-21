@@ -58,19 +58,19 @@
 
 
 (behavior ::git-status.out
-          :desc "When git command is executed, show its out"
+          :desc "When git status is executed, parse its output."
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
                       (object/raise obj :status (parse-porcelain data))))
 
 
-(def shell-git-out ;shell out object
+(def git-status-out
   (object/create
    (object/object*
-    ::shell-git-out
-    :tags [:shell-git-out]
+    ::git-status-out
+    :tags [:git-status-out]
     :behaviors [::git-status.out])))
 
 
 (defn git-status []
-  (git/git-command shell-git-out "status" "--porcelain" "--branch"))
+  (git/git-command git-status-out "status" "--porcelain" "--branch"))
