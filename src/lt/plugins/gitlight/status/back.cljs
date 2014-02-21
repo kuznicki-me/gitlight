@@ -14,9 +14,11 @@
 (defn on-cwd? []
   (not (nil? (pool/last-active))))
 
+
 (defn get-cwd []
   (files/parent
    (-> @(pool/last-active) :info :path)))
+
 
 (defn get-git-root []
   (if (on-cwd?)
@@ -24,17 +26,20 @@
       (if-not (nil? cwd)
         (files/parent cwd)))))
 
-(defn git-status []
+
+(defn git-command [& args]
   (if-let [cwd (get-git-root)]
     (proc/exec {:command (:git-binary @config)
-                :args    ["status"
-                          "--porcelain"
-                          "--branch"]
+                :args    args
                 :cwd     cwd
                 :obj     shell-git-out})
-    (popup/popup! {:header "We couldn't guess git root"
-                   :body "Please run `gitlight: Status' again on a file that is in a git repo."
+    (popup/popup! {:header  "We couldn't guess git root"
+                   :body    "Please rerun the command again on a file that is in a git repo."
                    :buttons [{:label "ok"}]})))
+
+
+(defn git-status []
+  (git-command "status" "--porcelain" "--branch"))
 
 
 (defn in-sequence? [haystack needle]
@@ -74,7 +79,7 @@
 
      (and (= \? X) (= \? Y)) [[filename :untracked :untracked]]
      (and (= \! X) (= \! Y)) [[filename :ignored :ignored]]
-     :else [[filename :unknown :unknown]])))
+     :else                   [[filename :unknown :unknown]])))
 
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))
