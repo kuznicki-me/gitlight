@@ -69,7 +69,9 @@
    (object/object*
     ::git-status-out
     :tags [:git-status-out]
-    :behaviors [::git-status.out])))
+    :behaviors [::git-status.out
+                ::refresh-ui-on-new-status
+                ::auto-refresh-git-status])))
 
 
 (defn git-status []

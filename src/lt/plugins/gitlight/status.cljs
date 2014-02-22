@@ -11,6 +11,15 @@
 
 
 
+
+(defn run-git-status []
+  (if (back/git-status)
+    (if (not (ui/is-open?)) (object/raise sidebar/rightbar :toggle ui/status-bar))
+    (if (ui/is-open?) (object/raise sidebar/rightbar :close! ui/status-bar))))
+
+
+
+
 (behavior ::init ; added to app in gitlight.behaviors
           :triggers #{:object.instant}
           :desc "Init gitlight status"
@@ -24,9 +33,7 @@
 
 (cmd/command {:command :gitlight-status
               :desc "gitlight: Status"
-              :exec (fn []
-                      (back/git-status)
-                      (object/raise sidebar/rightbar :toggle ui/status-bar))})
+              :exec run-git-status})
 
 
 
@@ -48,7 +55,8 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (if (and (ui/is-open?) (pos? (:git-status-refresh-rate @config)))
-                        (wait (:git-status-refresh-rate @config) back/git-status))))
+                        (wait (:git-status-refresh-rate @config) run-git-status))))
+                              ;back/git-status))))
 
 
 

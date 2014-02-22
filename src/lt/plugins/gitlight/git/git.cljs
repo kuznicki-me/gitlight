@@ -28,14 +28,15 @@
 
 (defn git-command [obj & args]
   (if-let [cwd (get-git-root)]
-    (proc/exec {:command (:git-binary @config)
+    (do (proc/exec {:command (:git-binary @config)
                 :args    args
                 :cwd     cwd
                 :obj     obj})
-    (popup/popup! {:header  "We couldn't guess git root"
+      true)
+    (do (popup/popup! {:header  "We couldn't guess git root"
                    :body    "Please rerun the command again on a file that is in a git repo."
-                   :buttons [{:label "ok"}]})))
-
+                   :buttons [{:label "ok"}]})
+      nil)))
 
 (defn git-command-ignore-out [& args]
   (apply (partial git-command git-ignore-out) args))

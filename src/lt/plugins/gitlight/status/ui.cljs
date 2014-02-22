@@ -1,6 +1,5 @@
 (ns lt.plugins.gitlight.status.ui
   (:require [lt.object :as object]
-            [lt.plugins.gitlight.status.back :as back]
             [lt.objs.sidebar :as sidebar]
             [lt.objs.console :as console]
             [lt.objs.popup :as popup]
