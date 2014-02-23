@@ -4,6 +4,7 @@
             [lt.plugins.gitlight.status.ui :as ui]
             [lt.plugins.gitlight :refer [config]]
             [lt.objs.sidebar :as sidebar]
+            [lt.objs.command :as command]
             [lt.util.js :refer [wait]]
             [lt.util.dom :as dom]
             [lt.objs.command :as cmd])
@@ -55,8 +56,10 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (if (and (ui/is-open?) (pos? (:git-status-refresh-rate @config)))
-                        (wait (:git-status-refresh-rate @config) run-git-status))))
-                              ;back/git-status))))
+                        (wait (:git-status-refresh-rate @config) (fn []
+                                                                   (if (and (ui/is-open?) (not (back/git-status)))
+                                                                     (object/raise sidebar/rightbar :close! ui/status-bar)
+                                                                     ))))))
 
 
 
