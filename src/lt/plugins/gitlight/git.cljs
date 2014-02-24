@@ -56,8 +56,3 @@
     :tags [:git-ignore-out]
     :behaviors [::ignore.out])))
 
-
-(cmd/command {:command :gitlight-add
-              :desc "gitlight: add"
-              :exec (fn []
-                      (git-command-ignore-out "add" "something"))})
