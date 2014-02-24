@@ -22,12 +22,12 @@
 
 (defn not-staged [X Y filename]
   (if (or (and (in-sequence? " MARC" X) (in-sequence? "MD" Y))
-          (and (=\D X) (= \M Y)))
+          (and (= \D X) (= \M Y)))
     [filename (keywording Y) :not-staged]))
 
 
 (defn staged [X Y filename]
-  (if (or (in-sequence? "MARC" X)
+  (if (or (and (in-sequence? "MARC" X) (in-sequence? " MD" Y))
           (and (= \D X) (in-sequence? " M" Y)))
     [filename (keywording X) :staged]))
 
