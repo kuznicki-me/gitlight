@@ -2,6 +2,7 @@
   (:require [lt.object :as object]
             [lt.objs.proc :as proc]
             [lt.objs.command :as cmd]
+            [lt.objs.notifos :as notifos]
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.popup :as popup]
@@ -10,8 +11,10 @@
     (:require-macros [lt.macros :refer [defui behavior]]))
 
 
+
 (defn on-cwd? []
   (not (nil? (pool/last-active))))
+
 
 
 (defn get-cwd []
@@ -19,11 +22,13 @@
    (-> @(pool/last-active) :info :path)))
 
 
+
 (defn get-git-root []
   (if (on-cwd?)
     (let [cwd (files/walk-up-find (get-cwd) ".git")]
       (if-not (nil? cwd)
         (files/parent cwd)))))
+
 
 
 (defn git-command [obj & args]
@@ -36,15 +41,21 @@
     (do (object/raise error :raise-error-popup)
       false)))
 
+
+
 (defn git-command-ignore-out [& args]
   (apply (partial git-command git-ignore-out) args))
 
 
+
 (behavior ::ignore.out
           :desc "Ignore git command output."
-          :triggers #{:proc.exit :proc.error}
+          :triggers #{:proc.exit}
           :reaction (fn [ obj data ]
-                      (print data)))
+                      (notifos/set-msg! (if (= data 0)
+                                          "git: success!"
+                                          "git: failed!"))))
+
 
 
 (def git-ignore-out
@@ -53,4 +64,3 @@
     ::git-ignore-out
     :tags [:git-ignore-out]
     :behaviors [::ignore.out])))
-
