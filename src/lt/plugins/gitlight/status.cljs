@@ -56,10 +56,10 @@
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (if (and (ui/is-open?) (pos? (:git-status-refresh-rate @config)))
-                        (wait (:git-status-refresh-rate @config) (fn []
-                                                                   (if (and (ui/is-open?) (not (back/git-status)))
-                                                                     (object/raise sidebar/rightbar :close! ui/status-bar)
-                                                                     ))))))
+                        (wait (:git-status-refresh-rate @config)
+                              (fn []
+                                (if (and (ui/is-open?) (not (back/git-status)))
+                                  (object/raise sidebar/rightbar :close! ui/status-bar)))))))
 
 
 
