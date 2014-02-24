@@ -5,7 +5,7 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.popup :as popup]
-            [lt.plugins.gitlight :refer [config]]
+            [lt.plugins.gitlight :refer [config error]]
             [clojure.string :as string])
     (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -29,14 +29,12 @@
 (defn git-command [obj & args]
   (if-let [cwd (get-git-root)]
     (do (proc/exec {:command (:git-binary @config)
-                :args    args
-                :cwd     cwd
-                :obj     obj})
+                    :args    args
+                    :cwd     cwd
+                    :obj     obj})
       true)
-    (do (popup/popup! {:header  "We couldn't guess git root"
-                   :body    "Please rerun the command again on a file that is in a git repo."
-                   :buttons [{:label "ok"}]})
-      nil)))
+    (do (object/raise error :raise-error-popup)
+      false)))
 
 (defn git-command-ignore-out [& args]
   (apply (partial git-command git-ignore-out) args))
