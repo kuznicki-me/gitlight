@@ -61,33 +61,6 @@
   (apply concat (map get-status-for-line lines)))
 
 
-;; (defn parse-and-keyword-line [line]
-;;   (let [X (first line)
-;;         Y (second line)
-;;         filename (str (subs line 3))]
-;;     (cond
-;;      (and (= \space X) (in-sequence? "MD" Y)) [[filename (keywording Y) :not-staged ]]
-
-;;      (and (in-sequence? "MARC" X) (= \space Y))          [[filename (keywording X) :staged]]
-;;      (and (in-sequence? "MARC" X) (in-sequence? "MD" Y)) [[filename (keywording X) :staged]
-;;                                                           [filename (keywording Y) :not-staged]]
-
-;;      (and (= \D X) (= \space Y)) [[filename :deleted :staged]]
-;;      (and (= \D X) (= \M Y))     [[filename :deleted :staged]
-;;                                   [filename :modified :not-staged]]
-
-;;      (and (= \D X) (= \D Y)) [[filename :unmerged-both-deleted    :merge-conflict]]
-;;      (and (= \A X) (= \U Y)) [[filename :unmerged-added-by-us     :merge-conflict]]
-;;      (and (= \U X) (= \D Y)) [[filename :unmerged-deleted-by-them :merge-conflict]]
-;;      (and (= \U X) (= \A Y)) [[filename :unmerged-added-by-them   :merge-conflict]]
-;;      (and (= \D X) (= \U Y)) [[filename :unmerged-deleted-by-us   :merge-conflict]]
-;;      (and (= \A X) (= \A Y)) [[filename :unmerged-both-added      :merge-conflict]]
-;;      (and (= \U X) (= \U Y)) [[filename :unmerged-both-modified   :merge-conflict]]
-
-;;      (and (= \? X) (= \? Y)) [[filename :untracked :untracked]]
-;;      (and (= \! X) (= \! Y)) [[filename :ignored :ignored]]
-;;      :else                   [[filename :unknown :unknown]])))
-
 
 (defn parse-porcelain [data]
   (let [splitted (string/split-lines (.toString data))

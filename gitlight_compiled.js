@@ -58,9 +58,9 @@ var args = null;if (arguments.length > 1) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 1),0);} 
 return git_command__delegate.call(this,obj,args);};
 git_command.cljs$lang$maxFixedArity = 1;
-git_command.cljs$lang$applyTo = (function (arglist__8798){
-var obj = cljs.core.first(arglist__8798);
-var args = cljs.core.rest(arglist__8798);
+git_command.cljs$lang$applyTo = (function (arglist__8221){
+var obj = cljs.core.first(arglist__8221);
+var args = cljs.core.rest(arglist__8221);
 return git_command__delegate(obj,args);
 });
 git_command.cljs$core$IFn$_invoke$arity$variadic = git_command__delegate;
@@ -78,8 +78,8 @@ var args = null;if (arguments.length > 0) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return git_command_ignore_out__delegate.call(this,args);};
 git_command_ignore_out.cljs$lang$maxFixedArity = 0;
-git_command_ignore_out.cljs$lang$applyTo = (function (arglist__8799){
-var args = cljs.core.seq(arglist__8799);
+git_command_ignore_out.cljs$lang$applyTo = (function (arglist__8222){
+var args = cljs.core.seq(arglist__8222);
 return git_command_ignore_out__delegate(args);
 });
 git_command_ignore_out.cljs$core$IFn$_invoke$arity$variadic = git_command_ignore_out__delegate;
