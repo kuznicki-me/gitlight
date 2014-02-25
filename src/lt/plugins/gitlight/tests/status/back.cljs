@@ -1,18 +1,14 @@
 (ns lt.plugins.gitlight.tests.status.back
   (:require [lt.object :as object]
+            [lt.objs.files :as files]
             [lt.plugins.gitlight.status.back :as back]
+            [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.tests.lib :as t])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defn random-str []
   (let [r (+ 10 (rand-int 10))]
     (apply str (repeatedly r #(char (+ (rand-int 26) 97))))))
-
-(for [x [" " "M" "A" "R" "C" "D" "U"] y [" " "M" "A" "D" "U"]]
-  ;(println (str "::" x y " " (random-str))))
-  (back/get-status-for-line (str x y " " (random-str))))
-
-
 
 
 (def data
@@ -121,3 +117,8 @@
             (fn []
               (t/asrt "git status backend" (run-tests))))
 
+
+
+(t/def-test ::does-git-path-even-point-to-something?
+            (fn []
+              (t/asrt "path to git exec" (files/file? (:git-binary @config)))))
