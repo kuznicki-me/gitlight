@@ -102,10 +102,22 @@
         d (nth data n)
         what-should-be (sort (map (partial change-filenames filename) d))
         what-is (sort parsed)]
-    (t/asrt (str "testing parsing of flags: `"X Y"'") (= what-should-be what-is))))
+    (= what-should-be what-is)))
 
 
+(defn generate-test-data []
+  (for [x [" " "M" "A" "R" "C" "D" "U"]
+        y [" " "M" "A" "D" "U"]]
+    (let [filename (random-str)]
+      [[x y filename] (back/get-status-for-line (str x y " " filename))])))
 
-(map test-data (map-indexed vector (for [x [" " "M" "A" "R" "C" "D" "U"] y [" " "M" "A" "D" "U"]]
-                           (let [filename (random-str)]
-                             [[x y filename] (back/get-status-for-line (str x y " " filename))] ))))
+
+(defn run-tests [] (every? identity
+                           (map test-data
+                                (map-indexed vector (generate-test-data)))))
+
+
+(t/def-test ::back-tests
+            (fn []
+              (t/asrt "git status backend" (run-tests))))
+
