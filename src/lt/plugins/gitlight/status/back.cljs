@@ -66,10 +66,7 @@
   (let [splitted (string/split-lines (.toString data))
         branch (subs(first splitted) 3)
         parsed (parse-git-status (rest splitted))]
-    ; parsed (map parse-and-keyword-line (rest splitted))]
-
-    {;:git-root    (get-git-root)
-     :branch-name (str branch)
+    {:branch-name (str branch)
      :status      (group-by (fn [a] (nth a 2)) parsed)}))
 
 
