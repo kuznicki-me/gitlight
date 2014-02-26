@@ -7,6 +7,7 @@
             [lt.plugins.gitlight.git :as git]
             [lt.objs.plugins :as plugins]
             [lt.objs.command :as cmd]
+            [clojure.string :as string]
             [lt.objs.proc :as proc])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -152,6 +153,7 @@
           :desc "git test repo out"
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
+                      (reset! (:cwd @test-git-status-out) (.toString data))
                       (test-git-status (.toString data))))
 
 
@@ -162,23 +164,44 @@
 
 ;; running the actual status command
 
+(def status-regexp
+   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n(\?\? untracked-...\n){5}")
+
+(def what-status-should-look-like
+   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n(\?\? untracked-...\n){5}")
+
+
 (def test-git-status-out
   (object/create
    (object/object*
     ::test-git-status-out
+    :last-result (atom nil)
+    :cwd (atom nil)
     :tags [:test-git-status-out]
     :behaviors [::test-git-status.out])))
-
-
-(def status-regexp
-   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}(\?\? untracked-...\n){5}")
 
 
 (behavior ::test-git-status.out
           :desc "When git status is executed, parse its output."
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
-                      (print (not (nil? (re-matches status-regexp (.toString data)))))))
+                      (let [matched (re-matches status-regexp (.toString data))]
+                        (if (nil? @(:last-result @obj))
+                          (do
+                            (reset! (:last-result @obj) (first matched))
+
+                            (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "add" "stage_me")
+                            (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "reset" "unstage_me")
+
+                            ;; test
+                            (print "status of test git repo is ok? " (not (nil? matched))))
+                          (do
+
+                            (print "status of test git repo is still ok? " (not (nil? matched))))
+                            ;(what-should-be @(:last-result @obj) @(:filename-added @obj) @(:filename-resetted @obj))
+
+                            ;(print (:last-result @obj)))
+                          ))))
 
 
 (defn test-git-status [cwd]
