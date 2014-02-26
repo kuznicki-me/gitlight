@@ -23,4 +23,4 @@ git commit -m "test commit" > /dev/null
 find $TEST_DIR -iname '*staged*' -exec sh -c 'echo "testing" >> "$1"' -- {} \;
 find $TEST_DIR -iname 'staged*' -exec git add "{}" \;
 
-echo $TEST_DIR
+echo -n $TEST_DIR
