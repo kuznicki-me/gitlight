@@ -30,14 +30,17 @@
         (files/parent cwd)))))
 
 
+(defn git-command-cwd [obj cwd & args]
+  (proc/exec {:command (:git-binary @config)
+              :args    args
+              :cwd     cwd
+              :obj     obj})
+  true)
+
 
 (defn git-command [obj & args]
   (if-let [cwd (get-git-root)]
-    (do (proc/exec {:command (:git-binary @config)
-                    :args    args
-                    :cwd     cwd
-                    :obj     obj})
-      true)
+    (apply (partial git-command-cwd obj cwd) args)
     (do (object/raise error :raise-error-popup)
       false)))
 
