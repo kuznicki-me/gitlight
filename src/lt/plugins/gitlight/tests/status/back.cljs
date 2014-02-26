@@ -170,12 +170,15 @@
     :behaviors [::test-git-status.out])))
 
 
+(def status-regexp
+   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}(\?\? untracked-...\n){5}")
+
 
 (behavior ::test-git-status.out
           :desc "When git status is executed, parse its output."
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
-                      (print (.toString data))))
+                      (print (not (nil? (re-matches status-regexp (.toString data)))))))
 
 
 (defn test-git-status [cwd]
@@ -187,4 +190,3 @@
 (cmd/command {:command :mkgit
               :desc "gitlight: mkgit"
               :exec mkgit})
-

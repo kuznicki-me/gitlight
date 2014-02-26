@@ -15,8 +15,8 @@ do
 	F=$(mktemp --tmpdir=. not-staged-XXX)
 	git add $F
 
-	# unstaged
-	mktemp --tmpdir=. unstaged-XXX > /dev/null
+	# untracked
+	mktemp --tmpdir=. untracked-XXX > /dev/null
 done
 git commit -m "test commit" > /dev/null
 
