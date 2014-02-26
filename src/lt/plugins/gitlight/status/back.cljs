@@ -67,7 +67,7 @@
         branch (subs(first splitted) 3)
         parsed (parse-git-status (rest splitted))]
     {:branch-name (str branch)
-     :status      (group-by (fn [a] (nth a 2)) parsed)}))
+     :status      (sort (group-by (fn [a] (nth a 2)) parsed))}))
 
 
 (behavior ::git-status.out
@@ -89,3 +89,13 @@
 
 (defn git-status []
   (git/git-command git-status-out "status" "--porcelain" "--branch"))
+
+
+
+(defn git-add [action filename]
+  (git/git-command-ignore-out "add" filename))
+
+
+
+(defn git-reset [action filename]
+  (git/git-command-ignore-out "reset" filename))

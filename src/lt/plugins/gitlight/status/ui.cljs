@@ -5,6 +5,7 @@
             [lt.objs.popup :as popup]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
+            [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.git :as git]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -47,27 +48,40 @@
    [:ul.files (map (partial file g-name) files)]])
 
 
-
-(defui button [n f]
+(defui button [n f fun]
   [:button [:nobr n]]
-  :click (fn [] (popup/popup!
+  :click (fn [] (fun n f)))
+
+
+(defn make-button [n f fun]
+  (if (= fun nil)
+    (button n f not-implemented-popup)
+    (button n f fun)))
+
+
+(defn not-implemented-popup [ n f ]
+  (popup/popup!
                  {:header "Not yet implemented..."
                   :body (str "perform action " n " on " f)
-                  :buttons [{:label "ok"}]})))
+                  :buttons [{:label "ok"}]}))
 
 
-
-(def file-ops {:not-staged ["stage" "diff" "revert" "stash"]
-               :untracked ["add" "ignore" "delete"]
-               :staged ["unstage"]})
+(def file-ops {:not-staged [["stage" back/git-add]
+                            ["diff"   nil]
+                            ["revert" nil]
+                            ["stash"  nil]]
+               :untracked [["add"    back/git-add]
+                           ["ignore" nil]
+                           ["delete" nil]]
+               :staged [["unstage" back/git-reset]]})
 
 
 
 (defui file [g-name [f t]]
   [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
    [:br]
-   (for [bt (g-name file-ops)]
-     (button bt f))
+   (for [[bt fun] (g-name file-ops)]
+     (make-button bt f fun))
    [:br]
    [:br]])
 
@@ -76,11 +90,11 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (button branch (str "Branch menu"))]]
-   [:h2 [:nobr "Root: " (button git-root "Change repo")]]
+   [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
+   [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
    [:br]
    (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
-     (button t git-root))
+     (make-button t git-root nil))
 
    [:br]
    [:br]
