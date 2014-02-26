@@ -3,7 +3,10 @@
             [lt.objs.files :as files]
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight :refer [config]]
-            [lt.plugins.gitlight.tests.lib :as t])
+            [lt.plugins.gitlight.tests.lib :as t]
+            [lt.objs.plugins :as plugins]
+            [lt.objs.command :as cmd]
+            [lt.objs.proc :as proc])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defn random-str []
@@ -122,3 +125,27 @@
 (t/def-test ::does-git-path-even-point-to-something?
             (fn []
               (t/asrt "path to git exec" (files/file? (:git-binary @config)))))
+
+
+(def git-test-repo
+  (object/create
+   (object/object*
+    ::git-test-repo-out
+    :tags [:git-test-repo-out]
+    :behaviors [::git-test-repo.out])))
+
+
+(behavior ::git-test-repo.out
+          :desc "git test repo out"
+          :triggers #{:proc.out}
+          :reaction (fn [ obj data ]
+                      (println (.toString data))))
+
+
+(defn mkgit []
+  (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkgit.sh")
+              :obj     git-test-repo}))
+
+(cmd/command {:command :mkgit
+              :desc "gitlight: mkgit"
+              :exec mkgit})
