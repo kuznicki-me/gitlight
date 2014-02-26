@@ -4,10 +4,13 @@
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.tests.lib :as t]
+            [lt.plugins.gitlight.git :as git]
             [lt.objs.plugins :as plugins]
             [lt.objs.command :as cmd]
             [lt.objs.proc :as proc])
   (:require-macros [lt.macros :refer [defui behavior]]))
+
+;; parsing of output of git command
 
 (defn random-str []
   (let [r (+ 10 (rand-int 10))]
@@ -118,15 +121,24 @@
 
 (t/def-test ::back-tests
             (fn []
-              (t/asrt "git status backend" (run-tests))))
+              (t/asrt "git status parse porcelain" (run-tests))))
 
 
+
+
+;; git path test
 
 (t/def-test ::does-git-path-even-point-to-something?
             (fn []
               (t/asrt "path to git exec" (files/file? (:git-binary @config)))))
 
 
+
+
+
+;; testing git status command
+
+;; obejcts and behaviors necessary for mkgit
 (def git-test-repo
   (object/create
    (object/object*
@@ -135,17 +147,44 @@
     :behaviors [::git-test-repo.out])))
 
 
+
 (behavior ::git-test-repo.out
           :desc "git test repo out"
           :triggers #{:proc.out}
           :reaction (fn [ obj data ]
-                      (println (.toString data))))
+                      (test-git-status (.toString data))))
 
 
 (defn mkgit []
   (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkgit.sh")
               :obj     git-test-repo}))
 
+
+;; running the actual status command
+
+(def test-git-status-out
+  (object/create
+   (object/object*
+    ::test-git-status-out
+    :tags [:test-git-status-out]
+    :behaviors [::test-git-status.out])))
+
+
+
+(behavior ::test-git-status.out
+          :desc "When git status is executed, parse its output."
+          :triggers #{:proc.out}
+          :reaction (fn [ obj data ]
+                      (print (.toString data))))
+
+
+(defn test-git-status [cwd]
+  (println cwd)
+  (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
+
+;; helper
+
 (cmd/command {:command :mkgit
               :desc "gitlight: mkgit"
               :exec mkgit})
+
