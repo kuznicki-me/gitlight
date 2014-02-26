@@ -42,7 +42,6 @@
   (set! (.-innerHTML node) ""))
 
 
-
 (defui group [g-name files]
   [:li {:class (name g-name)} [:h1 (g-name group-names)]
    [:ul.files (map (partial file g-name) files)]])
@@ -98,6 +97,7 @@
 
    [:br]
    [:br]
+   [:button "cześć!"]
    [:br]
    [:ul (for [[g fs] this]
           (if-not (zero? (count fs))

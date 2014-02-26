@@ -9,4 +9,4 @@
 
 (t/def-test ::test
             (fn []
-              (t/asrt "test ui" true)))
+              (t/asrt "test ui"  (false? (ui/is-open?)))))
