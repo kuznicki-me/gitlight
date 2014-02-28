@@ -103,4 +103,4 @@
 
 
 (defn git-rm [action filename]
-  (git/git-command-ignore-out "rm" filename))
+  (files/delete! (str (git/get-git-root) "/" filename)))
