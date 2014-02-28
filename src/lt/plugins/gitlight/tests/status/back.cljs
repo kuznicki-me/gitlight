@@ -159,23 +159,22 @@
                 :desc "When git status is executed, parse its output."
                 :triggers #{:proc.out}
                 :reaction (fn [ obj data ]
-                            (if (nil? @(:last-result @obj))
-                              (let [matched (re-matches status-regexp (.toString data))]
-                                (reset! (:last-result @obj) (first matched))
+                              (let [matched (re-matches status-regexp (.toString data))
+                                    cwd @(:cwd @obj)]
 
-                                (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "add" "stage_me")
-                                (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "reset" "unstage_me")
+                                (git/git-command-cwd git/git-ignore-out cwd "add" "stage_me")
+                                (git/git-command-cwd git/git-ignore-out cwd "reset" "unstage_me")
 
                                 ;; test
                                 (t/asrt "status of test git repo " (not (nil? matched)))
-                                (test-git-status @(:cwd @obj))
-                                )
+                                (git/git-command-cwd after-add-reset-out cwd "status" "--porcelain" "--branch")))))
 
-                              (do
-                                (let [matched-after (re-matches what-status-should-look-like (.toString data))]
-                                  (t/asrt "status of test git repo after add and reset" (not (nil? matched-after)))
-                                  (reset! (:last-result @obj) nil))
-                                ))))
+      (behavior ::after-add-reset.out
+                :desc "When git status is executed after add and reset parse its output."
+                :triggers #{:proc.out}
+                :reaction (fn [ obj data ]
+                            (let [matched-after (re-matches what-status-should-look-like (.toString data))]
+                              (t/asrt "status of test git repo after add and reset" (not (nil? matched-after))))))
 
       (def git-test-repo
         (object/create
@@ -189,14 +188,21 @@
         (object/create
          (object/object*
           ::test-git-status-out
-          :last-result (atom nil)
           :cwd (atom nil)
           :tags [:test-git-status-out]
           :behaviors [::test-git-status.out])))
 
 
+      (def after-add-reset-out
+        (object/create
+         (object/object*
+          ::after-add-reset-out
+          :cwd (atom nil)
+          :tags [:after-add-reset-out]
+          :behaviors [::after-add-reset.out])))
+
       (defn test-git-status [cwd]
         (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
 
       (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkgit.sh")
-                  :obj     git-test-repo}))))
+                  :obj     git-test-repo})))
