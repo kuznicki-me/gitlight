@@ -97,31 +97,33 @@
                   %) x)))
 
 
-
-(defn test-data [pair]
-  (let [[n what] pair
-        [tst parsed] what
-        [X Y filename] tst
-        d (nth data n)
-        what-should-be (sort (map (partial change-filenames filename) d))
-        what-is (sort parsed)]
-    (= what-should-be what-is)))
-
-
-(defn generate-test-data []
-  (for [x [" " "M" "A" "R" "C" "D" "U"]
-        y [" " "M" "A" "D" "U"]]
-    (let [filename (random-str)]
-      [[x y filename] (back/get-status-for-line (str x y " " filename))])))
-
-
-(defn run-tests [] (every? identity
-                           (map test-data
-                                (map-indexed vector (generate-test-data)))))
-
-
 (t/def-test ::back-tests
             (fn []
+
+              (defn test-data [pair]
+                (let [[n what] pair
+                      [tst parsed] what
+                      [X Y filename] tst
+                      d (nth data n)
+                      what-should-be (sort (map (partial change-filenames filename) d))
+                      what-is (sort parsed)
+                      tst (= what-should-be what-is)]
+                  (if-not tst
+                    (t/asrt (str "parsing porcelain: `"X"' `"Y"'") tst))
+                  tst))
+
+
+              (defn generate-test-data []
+                (for [x [" " "M" "A" "R" "C" "D" "U"]
+                      y [" " "M" "A" "D" "U"]]
+                  (let [filename (random-str)]
+                    [[x y filename] (back/get-status-for-line (str x y " " filename))])))
+
+
+              (defn run-tests [] (every? identity
+                                         (map test-data
+                                              (map-indexed vector (generate-test-data)))))
+
               (t/asrt "git status parse porcelain" (run-tests))))
 
 
@@ -137,7 +139,7 @@
 ;; git add and reset tests
 
 (def status-regexp
-   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n(\?\? untracked-...\n){5}")
+   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n\?\? trash\n(\?\? untracked-...\n){5}")
 
 (def what-status-should-look-like
    #"## master\n( M not-staged-...\n){5}A  stage_me\n(M  staged-...\n){5}\?\? unstage_me\n(\?\? untracked-...\n){5}")
@@ -164,12 +166,13 @@
 
                                 (git/git-command-cwd git/git-ignore-out cwd "add" "stage_me")
                                 (git/git-command-cwd git/git-ignore-out cwd "reset" "unstage_me")
+                                (files/delete! (str cwd "/" "trash"))
 
                                 ;; test
                                 (t/asrt "status of test git repo " (not (nil? matched)))
-                                (git/git-command-cwd after-add-reset-out cwd "status" "--porcelain" "--branch")))))
+                                (git/git-command-cwd after-add-reset-rm-out cwd "status" "--porcelain" "--branch")))))
 
-      (behavior ::after-add-reset.out
+      (behavior ::after-add-reset-rm.out
                 :desc "When git status is executed after add and reset parse its output."
                 :triggers #{:proc.out}
                 :reaction (fn [ obj data ]
@@ -193,13 +196,13 @@
           :behaviors [::test-git-status.out])))
 
 
-      (def after-add-reset-out
+      (def after-add-reset-rm-out
         (object/create
          (object/object*
-          ::after-add-reset-out
+          ::after-add-reset-rm-out
           :cwd (atom nil)
-          :tags [:after-add-reset-out]
-          :behaviors [::after-add-reset.out])))
+          :tags [:after-add-reset-rm-out]
+          :behaviors [::after-add-reset-rm.out])))
 
       (defn test-git-status [cwd]
         (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))

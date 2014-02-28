@@ -102,5 +102,5 @@
 
 
 
-(defn git-rm [action filename]
+(defn bin-rm [action filename]
   (files/delete! (str (git/get-git-root) "/" filename)))

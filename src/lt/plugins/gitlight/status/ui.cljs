@@ -71,7 +71,7 @@
                             ["stash"  nil]]
                :untracked [["add"    back/git-add]
                            ["ignore" nil]
-                           ["delete" back/git-rm]]
+                           ["delete" back/bin-rm]]
                :staged [["unstage" back/git-reset]]})
 
 
