@@ -99,3 +99,8 @@
 
 (defn git-reset [action filename]
   (git/git-command-ignore-out "reset" filename))
+
+
+
+(defn git-rm [action filename]
+  (git/git-command-ignore-out "rm" filename))

@@ -53,16 +53,16 @@
 
 
 (defn make-button [n f fun]
-  (if (= fun nil)
-    (button n f not-implemented-popup)
-    (button n f fun)))
+  (button n f (if (= fun nil)
+                not-implemented-popup
+                fun)))
 
 
 (defn not-implemented-popup [ n f ]
   (popup/popup!
-                 {:header "Not yet implemented..."
-                  :body (str "perform action " n " on " f)
-                  :buttons [{:label "ok"}]}))
+   {:header "Not yet implemented..."
+    :body (str "perform action " n " on " f)
+    :buttons [{:label "ok"}]}))
 
 
 (def file-ops {:not-staged [["stage" back/git-add]
@@ -71,7 +71,7 @@
                             ["stash"  nil]]
                :untracked [["add"    back/git-add]
                            ["ignore" nil]
-                           ["delete" nil]]
+                           ["delete" back/git-rm]]
                :staged [["unstage" back/git-reset]]})
 
 
