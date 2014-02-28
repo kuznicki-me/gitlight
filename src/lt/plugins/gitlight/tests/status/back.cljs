@@ -134,82 +134,69 @@
               (t/asrt "path to git exec" (files/file? (:git-binary @config)))))
 
 
-
-
-
-;; testing git status command
-
-;; obejcts and behaviors necessary for mkgit
-(def git-test-repo
-  (object/create
-   (object/object*
-    ::git-test-repo-out
-    :tags [:git-test-repo-out]
-    :behaviors [::git-test-repo.out])))
-
-
-
-(behavior ::git-test-repo.out
-          :desc "git test repo out"
-          :triggers #{:proc.out}
-          :reaction (fn [ obj data ]
-                      (reset! (:cwd @test-git-status-out) (.toString data))
-                      (test-git-status (.toString data))))
-
-
-(defn mkgit []
-  (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkgit.sh")
-              :obj     git-test-repo}))
-
-
-;; running the actual status command
+;; git add and reset tests
 
 (def status-regexp
    #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n(\?\? untracked-...\n){5}")
 
 (def what-status-should-look-like
-   #"## master\n( M not-staged-...\n){5}(M  staged-...\n){5}A  unstage_me\n\?\? stage_me\n(\?\? untracked-...\n){5}")
+   #"## master\n( M not-staged-...\n){5}A  stage_me\n(M  staged-...\n){5}\?\? unstage_me\n(\?\? untracked-...\n){5}")
 
 
-(def test-git-status-out
-  (object/create
-   (object/object*
-    ::test-git-status-out
-    :last-result (atom nil)
-    :cwd (atom nil)
-    :tags [:test-git-status-out]
-    :behaviors [::test-git-status.out])))
+
+(t/def-test ::git-add-and-reset-test
+  (fn []
+    (do
+      (behavior ::git-test-repo.out
+                :desc "git test repo out"
+                :triggers #{:proc.out}
+                :reaction (fn [ obj data ]
+                            (reset! (:cwd @test-git-status-out) (.toString data))
+                            (test-git-status (.toString data))))
 
 
-(behavior ::test-git-status.out
-          :desc "When git status is executed, parse its output."
-          :triggers #{:proc.out}
-          :reaction (fn [ obj data ]
-                      (let [matched (re-matches status-regexp (.toString data))]
-                        (if (nil? @(:last-result @obj))
-                          (do
-                            (reset! (:last-result @obj) (first matched))
+      (behavior ::test-git-status.out
+                :desc "When git status is executed, parse its output."
+                :triggers #{:proc.out}
+                :reaction (fn [ obj data ]
+                            (if (nil? @(:last-result @obj))
+                              (let [matched (re-matches status-regexp (.toString data))]
+                                (reset! (:last-result @obj) (first matched))
 
-                            (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "add" "stage_me")
-                            (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "reset" "unstage_me")
+                                (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "add" "stage_me")
+                                (git/git-command-cwd git/git-ignore-out @(:cwd @obj) "reset" "unstage_me")
 
-                            ;; test
-                            (print "status of test git repo is ok? " (not (nil? matched))))
-                          (do
+                                ;; test
+                                (t/asrt "status of test git repo " (not (nil? matched)))
+                                (test-git-status @(:cwd @obj))
+                                )
 
-                            (print "status of test git repo is still ok? " (not (nil? matched))))
-                            ;(what-should-be @(:last-result @obj) @(:filename-added @obj) @(:filename-resetted @obj))
+                              (do
+                                (let [matched-after (re-matches what-status-should-look-like (.toString data))]
+                                  (t/asrt "status of test git repo after add and reset" (not (nil? matched-after)))
+                                  (reset! (:last-result @obj) nil))
+                                ))))
 
-                            ;(print (:last-result @obj)))
-                          ))))
+      (def git-test-repo
+        (object/create
+         (object/object*
+          ::git-test-repo-out
+          :tags [:git-test-repo-out]
+          :behaviors [::git-test-repo.out])))
 
 
-(defn test-git-status [cwd]
-  (println cwd)
-  (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
+      (def test-git-status-out
+        (object/create
+         (object/object*
+          ::test-git-status-out
+          :last-result (atom nil)
+          :cwd (atom nil)
+          :tags [:test-git-status-out]
+          :behaviors [::test-git-status.out])))
 
-;; helper
 
-(cmd/command {:command :mkgit
-              :desc "gitlight: mkgit"
-              :exec mkgit})
+      (defn test-git-status [cwd]
+        (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
+
+      (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkgit.sh")
+                  :obj     git-test-repo}))))
