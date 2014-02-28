@@ -35,16 +35,18 @@
 
 (cmd/command {:command ::whatevers
               :desc "git: commit"
-              :exec (fn []
-                      (popup/popup! {:header  "commit message plz"
-                                     :body (input commit-input)
-                                     :buttons [{:label "commit"
-                                                :action (fn []
-                                                          (git-commit @(:commit @commit-input))
-                                                          (reset! (:commit @commit-input) nil))}
-                                               {:label "cancel"
-                                                :action (fn [] reset! (:commit @commit-input) nil)}]})
-                      )})
+              :exec git-commit})
 
-(defn git-commit [msg]
+
+(defn git-commit []
+  (popup/popup! {:header  "commit message plz"
+                 :body (input commit-input)
+                 :buttons [{:label "commit"
+                            :action (fn []
+                                      (git-cmd-commit @(:commit @commit-input))
+                                      (reset! (:commit @commit-input) nil))}
+                           {:label "cancel"
+                            :action (fn [] reset! (:commit @commit-input) nil)}]}))
+
+(defn git-cmd-commit [msg]
   (git/git-command-ignore-out "commit" "-m" msg))

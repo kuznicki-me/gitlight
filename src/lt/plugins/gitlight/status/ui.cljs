@@ -6,6 +6,7 @@
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [lt.plugins.gitlight.status.back :as back]
+            [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -92,7 +93,8 @@
    [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
    [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
    [:br]
-   (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
+   (make-button "commit" git-root commit/git-commit)
+   (for [t ["push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
      (make-button t git-root nil))
 
    [:br]
