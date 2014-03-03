@@ -18,13 +18,12 @@
                 :desc "git test repo out"
                 :triggers #{:proc.out}
                 :reaction (fn [ obj data ]
-                            (println (.toString data))
                             (let [cwd (.toString data)]
                               (reset! (:cwd @git-test-exit-status) cwd)
                               (reset! (:command @git-test-exit-status) "fetch")
-                              (git/git-command-cwd git-test-exit-status cwd "fetch"))
+                              (git/git-command-cwd git-test-exit-status cwd "fetch"))))
 
-                              ))
+
 
       (defn after [text cwd data & what_next]
         (println text cwd data what_next)
@@ -34,19 +33,19 @@
           (apply (partial git/git-command-cwd git-test-exit-status cwd) what_next))))
 
 
+
       (behavior ::git-test-exit-status.out
                 :desc "git test repo out"
                 :triggers #{:proc.exit}
                 :reaction (fn [ obj data ]
-                            (println "hello")
                             (let [cwd @(:cwd @obj)]
                               (case @(:command @obj)
                                       "fetch" (after "git fetch" cwd data "pull")
                                       "pull" (after "git pull" cwd data "add" "push_me")
                                       "add" (after "git add" cwd data "commit" "-m" "commiting")
                                       "commit" (after "git commit" cwd data "push")
-                                      "push" (t/asrt "git push" (= 0 data)))
-                              )))
+                                      "push" (t/asrt "git push" (= 0 data))))))
+
 
 
       (def git-test-exit-status
@@ -69,12 +68,8 @@
           :behaviors [::git-test-repo.out])))
 
 
-
-      (defn test-git-status [cwd]
-        (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
-
-
       (def dir (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/"))
+
 
       (proc/exec {:command (str dir "mkremote.sh")
                   :cwd dir
