@@ -18,16 +18,16 @@
                 :desc "git test repo out"
                 :triggers #{:proc.out}
                 :reaction (fn [ obj data ]
-                            (println "hello")
+                            (println (.toString data))
                             (let [cwd (.toString data)]
-                              (reset! (:cwd @git-test-exit-status) "cwd")
+                              (reset! (:cwd @git-test-exit-status) cwd)
                               (reset! (:command @git-test-exit-status) "fetch")
-                              (git/git-command-cwd git-test-exit-status cwd "fetch")
+                              (git/git-command-cwd git-test-exit-status cwd "fetch"))
 
-                              )))
+                              ))
 
       (defn after [text cwd data & what_next]
-        (println "txt")
+        (println text cwd data what_next)
         (t/asrt text (= 0 data))
         (if (= 0 data)
           (do (reset! (:command @git-test-exit-status) (first what_next))
@@ -40,7 +40,7 @@
                 :reaction (fn [ obj data ]
                             (println "hello")
                             (let [cwd @(:cwd @obj)]
-                              (switch @(:command @obj)
+                              (case @(:command @obj)
                                       "fetch" (after "git fetch" cwd data "pull")
                                       "pull" (after "git pull" cwd data "add" "push_me")
                                       "add" (after "git add" cwd data "commit" "-m" "commiting")
@@ -74,5 +74,8 @@
         (git/git-command-cwd test-git-status-out cwd "status" "--porcelain" "--branch"))
 
 
-      (proc/exec {:command (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/mkremote.sh")
+      (def dir (str plugins/user-plugins-dir "/gitlight/src/lt/plugins/gitlight/tests/status/"))
+
+      (proc/exec {:command (str dir "mkremote.sh")
+                  :cwd dir
                   :obj     git-test-repo}))))

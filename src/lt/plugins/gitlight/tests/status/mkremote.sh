@@ -15,4 +15,4 @@ git checkout -b testing >/dev/null 2>&1
 cd $TEST_DIR
 cd gitlight-testing*
 touch push_me
-pwd
+echo -n $(pwd)
