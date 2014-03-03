@@ -1,4 +1,5 @@
 version 0.0.2
+=============
 
 Fixes:
  * Hide/not open status on file not in git repo.  Thanks jsyrjala!
@@ -10,16 +11,18 @@ New Features:
    Note:  they should work on Linux and maybe Mac, but most probably not on
    Windows.
  * Git add, git reset and rm untracked are here!  Probably buggy, so use at own
-   discretion!  Click the buttons in the git status UI and witness git magic.
- * Very experimental git commit.  Probably best not to use on important repos.
+   discretion.  Click the stage, unstage, add, resolve or delete buttons in the
+   git status UI and witness git magic.
+ * Very simple git commit.  Probably best not to use on important repos.
    Look and feel are definitely not final and are subject to change.
+ * Simplest possible git push, pull and fetch.
  * Newer, more exciting and harder to debug bugs!
 
 Changes:
  * We changed the way git is called that should (in theory) provide easier
    extensibility of the plugin with new commands.
 
-Known Issues (things that just do not work, work properly or in the way we want):
+Known Issues:
  * Self tests leave some trash in /tmp/.  Not a huge problem, just irritating.
  * Staging does not work on moved or copied files.  We do not yet process moved
    files well enough to support this feature.
@@ -36,10 +39,13 @@ Known Issues (things that just do not work, work properly or in the way we want)
    status yet, so You need to wait the refresh interval to see changes made to
    the repo in the UI.  Can feel somewhat sluggish, especially with larger
    intervals and/or larger quantities of files added, reseted and deleted.
- * Merge conflicts.
+ * Using gitlight at the moment is quite a click-a-thon, and we do not really
+   love that.  We shall try to implement some sort of keyboard controlling
+   scheme, if time, wits and abilities permit.
 
 
 
 version 0.0.1
- + UI for status.
- + Git status.
+=============
+ * UI for status.
+ * Git status.
