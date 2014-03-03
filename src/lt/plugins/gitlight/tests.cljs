@@ -78,4 +78,5 @@
               :desc "gitlight: self test"
               :exec (fn []
                       (tabs/add-or-focus! tests-out)
+                      (object/merge! tests-out {:results []})
                       (object/raise tests-out :run-tests))})

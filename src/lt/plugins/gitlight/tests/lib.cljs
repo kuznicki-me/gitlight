@@ -1,7 +1,7 @@
 (ns lt.plugins.gitlight.tests.lib
   (:require [lt.object :as object]
             [lt.plugins.gitlight.tests :as ta]
-            [lt.objs.command :as cmd])
+            [lt.util.dom :as dom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
@@ -20,8 +20,16 @@
                 {:info explanation :status (asrt-out test-case)}))
 
 
+(defn selector-asrt [{:keys [select]}]
+  )
+
+(defn dom-asrt [node selectors]
+  (reduce (fn [v acc] (and v acc))
+          (map (fn [] ()))))
+
+
 (defn def-test [test-name f]
-  (behavior test-name
+  (behavior test$-name
             :triggers #{:run-tests}
             :reaction (fn []
                         (.log js/console "refresh" (.random js/Math))

@@ -42,11 +42,6 @@
   (set! (.-innerHTML node) ""))
 
 
-(defui group [g-name files]
-  [:li {:class (name g-name)} [:h1 (g-name group-names)]
-   [:ul.files (map (partial file g-name) files)]])
-
-
 (defui button [n f fun]
   [:button [:nobr n]]
   :click (fn [] (fun n f)))
@@ -83,6 +78,12 @@
      (make-button bt f fun))
    [:br]
    [:br]])
+
+
+
+(defui group [g-name files]
+  [:li {:class (name g-name)} [:h1 (g-name group-names)]
+   [:ul.files (map (partial file g-name) files)]])
 
 
 

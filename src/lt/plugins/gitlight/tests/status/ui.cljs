@@ -6,7 +6,13 @@
 
 
 
+(defui test-node []
+  [:div "test"])
 
-(t/def-test ::test
-            (fn []
-              (t/asrt "test ui"  (false? (ui/is-open?)))))
+(t/def-test
+ ::test
+ (fn []
+   (t/asrt "dom-truncate: truncates"
+           (let [tn (test-node)]
+             (ui/dom-truncate tn)
+             (= (.-innerHTML tn) "") ))))
