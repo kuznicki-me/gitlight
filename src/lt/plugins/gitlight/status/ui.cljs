@@ -6,6 +6,7 @@
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [lt.plugins.gitlight.status.back :as back]
+            [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -16,7 +17,8 @@
   (object/merge! sidebar/rightbar {:width width :max-width width}))
 
 
-(def group-names {:not-staged "Not staged"
+(def group-names {:merge-conflict "Merge conflicts"
+                  :not-staged "Not staged"
                   :staged     "Staged"
                   :untracked  "Untracked"
                   :ignored    "Ignored" })
@@ -48,25 +50,27 @@
 
 
 (defn make-button [n f fun]
-  (if (= fun nil)
-    (button n f not-implemented-popup)
-    (button n f fun)))
+  (button n f (if (= fun nil)
+                not-implemented-popup
+                fun)))
 
 
 (defn not-implemented-popup [ n f ]
   (popup/popup!
-                 {:header "Not yet implemented..."
-                  :body (str "perform action " n " on " f)
-                  :buttons [{:label "ok"}]}))
+   {:header "Not yet implemented..."
+    :body (str "perform action " n " on " f)
+    :buttons [{:label "ok"}]}))
 
 
-(def file-ops {:not-staged [["stage" back/git-add]
+(def file-ops {:merge-conflict[["resolve" back/git-add]
+                               ["diff"   nil]]
+               :not-staged [["stage" back/git-add]
                             ["diff"   nil]
                             ["revert" nil]
                             ["stash"  nil]]
                :untracked [["add"    back/git-add]
                            ["ignore" nil]
-                           ["delete" nil]]
+                           ["delete" back/bin-rm]]
                :staged [["unstage" back/git-reset]]})
 
 
@@ -93,12 +97,12 @@
    [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
    [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
    [:br]
-   (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
+   (make-button "commit" git-root commit/git-commit)
+   (for [t ["push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
      (make-button t git-root nil))
 
    [:br]
    [:br]
-   [:button "cześć!"]
    [:br]
    [:ul (for [[g fs] this]
           (if-not (zero? (count fs))

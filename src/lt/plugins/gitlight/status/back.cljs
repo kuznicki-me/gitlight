@@ -99,3 +99,8 @@
 
 (defn git-reset [action filename]
   (git/git-command-ignore-out "reset" filename))
+
+
+
+(defn bin-rm [action filename]
+  (files/delete! (str (git/get-git-root) "/" filename)))

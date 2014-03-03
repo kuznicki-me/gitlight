@@ -23,6 +23,7 @@ git commit -m "test commit" > /dev/null
 touch unstage_me
 git add unstage_me
 touch stage_me
+touch trash
 
 find $TEST_DIR -iname '*staged*' -exec sh -c 'echo "testing" >> "$1"' -- {} \;
 find $TEST_DIR -iname 'staged*' -exec git add "{}" \;

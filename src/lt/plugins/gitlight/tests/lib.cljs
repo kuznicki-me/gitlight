@@ -23,9 +23,9 @@
 (defn selector-asrt [{:keys [select]}]
   )
 
-(defn dom-asrt [node selectors]
-  (reduce (fn [v acc] (and v acc))
-          (map (fn [] ()))))
+;(defn dom-asrt [node selectors]
+;  (reduce (fn [v acc] (and v acc))
+;          (map (fn [] ()))))
 
 
 (defn def-test [test-name f]
