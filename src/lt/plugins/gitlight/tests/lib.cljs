@@ -29,7 +29,7 @@
 
 
 (defn def-test [test-name f]
-  (behavior test$-name
+  (behavior test-name
             :triggers #{:run-tests}
             :reaction (fn []
                         (.log js/console "refresh" (.random js/Math))
