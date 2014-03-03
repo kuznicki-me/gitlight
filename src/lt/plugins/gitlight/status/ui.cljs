@@ -107,9 +107,9 @@
    [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
    [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
    [:br]
-   (make-button "commit" git-root commit/git-commit)
-   (for [t ["push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
-     (make-button t git-root nil))
+   ;(make-button "commit" git-root commit/git-commit)
+   (for [[bname fun] (vals repo-ops)] ;  "remote"
+     (make-button bname git-root fun))
 
    [:br]
    [:br]

@@ -1,4 +1,4 @@
-(ns lt.plugins.gitlight.fetch
+(ns lt.plugins.gitlight.remote-com
   (:require [lt.plugins.gitlight.git :as git]))
 
 
