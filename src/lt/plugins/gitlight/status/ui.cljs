@@ -8,6 +8,7 @@
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.remote-com :as remote]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -73,6 +74,15 @@
                            ["delete" back/bin-rm]]
                :staged [["unstage" back/git-reset]]})
 
+
+
+(def repo-ops {:commit ["commit" commit/git-commit]
+               :push   ["push"   remote/git-push]
+               :pull   ["pull"   remote/git-pull]
+               :fetch  ["fetch"  remote/git-fetch]
+               :log    ["log"    nil]
+               :merge  ["merge"  nil]
+               :tag    ["tag"    nil]})
 
 
 (defui file [g-name [f t]]
