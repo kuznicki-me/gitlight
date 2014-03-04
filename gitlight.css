@@ -1,4 +1,10 @@
 
+
+.gitlight-status .merge-conflict li {
+  color: #ca2d2d
+}
+
+
 .gitlight-status .staged li {
   color: #07ae8f;
 }

@@ -22,12 +22,12 @@
 
 (defn not-staged [X Y filename]
   (if (or (and (in-sequence? " MARC" X) (in-sequence? "MD" Y))
-          (and (=\D X) (= \M Y)))
+          (and (= \D X) (= \M Y)))
     [filename (keywording Y) :not-staged]))
 
 
 (defn staged [X Y filename]
-  (if (or (in-sequence? "MARC" X)
+  (if (or (and (in-sequence? "MARC" X) (in-sequence? " MD" Y))
           (and (= \D X) (in-sequence? " M" Y)))
     [filename (keywording X) :staged]))
 
@@ -66,11 +66,8 @@
   (let [splitted (string/split-lines (.toString data))
         branch (subs(first splitted) 3)
         parsed (parse-git-status (rest splitted))]
-    ; parsed (map parse-and-keyword-line (rest splitted))]
-
-    {;:git-root    (get-git-root)
-     :branch-name (str branch)
-     :status      (group-by (fn [a] (nth a 2)) parsed)}))
+    {:branch-name (str branch)
+     :status      (sort (group-by (fn [a] (nth a 2)) parsed))}))
 
 
 (behavior ::git-status.out
@@ -92,3 +89,18 @@
 
 (defn git-status []
   (git/git-command git-status-out "status" "--porcelain" "--branch"))
+
+
+
+(defn git-add [action filename]
+  (git/git-command-ignore-out "add" filename))
+
+
+
+(defn git-reset [action filename]
+  (git/git-command-ignore-out "reset" filename))
+
+
+
+(defn bin-rm [action filename]
+  (files/delete! (str (git/get-git-root) "/" filename)))

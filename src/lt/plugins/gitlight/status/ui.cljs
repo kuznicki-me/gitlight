@@ -5,7 +5,10 @@
             [lt.objs.popup :as popup]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
+            [lt.plugins.gitlight.status.back :as back]
+            [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.remote-com :as remote]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -15,7 +18,8 @@
   (object/merge! sidebar/rightbar {:width width :max-width width}))
 
 
-(def group-names {:not-staged "Not staged"
+(def group-names {:merge-conflict "Merge conflicts"
+                  :not-staged "Not staged"
                   :staged     "Staged"
                   :untracked  "Untracked"
                   :ignored    "Ignored" })
@@ -41,6 +45,55 @@
   (set! (.-innerHTML node) ""))
 
 
+(defui button [n f fun]
+  [:button [:nobr n]]
+  :click (fn [] (fun n f)))
+
+
+(defn make-button [n f fun]
+  (button n f (if (= fun nil)
+                not-implemented-popup
+                fun)))
+
+
+(defn not-implemented-popup [ n f ]
+  (popup/popup!
+   {:header "Not yet implemented..."
+    :body (str "perform action " n " on " f)
+    :buttons [{:label "ok"}]}))
+
+
+(def file-ops {:merge-conflict[["resolve" back/git-add]
+                               ["diff"   nil]]
+               :not-staged [["stage" back/git-add]
+                            ["diff"   nil]
+                            ["revert" nil]
+                            ["stash"  nil]]
+               :untracked [["add"    back/git-add]
+                           ["ignore" nil]
+                           ["delete" back/bin-rm]]
+               :staged [["unstage" back/git-reset]]})
+
+
+
+(def repo-ops {:commit ["commit" commit/git-commit]
+               :push   ["push"   remote/git-push]
+               :pull   ["pull"   remote/git-pull]
+               :fetch  ["fetch"  remote/git-fetch]
+               :log    ["log"    nil]
+               :merge  ["merge"  nil]
+               :tag    ["tag"    nil]})
+
+
+(defui file [g-name [f t]]
+  [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
+   [:br]
+   (for [[bt fun] (g-name file-ops)]
+     (make-button bt f fun))
+   [:br]
+   [:br]])
+
+
 
 (defui group [g-name files]
   [:li {:class (name g-name)} [:h1 (g-name group-names)]
@@ -48,39 +101,15 @@
 
 
 
-(defui button [n f]
-  [:button [:nobr n]]
-  :click (fn [] (popup/popup!
-                 {:header "Not yet implemented..."
-                  :body (str "perform action " n " on " f)
-                  :buttons [{:label "ok"}]})))
-
-
-
-(def file-ops {:not-staged ["stage" "diff" "revert" "stash"]
-               :untracked ["add" "ignore" "delete"]
-               :staged ["unstage"]})
-
-
-
-(defui file [g-name [f t]]
-  [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
-   [:br]
-   (for [bt (g-name file-ops)]
-     (button bt f))
-   [:br]
-   [:br]])
-
-
-
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (button branch (str "Branch menu"))]]
-   [:h2 [:nobr "Root: " (button git-root "Change repo")]]
+   [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
+   [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
    [:br]
-   (for [t ["commit" "push" "pull" "fetch" "log" "merge" "tag"]] ;  "remote"
-     (button t git-root))
+   ;(make-button "commit" git-root commit/git-commit)
+   (for [[bname fun] (vals repo-ops)] ;  "remote"
+     (make-button bname git-root fun))
 
    [:br]
    [:br]
