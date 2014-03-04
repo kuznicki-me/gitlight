@@ -14,7 +14,7 @@ on Linux and Mac try:
     
 on Windows binary files are usually located in place like:
 
-    C:\Users\<username>\AppData\Local\GitHub\PortableGit_<numbersandletters>\bin\git.exe
+    C:\\Users\\<username>\\AppData\\Local\\GitHub\\PortableGit_<numbersandletters>\\bin\\git.exe
 
 Default config:
 
