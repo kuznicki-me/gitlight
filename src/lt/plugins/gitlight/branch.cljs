@@ -7,7 +7,8 @@
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [clojure.string :as string]
-            [lt.plugins.gitlight.git :as git])
+            [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
@@ -23,34 +24,15 @@
 
 
 
-(defn dom-truncate [node]
-  (set! (.-innerHTML node) ""))
-
-(defn dom-reset [node new-cnt]
-  (dom-truncate node)
-  (dom/append node new-cnt))
-
-
 (defui branch-panel [this]
   [:div [:h1 "Branches"]
    [:table
     (for [[this-one? [branch sha1 desc]] (:results @this)]
       [:tr
-       [:td this-one?]
+       [:td (if this-one? "->" "")]
        [:td branch]
        [:td sha1]
        [:td desc]])]])
-
-
-(behavior ::on-close-destroy
-          :triggers #{:close}
-          :reaction (fn [this]
-                      (when-let [ts (:lt.objs.tabs/tabset @this)]
-                        (when (= (count (:objs @ts)) 1)
-                          (tabs/rem-tabset ts)))
-                      (object/raise this :destroy)))
-
-
 
 
 (behavior ::refresh-results
@@ -58,7 +40,7 @@
           :reaction (fn [this]
                       (println "refreshing")
                       (let [new-cnt (branch-panel this)]
-                        (dom-reset (dom/parent (:content @this)) new-cnt)
+                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
                         (object/merge! this {:content new-cnt} ))))
 
 
@@ -78,7 +60,8 @@
                 :tags [:gitlight-branches.out]
                 :name "branches out"
                 :results []
-                :behaviors [::on-close-destroy ::refresh-results]
+                :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
+                            ::refresh-results]
                 :init (fn [this]
                         (branch-panel this)))
 

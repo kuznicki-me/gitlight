@@ -9,6 +9,7 @@
             [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.remote-com :as remote]
+            [lt.plugins.gitlight.common-ui :as cui]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -41,27 +42,6 @@
      status-bar))
 
 
-(defn dom-truncate [node]
-  (set! (.-innerHTML node) ""))
-
-
-(defui button [n f fun]
-  [:button [:nobr n]]
-  :click (fn [] (fun n f)))
-
-
-(defn make-button [n f fun]
-  (button n f (if (= fun nil)
-                not-implemented-popup
-                fun)))
-
-
-(defn not-implemented-popup [ n f ]
-  (popup/popup!
-   {:header "Not yet implemented..."
-    :body (str "perform action " n " on " f)
-    :buttons [{:label "ok"}]}))
-
 
 (def file-ops {:merge-conflict[["resolve" back/git-add]
                                ["diff"   nil]]
@@ -89,7 +69,7 @@
   [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
    [:br]
    (for [[bt fun] (g-name file-ops)]
-     (make-button bt f fun))
+     (cui/make-button bt f fun))
    [:br]
    [:br]])
 
@@ -104,12 +84,12 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (make-button branch (str "Branch menu") nil)]]
-   [:h2 [:nobr "Root: " (make-button git-root "Change repo" nil)]]
+   [:h1 [:nobr (str "Branch: ") (cui/make-button branch (str "Branch menu") nil)]]
+   [:h2 [:nobr "Root: " (cui/make-button git-root "Change repo" nil)]]
    [:br]
    ;(make-button "commit" git-root commit/git-commit)
    (for [[bname fun] (vals repo-ops)] ;  "remote"
-     (make-button bname git-root fun))
+     (cui/make-button bname git-root fun))
 
    [:br]
    [:br]
@@ -131,7 +111,7 @@
           :triggers #{:refresh}
           :reaction (fn [ obj status branch]
                       (let [bar-dom (:content @obj)]
-                        (dom-truncate bar-dom) ; clear content
+                        (cui/dom-truncate bar-dom) ; clear content
                         (dom/append bar-dom (status-ui status branch (git/get-git-root)))
                         (resize-to-content (dom/parent bar-dom) bar-dom))))
 

@@ -1,6 +1,7 @@
 (ns lt.plugins.gitlight.tests.status.ui
   (:require [lt.object :as object]
             [lt.plugins.gitlight.status.ui :as ui]
+            [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.tests.lib :as t])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -14,5 +15,5 @@
  (fn []
    (t/asrt "dom-truncate: truncates"
            (let [tn (test-node)]
-             (ui/dom-truncate tn)
+             (cui/dom-truncate tn)
              (= (.-innerHTML tn) "") ))))

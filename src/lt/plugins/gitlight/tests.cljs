@@ -2,18 +2,9 @@
   (:require [lt.object :as object]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
-            [lt.objs.command :as cmd])
+            [lt.objs.command :as cmd]
+            [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
-
-
-
-
-(defn dom-truncate [node]
-  (set! (.-innerHTML node) ""))
-
-(defn dom-reset [node new-cnt]
-  (dom-truncate node)
-  (dom/append node new-cnt))
 
 
 (defn which-color? [result]
@@ -35,21 +26,13 @@
 
 
 
-(behavior ::on-close-destroy
-          :triggers #{:close}
-          :reaction (fn [this]
-                      (when-let [ts (:lt.objs.tabs/tabset @this)]
-                        (when (= (count (:objs @ts)) 1)
-                          (tabs/rem-tabset ts)))
-                      (object/raise this :destroy)))
-
 
 (behavior ::refresh-results
           :triggers #{:add-result}
           :reaction (fn [this result]
                       (object/update! this [:results] conj result)
                       (let [new-cnt (test-panel this)]
-                        (dom-reset (dom/parent (:content @this)) new-cnt)
+                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
                         (.log js/console (.-innerHTML new-cnt))
                         (object/merge! this {:content new-cnt} ))))
 
@@ -59,7 +42,8 @@
                 :tags [:gitlight-tests.out]
                 :name "tests out"
                 :results [{:info "show test panel" :status :ok}]
-                :behaviors [::on-close-destroy ::refresh-results]
+                :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
+                            ::refresh-results]
                 :init (fn [this]
                         (test-panel this)))
 
