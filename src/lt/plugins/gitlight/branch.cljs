@@ -17,11 +17,7 @@
   (let [active? (= \* (first line))
         to_cut  (subs line 2)
         splitted (string/split to_cut #"\s+" 3)]
-      [active? splitted]
-      )
-
-  )
-
+      [active? splitted]))
 
 
 (defui branch-panel [this]
@@ -32,7 +28,6 @@
        [:td (if this-one? "->" "") ]
        [:td {:class (if this-one? "current" "not-current")}
         (cui/make_button branch "checkout branch" git-checkout)]
-
        [:td sha1]
        [:td desc]])]])
 
@@ -40,9 +35,7 @@
 (behavior ::refresh-results
           :triggers #{:refresh}
           :reaction (fn [this]
-                      (println "refreshing")
                       (let [new-cnt (branch-panel this)]
-                        (.log js/console new-cnt)
                         (cui/dom-reset (dom/parent (:content @this)) new-cnt)
                         (object/merge! this {:content new-cnt} ))))
 
@@ -61,7 +54,7 @@
 
 (object/object* ::branches.out
                 :tags [:gitlight-branches.out]
-                :name "branches out"
+                :name "git branches out"
                 :results []
                 :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
                             ::refresh-results]
