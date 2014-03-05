@@ -31,7 +31,7 @@
       [:tr
        [:td (if this-one? "->" "") ]
        [:td {:class (if this-one? "current" "not-current")}
-        (cui/make_button branch "checkout branch" nil)]
+        (cui/make_button branch "checkout branch" git-checkout)]
 
        [:td sha1]
        [:td desc]])]])
@@ -80,6 +80,10 @@
 
 (defn git-branches []
   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
+
+
+(defn git-checkout [branch action]
+  (git/git-command-ignore-out "checkout" branch))
 
 
 (cmd/command {:command ::branches
