@@ -8,7 +8,8 @@
             [lt.util.dom :as dom]
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
-            [lt.plugins.gitlight.common-ui :as cui])
+            [lt.plugins.gitlight.common-ui :as cui]
+            [lt.plugins.gitlight.remote-com :as remcom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
@@ -28,6 +29,7 @@
        [:td (if this-one? "->" "") ]
        [:td {:class (if this-one? "current" "not-current")}
         (cui/make_button branch "checkout branch" git-checkout)]
+       [:t (cui/make_button "push it!" branch git-push-it!)]
        [:td sha1]
        [:td desc]])]])
 
@@ -75,12 +77,20 @@
   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
 
 
+
 (defn git-checkout [branch action]
   (git/git-command-ignore-out "checkout" branch)
-  (git-branches)
-  (object/raise branches-out :refresh))
+  (git-branches))
+
+
+(defn git-push-it! [action branch]
+  (remcom/git-push-remote-branch "origin" branch)
+  (git-branches))
+
 
 
 (cmd/command {:command ::branches
               :desc "gitlight: branches"
               :exec git-branches})
+
+
