@@ -29,8 +29,10 @@
    [:table
     (for [[this-one? [branch sha1 desc]] (:results @this)]
       [:tr
-       [:td (if this-one? "->" "")]
-       [:td branch]
+       [:td (if this-one? "->" "") ]
+       [:td {:class (if this-one? "current" "not-current")}
+        (cui/make_button branch "checkout branch" nil)]
+
        [:td sha1]
        [:td desc]])]])
 
@@ -50,7 +52,7 @@
           :triggers #{:proc.out}
           :reaction (fn [obj data]
                       (let [lines (string/split-lines (.toString data))
-                            splitted (reverse (sort (map git-branch-splitter lines)))]
+                            splitted (map git-branch-splitter lines)]
                         (tabs/add-or-focus! branches-out)
                         (object/merge! branches-out {:results splitted})
                         (object/raise branches-out :refresh))))
