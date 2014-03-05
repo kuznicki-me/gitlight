@@ -30,6 +30,7 @@
        [:td {:class (if this-one? "current" "not-current")}
         (cui/make_button branch "checkout branch" git-checkout)]
        [:t (cui/make_button "push it!" branch git-push-it!)]
+       [:t (cui/make_button "pull it!" branch git-pull-it!)]
        [:td sha1]
        [:td desc]])]])
 
@@ -85,6 +86,11 @@
 
 (defn git-push-it! [action branch]
   (remcom/git-push-remote-branch "origin" branch)
+  (git-branches))
+
+
+(defn git-pull-it! [action branch]
+  (remcom/git-pull-remote-branch "origin" branch)
   (git-branches))
 
 

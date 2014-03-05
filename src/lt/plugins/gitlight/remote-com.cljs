@@ -16,5 +16,9 @@
   (git/git-command-ignore-out "push" remote branch))
 
 
+(defn git-pull-remote-branch [remote branch]
+  (git/git-command-ignore-out "pull" remote branch))
+
+
 (defn git-pull []
   (git/git-command-ignore-out "pull"))
