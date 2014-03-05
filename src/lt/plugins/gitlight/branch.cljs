@@ -83,7 +83,9 @@
 
 
 (defn git-checkout [branch action]
-  (git/git-command-ignore-out "checkout" branch))
+  (git/git-command-ignore-out "checkout" branch)
+  (git-branches)
+  (object/raise branches-out :refresh))
 
 
 (cmd/command {:command ::branches
