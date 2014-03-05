@@ -17,3 +17,12 @@
 .gitlight-status .untracked li.untracked {
   color: #43acd8;
 }
+
+.gitlight-branches table td {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.gitlight-branches table td.not-current button  {
+  background-color: #007c00;
+}

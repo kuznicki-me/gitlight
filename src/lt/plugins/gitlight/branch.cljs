@@ -25,7 +25,7 @@
 
 
 (defui branch-panel [this]
-  [:div [:h1 "Branches"]
+  [:div.gitlight-branches [:h1 "Branches"]
    [:table
     (for [[this-one? [branch sha1 desc]] (:results @this)]
       [:tr
@@ -42,6 +42,7 @@
           :reaction (fn [this]
                       (println "refreshing")
                       (let [new-cnt (branch-panel this)]
+                        (.log js/console new-cnt)
                         (cui/dom-reset (dom/parent (:content @this)) new-cnt)
                         (object/merge! this {:content new-cnt} ))))
 
