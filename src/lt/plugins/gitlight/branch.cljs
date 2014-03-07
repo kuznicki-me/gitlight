@@ -26,12 +26,12 @@
    [:table
     (for [[this-one? [branch sha1 desc]] (:results @this)]
       [:tr
-       [:td (if this-one? "->" "") ]
+       [:td.merge (if this-one? "->" "")]
        [:td {:class (if this-one? "current" "not-current")}
         (cui/make_button branch "checkout branch" git-checkout)]
-       [:t (cui/make_button "push it!" branch git-push-it!)]
-       [:t (cui/make_button "pull it!" branch git-pull-it!)]
+       [:td (if this-one? "" (cui/make_button "merge" branch git-merge))]
        [:td sha1]
+       [:t (cui/make_button "push it!" branch git-push-it!)]
        [:td desc]])]])
 
 
@@ -78,6 +78,10 @@
   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
 
 
+(defn git-merge [action branch]
+  (git/git-ignore-out "merge" branch)
+  (git-branches))
+
 
 (defn git-checkout [branch action]
   (git/git-command-ignore-out "checkout" branch)
@@ -86,11 +90,6 @@
 
 (defn git-push-it! [action branch]
   (remcom/git-push-remote-branch "origin" branch)
-  (git-branches))
-
-
-(defn git-pull-it! [action branch]
-  (remcom/git-pull-remote-branch "origin" branch)
   (git-branches))
 
 
