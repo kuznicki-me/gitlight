@@ -44,14 +44,14 @@
 
 
 
-(def file-ops {:merge-conflict[["resolve" back/git-add]
-                               ["diff"   nil]]
-               :not-staged [["stage" back/git-add]
-                            ["diff"   nil]
-                            ["revert" nil]
-                            ["stash"  nil]]
+(def file-ops {:merge-conflict[["resolve" back/git-add]]
+                               ;["diff"   nil]]
+               :not-staged [["stage" back/git-add]]
+                            ;["diff"   nil]
+                            ;["revert" nil]
+                            ;["stash"  nil]]
                :untracked [["add"    back/git-add]
-                           ["ignore" nil]
+                           ;["ignore" nil]
                            ["delete" back/bin-rm]]
                :staged [["unstage" back/git-reset]]})
 
@@ -60,10 +60,10 @@
 (def repo-ops {:commit ["commit" commit/git-commit]
                :push   ["push"   remote/git-push]
                :pull   ["pull"   remote/git-pull]
-               :fetch  ["fetch"  remote/git-fetch]
-               :log    ["log"    nil]
-               :merge  ["merge"  nil]
-               :tag    ["tag"    nil]})
+               :fetch  ["fetch"  remote/git-fetch]})
+               ;:log    ["log"    nil]
+               ;:merge  ["merge"  nil]
+               ;:tag    ["tag"    nil]})
 
 
 (defui file [g-name [f t]]
