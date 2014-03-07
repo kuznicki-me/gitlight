@@ -79,7 +79,7 @@
 
 
 (defn git-merge [action branch]
-  (git/git-ignore-out "merge" branch)
+  (git/git-command-ignore-out "merge" branch)
   (git-branches))
 
 
