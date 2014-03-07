@@ -28,8 +28,10 @@
       [:tr
        [:td (if this-one? "->" "")]
        [:td {:class (if this-one? "current" "not-current")}
-        (cui/make_button branch "checkout branch" git-checkout)]
-       [:td.merge (if this-one? "" (cui/make_button "merge" branch git-merge))]
+             (cui/make_button branch "checkout branch" git-checkout)]
+       (if this-one?
+         [:td.pull (cui/make_button "pull!" branch (fn [x y] (remcom/git-pull)))]
+         [:td.merge (cui/make_button "merge" branch git-merge)])
        [:td sha1]
        [:td.push (cui/make_button "push it!" branch git-push-it!)]
        [:td desc]])

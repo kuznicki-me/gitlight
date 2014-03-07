@@ -23,8 +23,12 @@
   padding-right: 5px;
 }
 
-.gitlight-branches table td.merge button  {
+.gitlight-branches table td.pull button  {
   background-color: #367bc9;
+}
+
+.gitlight-branches table td.merge button  {
+  background-color: #114682;
 }
 
 .gitlight-branches table td.current button  {
