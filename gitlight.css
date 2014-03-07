@@ -23,6 +23,23 @@
   padding-right: 5px;
 }
 
+.gitlight-branches table td.merge button  {
+  background-color: #367bc9;
+}
+
+.gitlight-branches table td.current button  {
+  background-color: #7e9100;
+}
+
 .gitlight-branches table td.not-current button  {
+  background-color: #005000;
+}
+
+.gitlight-branches table td.new-branch button  {
   background-color: #007c00;
 }
+
+.gitlight-branches table td.push button  {
+  background-color: #c05623;
+}
+

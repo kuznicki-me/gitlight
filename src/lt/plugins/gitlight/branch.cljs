@@ -26,12 +26,12 @@
    [:table
     (for [[this-one? [branch sha1 desc]] (:results @this)]
       [:tr
-       [:td.merge (if this-one? "->" "")]
+       [:td (if this-one? "->" "")]
        [:td {:class (if this-one? "current" "not-current")}
         (cui/make_button branch "checkout branch" git-checkout)]
-       [:td (if this-one? "" (cui/make_button "merge" branch git-merge))]
+       [:td.merge (if this-one? "" (cui/make_button "merge" branch git-merge))]
        [:td sha1]
-       [:t (cui/make_button "push it!" branch git-push-it!)]
+       [:td.push (cui/make_button "push it!" branch git-push-it!)]
        [:td desc]])
     [:tr
      [:td]
