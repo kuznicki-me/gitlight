@@ -3,7 +3,7 @@ version 0.0.2
 
 Fixes:
  * Hide/not open status on file not in git repo.  Thanks jsyrjala!
- * Fix pathing (tested on Linux, should work on MacOS, not tested on Windows).
+ * Fix pathing (tested on Linux and Windows, should work on MacOS).
 
 New Features:
  * Basic self tests.  Run them if the plugin does not work, maybe it will tell

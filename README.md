@@ -11,6 +11,10 @@ on Linux and Mac try:
     $ whereis git
     # and/or
     $ which git
+    
+on Windows, you are using GitHub, binary files are usually located in place like:
+
+    C:\\Users\\<username>\\AppData\\Local\\GitHub\\PortableGit_<numbersandletters>\\bin\\git.exe
 
 Default config:
 
