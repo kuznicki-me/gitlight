@@ -33,13 +33,13 @@
 (def commit-input (object/create ::commit-input))
 
 
-(cmd/command {:command ::whatevers
-              :desc "git: commit"
+(cmd/command {:command ::git-commit
+              :desc "gitlight: commit"
               :exec git-commit})
 
 
 (defn git-commit []
-  (popup/popup! {:header  "commit message plz"
+  (popup/popup! {:header  "commit message?"
                  :body (input commit-input)
                  :buttons [{:label "commit"
                             :action (fn []
