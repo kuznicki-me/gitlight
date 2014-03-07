@@ -32,7 +32,11 @@
        [:td (if this-one? "" (cui/make_button "merge" branch git-merge))]
        [:td sha1]
        [:t (cui/make_button "push it!" branch git-push-it!)]
-       [:td desc]])]])
+       [:td desc]])
+    [:tr
+     [:td]
+     [:td.new-branch (cui/make_button "make new branch" nil git-new-branch)]]
+    ]])
 
 
 (behavior ::refresh-results
@@ -92,6 +96,14 @@
   (remcom/git-push-remote-branch "origin" branch)
   (git-branches))
 
+
+(defn git-new-branch [action branch]
+  (cui/input-popup "new branch name" "create" git-create-new-branch))
+
+
+(defn git-create-new-branch [branch]
+  (git/git-command-ignore-out "branch" branch)
+  (git-branches))
 
 
 (cmd/command {:command ::branches

@@ -1209,15 +1209,15 @@ goog.require('lt.objs.command');
 goog.require('lt.plugins.gitlight.git');
 lt.plugins.gitlight.branch.git_branch_splitter = (function git_branch_splitter(line){var active_QMARK_ = cljs.core._EQ_.call(null,"*",cljs.core.first.call(null,line));var to_cut = cljs.core.subs.call(null,line,2);var splitted = clojure.string.split.call(null,to_cut,/\s+/,3);return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [active_QMARK_,splitted], null);
 });
-lt.plugins.gitlight.branch.branch_panel = (function branch_panel(this$){var e__8114__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.gitlight-branches","div.gitlight-branches",1801709646),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",1013907515),"Branches"], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"table","table",1124020032),(function (){var iter__7469__auto__ = (function iter__8327(s__8328){return (new cljs.core.LazySeq(null,(function (){var s__8328__$1 = s__8328;while(true){
-var temp__4092__auto__ = cljs.core.seq.call(null,s__8328__$1);if(temp__4092__auto__)
-{var s__8328__$2 = temp__4092__auto__;if(cljs.core.chunked_seq_QMARK_.call(null,s__8328__$2))
-{var c__7467__auto__ = cljs.core.chunk_first.call(null,s__8328__$2);var size__7468__auto__ = cljs.core.count.call(null,c__7467__auto__);var b__8330 = cljs.core.chunk_buffer.call(null,size__7468__auto__);if((function (){var i__8329 = 0;while(true){
-if((i__8329 < size__7468__auto__))
-{var vec__8335 = cljs.core._nth.call(null,c__7467__auto__,i__8329);var this_one_QMARK_ = cljs.core.nth.call(null,vec__8335,0,null);var vec__8336 = cljs.core.nth.call(null,vec__8335,1,null);var branch = cljs.core.nth.call(null,vec__8336,0,null);var sha1 = cljs.core.nth.call(null,vec__8336,1,null);var desc = cljs.core.nth.call(null,vec__8336,2,null);cljs.core.chunk_append.call(null,b__8330,new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tr","tr",1013907952),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td.merge","td.merge",1293221548),(cljs.core.truth_(this_one_QMARK_)?"->":"")], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",1108647146),(cljs.core.truth_(this_one_QMARK_)?"current":"not-current")], null),lt.plugins.gitlight.common_ui.make_button.call(null,branch,"checkout branch",lt.plugins.gitlight.branch.git_checkout)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),(cljs.core.truth_(this_one_QMARK_)?"":lt.plugins.gitlight.common_ui.make_button.call(null,"merge",branch,lt.plugins.gitlight.branch.git_merge))], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),sha1], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"t","t",1013904358),lt.plugins.gitlight.common_ui.make_button.call(null,"push it!",branch,lt.plugins.gitlight.branch.git_push_it_BANG_)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),desc], null)], null));
+lt.plugins.gitlight.branch.branch_panel = (function branch_panel(this$){var e__8114__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.gitlight-branches","div.gitlight-branches",1801709646),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",1013907515),"Branches"], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"table","table",1124020032),(function (){var iter__7469__auto__ = (function iter__9197(s__9198){return (new cljs.core.LazySeq(null,(function (){var s__9198__$1 = s__9198;while(true){
+var temp__4092__auto__ = cljs.core.seq.call(null,s__9198__$1);if(temp__4092__auto__)
+{var s__9198__$2 = temp__4092__auto__;if(cljs.core.chunked_seq_QMARK_.call(null,s__9198__$2))
+{var c__7467__auto__ = cljs.core.chunk_first.call(null,s__9198__$2);var size__7468__auto__ = cljs.core.count.call(null,c__7467__auto__);var b__9200 = cljs.core.chunk_buffer.call(null,size__7468__auto__);if((function (){var i__9199 = 0;while(true){
+if((i__9199 < size__7468__auto__))
+{var vec__9205 = cljs.core._nth.call(null,c__7467__auto__,i__9199);var this_one_QMARK_ = cljs.core.nth.call(null,vec__9205,0,null);var vec__9206 = cljs.core.nth.call(null,vec__9205,1,null);var branch = cljs.core.nth.call(null,vec__9206,0,null);var sha1 = cljs.core.nth.call(null,vec__9206,1,null);var desc = cljs.core.nth.call(null,vec__9206,2,null);cljs.core.chunk_append.call(null,b__9200,new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tr","tr",1013907952),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td.merge","td.merge",1293221548),(cljs.core.truth_(this_one_QMARK_)?"->":"")], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",1108647146),(cljs.core.truth_(this_one_QMARK_)?"current":"not-current")], null),lt.plugins.gitlight.common_ui.make_button.call(null,branch,"checkout branch",lt.plugins.gitlight.branch.git_checkout)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),(cljs.core.truth_(this_one_QMARK_)?"":lt.plugins.gitlight.common_ui.make_button.call(null,"merge",branch,lt.plugins.gitlight.branch.git_merge))], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),sha1], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"t","t",1013904358),lt.plugins.gitlight.common_ui.make_button.call(null,"push it!",branch,lt.plugins.gitlight.branch.git_push_it_BANG_)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),desc], null)], null));
 {
-var G__8345 = (i__8329 + 1);
-i__8329 = G__8345;
+var G__9215 = (i__9199 + 1);
+i__9199 = G__9215;
 continue;
 }
 } else
@@ -1226,12 +1226,12 @@ continue;
 break;
 }
 })())
-{return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__8330),iter__8327.call(null,cljs.core.chunk_rest.call(null,s__8328__$2)));
+{return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__9200),iter__9197.call(null,cljs.core.chunk_rest.call(null,s__9198__$2)));
 } else
-{return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__8330),null);
+{return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__9200),null);
 }
 } else
-{var vec__8337 = cljs.core.first.call(null,s__8328__$2);var this_one_QMARK_ = cljs.core.nth.call(null,vec__8337,0,null);var vec__8338 = cljs.core.nth.call(null,vec__8337,1,null);var branch = cljs.core.nth.call(null,vec__8338,0,null);var sha1 = cljs.core.nth.call(null,vec__8338,1,null);var desc = cljs.core.nth.call(null,vec__8338,2,null);return cljs.core.cons.call(null,new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tr","tr",1013907952),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td.merge","td.merge",1293221548),(cljs.core.truth_(this_one_QMARK_)?"->":"")], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",1108647146),(cljs.core.truth_(this_one_QMARK_)?"current":"not-current")], null),lt.plugins.gitlight.common_ui.make_button.call(null,branch,"checkout branch",lt.plugins.gitlight.branch.git_checkout)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),(cljs.core.truth_(this_one_QMARK_)?"":lt.plugins.gitlight.common_ui.make_button.call(null,"merge",branch,lt.plugins.gitlight.branch.git_merge))], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),sha1], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"t","t",1013904358),lt.plugins.gitlight.common_ui.make_button.call(null,"push it!",branch,lt.plugins.gitlight.branch.git_push_it_BANG_)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),desc], null)], null),iter__8327.call(null,cljs.core.rest.call(null,s__8328__$2)));
+{var vec__9207 = cljs.core.first.call(null,s__9198__$2);var this_one_QMARK_ = cljs.core.nth.call(null,vec__9207,0,null);var vec__9208 = cljs.core.nth.call(null,vec__9207,1,null);var branch = cljs.core.nth.call(null,vec__9208,0,null);var sha1 = cljs.core.nth.call(null,vec__9208,1,null);var desc = cljs.core.nth.call(null,vec__9208,2,null);return cljs.core.cons.call(null,new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tr","tr",1013907952),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td.merge","td.merge",1293221548),(cljs.core.truth_(this_one_QMARK_)?"->":"")], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",1108647146),(cljs.core.truth_(this_one_QMARK_)?"current":"not-current")], null),lt.plugins.gitlight.common_ui.make_button.call(null,branch,"checkout branch",lt.plugins.gitlight.branch.git_checkout)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),(cljs.core.truth_(this_one_QMARK_)?"":lt.plugins.gitlight.common_ui.make_button.call(null,"merge",branch,lt.plugins.gitlight.branch.git_merge))], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),sha1], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"t","t",1013904358),lt.plugins.gitlight.common_ui.make_button.call(null,"push it!",branch,lt.plugins.gitlight.branch.git_push_it_BANG_)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938),desc], null)], null),iter__9197.call(null,cljs.core.rest.call(null,s__9198__$2)));
 }
 } else
 {return null;
@@ -1240,45 +1240,45 @@ break;
 }
 }),null,null));
 });return iter__7469__auto__.call(null,new cljs.core.Keyword(null,"results","results",2111450984).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,this$)));
-})()], null)], null));var seq__8339_8346 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,cljs.core.PersistentVector.EMPTY));var chunk__8340_8347 = null;var count__8341_8348 = 0;var i__8342_8349 = 0;while(true){
-if((i__8342_8349 < count__8341_8348))
-{var vec__8343_8350 = cljs.core._nth.call(null,chunk__8340_8347,i__8342_8349);var ev__8115__auto___8351 = cljs.core.nth.call(null,vec__8343_8350,0,null);var func__8116__auto___8352 = cljs.core.nth.call(null,vec__8343_8350,1,null);lt.util.dom.on.call(null,e__8114__auto__,ev__8115__auto___8351,func__8116__auto___8352);
+})(),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"tr","tr",1013907952),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td","td",1013907938)], null),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"td.new-branch","td.new-branch",3433852959),lt.plugins.gitlight.common_ui.make_button.call(null,"make new branch",null,lt.plugins.gitlight.branch.git_new_branch)], null)], null)], null)], null));var seq__9209_9216 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,cljs.core.PersistentVector.EMPTY));var chunk__9210_9217 = null;var count__9211_9218 = 0;var i__9212_9219 = 0;while(true){
+if((i__9212_9219 < count__9211_9218))
+{var vec__9213_9220 = cljs.core._nth.call(null,chunk__9210_9217,i__9212_9219);var ev__8115__auto___9221 = cljs.core.nth.call(null,vec__9213_9220,0,null);var func__8116__auto___9222 = cljs.core.nth.call(null,vec__9213_9220,1,null);lt.util.dom.on.call(null,e__8114__auto__,ev__8115__auto___9221,func__8116__auto___9222);
 {
-var G__8353 = seq__8339_8346;
-var G__8354 = chunk__8340_8347;
-var G__8355 = count__8341_8348;
-var G__8356 = (i__8342_8349 + 1);
-seq__8339_8346 = G__8353;
-chunk__8340_8347 = G__8354;
-count__8341_8348 = G__8355;
-i__8342_8349 = G__8356;
+var G__9223 = seq__9209_9216;
+var G__9224 = chunk__9210_9217;
+var G__9225 = count__9211_9218;
+var G__9226 = (i__9212_9219 + 1);
+seq__9209_9216 = G__9223;
+chunk__9210_9217 = G__9224;
+count__9211_9218 = G__9225;
+i__9212_9219 = G__9226;
 continue;
 }
 } else
-{var temp__4092__auto___8357 = cljs.core.seq.call(null,seq__8339_8346);if(temp__4092__auto___8357)
-{var seq__8339_8358__$1 = temp__4092__auto___8357;if(cljs.core.chunked_seq_QMARK_.call(null,seq__8339_8358__$1))
-{var c__7500__auto___8359 = cljs.core.chunk_first.call(null,seq__8339_8358__$1);{
-var G__8360 = cljs.core.chunk_rest.call(null,seq__8339_8358__$1);
-var G__8361 = c__7500__auto___8359;
-var G__8362 = cljs.core.count.call(null,c__7500__auto___8359);
-var G__8363 = 0;
-seq__8339_8346 = G__8360;
-chunk__8340_8347 = G__8361;
-count__8341_8348 = G__8362;
-i__8342_8349 = G__8363;
+{var temp__4092__auto___9227 = cljs.core.seq.call(null,seq__9209_9216);if(temp__4092__auto___9227)
+{var seq__9209_9228__$1 = temp__4092__auto___9227;if(cljs.core.chunked_seq_QMARK_.call(null,seq__9209_9228__$1))
+{var c__7500__auto___9229 = cljs.core.chunk_first.call(null,seq__9209_9228__$1);{
+var G__9230 = cljs.core.chunk_rest.call(null,seq__9209_9228__$1);
+var G__9231 = c__7500__auto___9229;
+var G__9232 = cljs.core.count.call(null,c__7500__auto___9229);
+var G__9233 = 0;
+seq__9209_9216 = G__9230;
+chunk__9210_9217 = G__9231;
+count__9211_9218 = G__9232;
+i__9212_9219 = G__9233;
 continue;
 }
 } else
-{var vec__8344_8364 = cljs.core.first.call(null,seq__8339_8358__$1);var ev__8115__auto___8365 = cljs.core.nth.call(null,vec__8344_8364,0,null);var func__8116__auto___8366 = cljs.core.nth.call(null,vec__8344_8364,1,null);lt.util.dom.on.call(null,e__8114__auto__,ev__8115__auto___8365,func__8116__auto___8366);
+{var vec__9214_9234 = cljs.core.first.call(null,seq__9209_9228__$1);var ev__8115__auto___9235 = cljs.core.nth.call(null,vec__9214_9234,0,null);var func__8116__auto___9236 = cljs.core.nth.call(null,vec__9214_9234,1,null);lt.util.dom.on.call(null,e__8114__auto__,ev__8115__auto___9235,func__8116__auto___9236);
 {
-var G__8367 = cljs.core.next.call(null,seq__8339_8358__$1);
-var G__8368 = null;
-var G__8369 = 0;
-var G__8370 = 0;
-seq__8339_8346 = G__8367;
-chunk__8340_8347 = G__8368;
-count__8341_8348 = G__8369;
-i__8342_8349 = G__8370;
+var G__9237 = cljs.core.next.call(null,seq__9209_9228__$1);
+var G__9238 = null;
+var G__9239 = 0;
+var G__9240 = 0;
+seq__9209_9216 = G__9237;
+chunk__9210_9217 = G__9238;
+count__9211_9218 = G__9239;
+i__9212_9219 = G__9240;
 continue;
 }
 }
@@ -1312,6 +1312,11 @@ lt.plugins.gitlight.branch.git_checkout = (function git_checkout(branch,action){
 return lt.plugins.gitlight.branch.git_branches.call(null);
 });
 lt.plugins.gitlight.branch.git_push_it_BANG_ = (function git_push_it_BANG_(action,branch){lt.plugins.gitlight.remote_com.git_push_remote_branch.call(null,"origin",branch);
+return lt.plugins.gitlight.branch.git_branches.call(null);
+});
+lt.plugins.gitlight.branch.git_new_branch = (function git_new_branch(action,branch){return lt.plugins.gitlight.common_ui.input_popup.call(null,"new branch name","create",lt.plugins.gitlight.branch.git_create_new_branch);
+});
+lt.plugins.gitlight.branch.git_create_new_branch = (function git_create_new_branch(branch){lt.plugins.gitlight.git.git_command_ignore_out.call(null,"branch",branch);
 return lt.plugins.gitlight.branch.git_branches.call(null);
 });
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.branch","branches","lt.plugins.gitlight.branch/branches",1924152112),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: branches",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.branch.git_branches], null));
