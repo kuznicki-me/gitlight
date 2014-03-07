@@ -1,3 +1,22 @@
+version 0.0.3
+=============
+New Features:
+ * Simple branch management -- merge, push, checkout and create new ones.  In
+   color!
+
+Changes:
+ * Commented out unused (yet!) buttons.  They will be back when we implement
+   them.
+ * Common UI elements got their own file.  Want to annoy users with input
+   popups?  There's a standard way to do it, now!
+
+Known Issues:
+ * The branches window does not refresh with commits made by status sidebar.
+   It refreshes itself on its own button clicks, or reruning the command.  It
+   is a bit inconsistent with the auto-refresh of status sidebar.
+
+
+
 version 0.0.2
 =============
 

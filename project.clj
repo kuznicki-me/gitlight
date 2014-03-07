@@ -1,2 +1,2 @@
-(defproject gitlight "0.0.1"
+(defproject gitlight "0.0.3"
   :dependencies [[org.clojure/clojure "1.5.1"]])
