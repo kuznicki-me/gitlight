@@ -10,6 +10,7 @@
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.remote-com :as remote]
             [lt.plugins.gitlight.common-ui :as cui]
+            [lt.plugins.gitlight.branch :as branch]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -84,7 +85,7 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (cui/make-button branch (str "Branch menu") nil)]]
+   [:h1 [:nobr (str "Branch: ") (cui/make-button branch (str "Branch menu") (fn [x y] (branch/git-branches)))]]
    [:h2 [:nobr "Root: " (cui/make-button git-root "Change repo" nil)]]
    [:br]
    ;(make-button "commit" git-root commit/git-commit)
