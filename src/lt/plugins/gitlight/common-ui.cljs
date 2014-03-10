@@ -59,6 +59,14 @@
                             :action clear-input}]}))
 
 
+(defn make-refresh-behavior [k fun]
+  (behavior k
+            :triggers #{:refresh}
+            :reaction (fn [this]
+                        (let [new-cnt (fun this)]
+                        (dom-reset (dom/parent (:content @this)) new-cnt)
+                        (object/merge! this {:content new-cnt} )))))
+
 
 (defn dom-truncate [node]
   (set! (.-innerHTML node) ""))

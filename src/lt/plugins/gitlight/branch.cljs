@@ -41,14 +41,14 @@
     ]])
 
 
-(behavior ::refresh-results
-          :triggers #{:refresh}
-          :reaction (fn [this]
-                      (let [new-cnt (branch-panel this)]
-                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
-                        (object/merge! this {:content new-cnt} ))))
+;(behavior ::refresh-results
+;          :triggers #{:refresh}
+;          :reaction (fn [this]
+;                      (let [new-cnt (branch-panel this)]
+;                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
+;                        (object/merge! this {:content new-cnt} ))))
 
-
+(def refresh-results (cui/make-refresh-behavior ::refresh-results branch-panel))
 
 
 (behavior ::git-branch.out
@@ -66,7 +66,7 @@
                 :name "git branches out"
                 :results []
                 :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
-                            ::refresh-results]
+                            refresh-results]
                 :init (fn [this]
                         (branch-panel this)))
 
