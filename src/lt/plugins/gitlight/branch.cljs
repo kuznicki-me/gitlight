@@ -48,16 +48,16 @@
 ;                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
 ;                        (object/merge! this {:content new-cnt} ))))
 
-(def refresh-results (cui/make-refresh-behavior ::refresh-results branch-panel))
+;(def refresh-results (cui/make-refresh-behavior ::refresh-results branch-panel))
 
 
 (defn parse-data [data]
   (let [lines (string/split-lines (.toString data))]
     (map git-branch-splitter lines)))
 
-(def git-branch-out (cui/make-refresh-tab-behavior branches-out
-                                                   ::git-branch.out
-                                                   parse-data))
+;(def git-branch-out (cui/make-refresh-tab-behavior branches-out
+;                                                   ::git-branch.out
+;                                                   parse-data))
 
 ;(behavior ::git-branch.out
 ;          :triggers #{:proc.out}
@@ -68,23 +68,25 @@
 
 
 
-(object/object* ::branches.out
-                :tags [:gitlight-branches.out]
-                :name "git branches out"
-                :results []
-                :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
-                            refresh-results]
-                :init (fn [this]
-                        (branch-panel this)))
+;(object/object* ::branches.out
+;                :tags [:gitlight-branches.out]
+;                :name "git branches out"
+;                :results []
+;                :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
+;                            refresh-results]
+;                :init (fn [this]
+;                        (branch-panel this)))
 
-(object/object* ::git-branch-output
-                :tags #{::git-branch-output}
-                :behaviors [git-branch-out])
+;(object/object* ::git-branch-output
+;                :tags #{::git-branch-output}
+;                :behaviors [git-branch-out])
 
 
-(def git-branch-output (object/create ::git-branch-output))
+;(def git-branch-output (object/create ::git-branch-output))
 
-(def branches-out (object/create ::branches.out))
+;(def branches-out (object/create ::branches.out))
+
+(def git-branch-output (cui/make-output-tab-object ::git-branches parse-data branch-panel))
 
 
 (defn git-branches []

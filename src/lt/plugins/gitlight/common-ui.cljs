@@ -59,11 +59,11 @@
                             :action clear-input}]}))
 
 
-(defn make-refresh-behavior [k fun]
+(defn make-refresh-behavior [k ui-fun]
   (behavior k
             :triggers #{:refresh}
             :reaction (fn [this]
-                        (let [new-cnt (fun this)]
+                        (let [new-cnt (ui-fun this)]
                         (dom-reset (dom/parent (:content @this)) new-cnt)
                         (object/merge! this {:content new-cnt} )))))
 
@@ -75,6 +75,35 @@
                         (tabs/add-or-focus! obj)
                         (object/merge! obj {:results (data-parsing-fun data)})
                         (object/raise obj :refresh))))
+
+
+(defn make-output-tab-object [k data-parsing-fun ui-fun]
+  (let [kwrdstr (subs (str k) 1)
+        data-keeping-obj (str kwrdstr "-out")
+        refresh-str (str kwrdstr "-refresh-results")
+        refresh-tab-str (str kwrdstr "-refresh-tab-results")
+        command-output-str (str kwrdstr "-output")
+
+        refresh-results (make-refresh-behavior (keyword refresh-str) ui-fun)
+
+        out-obj (object/object* (keyword data-keeping-obj)
+                                :tags [:gitlight-tab.out]
+                                :name data-keeping-obj
+                                :results []
+                                :behaviors [::on-close-destroy
+                                            refresh-results]
+                                :init (fn [this]
+                                        (ui-fun this)))
+        out (object/create out-obj)
+
+        parse-command-output (make-refresh-tab-behavior out
+                                                        (keyword refresh-tab-kwrd)
+                                                        data-parsing-fun)]
+
+    (object/create (object/object* (keyword command-output-str)
+                                   :tags #{:gitlight-tab-output}
+                                   :behaviors [parse-command-output]))))
+
 
 
 (defn dom-truncate [node]
