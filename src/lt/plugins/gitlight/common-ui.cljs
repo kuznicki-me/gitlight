@@ -99,9 +99,9 @@
                                             refresh-results]
                                 :init (fn [this]
                                         (ui-fun this)))
-        tab (object/create out-obj)
+        tab (object/create tab-obj)
 
-        parse-command-output (make-refresh-tab-behavior out
+        parse-command-output (make-refresh-tab-behavior tab
                                                         refresh-tab-kwd
                                                         data-parsing-fun)]
 
