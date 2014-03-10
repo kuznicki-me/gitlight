@@ -13,14 +13,6 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-
-(defn git-branch-splitter [line]
-  (let [active? (= \* (first line))
-        to_cut  (subs line 2)
-        splitted (string/split to_cut #"\s+" 3)]
-      [active? splitted]))
-
-
 (defui branch-panel [this]
   [:div.gitlight-branches [:h1 "Branches"]
    [:table
@@ -37,54 +29,21 @@
        [:td desc]])
     [:tr
      [:td]
-     [:td.new-branch (cui/make_button "make new branch" nil git-new-branch)]]
+     [:td.new-branch (cui/make_button "make a new branch" nil git-new-branch)]]
     ]])
 
 
-;(behavior ::refresh-results
-;          :triggers #{:refresh}
-;          :reaction (fn [this]
-;                      (let [new-cnt (branch-panel this)]
-;                        (cui/dom-reset (dom/parent (:content @this)) new-cnt)
-;                        (object/merge! this {:content new-cnt} ))))
-
-;(def refresh-results (cui/make-refresh-behavior ::refresh-results branch-panel))
+(defn git-branch-splitter [line]
+  (let [active? (= \* (first line))
+        to_cut  (subs line 2)
+        splitted (string/split to_cut #"\s+" 3)]
+      [active? splitted]))
 
 
 (defn parse-data [data]
   (let [lines (string/split-lines (.toString data))]
     (map git-branch-splitter lines)))
 
-;(def git-branch-out (cui/make-refresh-tab-behavior branches-out
-;                                                   ::git-branch.out
-;                                                   parse-data))
-
-;(behavior ::git-branch.out
-;          :triggers #{:proc.out}
-;          :reaction (fn [obj data]
-;                      (tabs/add-or-focus! branches-out)
-;                      (object/merge! branches-out {:results (parse-data data)})
-;                      (object/raise branches-out :refresh)))
-
-
-
-;(object/object* ::branches.out
-;                :tags [:gitlight-branches.out]
-;                :name "git branches out"
-;                :results []
-;                :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
-;                            refresh-results]
-;                :init (fn [this]
-;                        (branch-panel this)))
-
-;(object/object* ::git-branch-output
-;                :tags #{::git-branch-output}
-;                :behaviors [git-branch-out])
-
-
-;(def git-branch-output (object/create ::git-branch-output))
-
-;(def branches-out (object/create ::branches.out))
 
 (def git-branch-output (cui/make-output-tab-object ::git-branches parse-data branch-panel))
 
