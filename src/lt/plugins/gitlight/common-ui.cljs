@@ -84,14 +84,14 @@
 
 
 (defn make-output-tab-object [window-name k data-parsing-fun ui-fun]
-  (let [[data-keeping-kwd
+  (let [[tab-kwd
          refresh-kwd
          refresh-tab-kwd
          command-output-kwd] (make-keywords k)
 
         refresh-results (make-refresh-behavior refresh-kwd ui-fun)
 
-        out-obj (object/object* data-keeping-kwd
+        tab-obj (object/object* tab-kwd
                                 :tags [:gitlight-tab.out]
                                 :name window-name
                                 :results []
@@ -99,7 +99,7 @@
                                             refresh-results]
                                 :init (fn [this]
                                         (ui-fun this)))
-        out (object/create out-obj)
+        tab (object/create out-obj)
 
         parse-command-output (make-refresh-tab-behavior out
                                                         refresh-tab-kwd
