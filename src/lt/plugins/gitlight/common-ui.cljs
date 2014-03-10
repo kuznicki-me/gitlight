@@ -68,6 +68,15 @@
                         (object/merge! this {:content new-cnt} )))))
 
 
+(defn make-refresh-tab-behavior [obj k data-parsing-fun]
+  (behavior k
+            :triggers #{:proc.out}
+            :reaction (fn [this data]
+                        (tabs/add-or-focus! obj)
+                        (object/merge! obj {:results (data-parsing-fun data)})
+                        (object/raise obj :refresh))))
+
+
 (defn dom-truncate [node]
   (set! (.-innerHTML node) ""))
 

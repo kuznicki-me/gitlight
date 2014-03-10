@@ -51,14 +51,21 @@
 (def refresh-results (cui/make-refresh-behavior ::refresh-results branch-panel))
 
 
-(behavior ::git-branch.out
-          :triggers #{:proc.out}
-          :reaction (fn [obj data]
-                      (let [lines (string/split-lines (.toString data))
-                            splitted (map git-branch-splitter lines)]
-                        (tabs/add-or-focus! branches-out)
-                        (object/merge! branches-out {:results splitted})
-                        (object/raise branches-out :refresh))))
+(defn parse-data [data]
+  (let [lines (string/split-lines (.toString data))]
+    (map git-branch-splitter lines)))
+
+(def git-branch-out (cui/make-refresh-tab-behavior branches-out
+                                                   ::git-branch.out
+                                                   parse-data))
+
+;(behavior ::git-branch.out
+;          :triggers #{:proc.out}
+;          :reaction (fn [obj data]
+;                      (tabs/add-or-focus! branches-out)
+;                      (object/merge! branches-out {:results (parse-data data)})
+;                      (object/raise branches-out :refresh)))
+
 
 
 (object/object* ::branches.out
@@ -72,7 +79,7 @@
 
 (object/object* ::git-branch-output
                 :tags #{::git-branch-output}
-                :behaviors [::git-branch.out])
+                :behaviors [git-branch-out])
 
 
 (def git-branch-output (object/create ::git-branch-output))
