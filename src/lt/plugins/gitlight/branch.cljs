@@ -45,7 +45,7 @@
     (map git-branch-splitter lines)))
 
 
-(def git-branch-output (cui/make-output-tab-object ::git-branches parse-data branch-panel))
+(def git-branch-output (cui/make-output-tab-object "Git branches" ::git-branches parse-data branch-panel))
 
 
 (defn git-branches []

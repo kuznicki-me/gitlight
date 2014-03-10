@@ -77,18 +77,23 @@
                         (object/raise obj :refresh))))
 
 
-(defn make-output-tab-object [k data-parsing-fun ui-fun]
-  (let [kwrdstr (subs (str k) 1)
-        data-keeping-obj (str kwrdstr "-out")
-        refresh-str (str kwrdstr "-refresh-results")
-        refresh-tab-str (str kwrdstr "-refresh-tab-results")
-        command-output-str (str kwrdstr "-output")
+(defn make-keywords [k]
+   (let [kwrdstr (subs (str k) 1)]
+     (map (fn [x] (keyword (str kwrdstr x)))
+          ["-out" "-refresh-results" "-refresh-tab-results""-output"])))
 
-        refresh-results (make-refresh-behavior (keyword refresh-str) ui-fun)
 
-        out-obj (object/object* (keyword data-keeping-obj)
+(defn make-output-tab-object [window-name k data-parsing-fun ui-fun]
+  (let [[data-keeping-kwd
+         refresh-kwd
+         refresh-tab-kwd
+         command-output-kwd] (make-keywords k)
+
+        refresh-results (make-refresh-behavior refresh-kwd ui-fun)
+
+        out-obj (object/object* data-keeping-kwd
                                 :tags [:gitlight-tab.out]
-                                :name data-keeping-obj
+                                :name window-name
                                 :results []
                                 :behaviors [::on-close-destroy
                                             refresh-results]
@@ -97,10 +102,10 @@
         out (object/create out-obj)
 
         parse-command-output (make-refresh-tab-behavior out
-                                                        (keyword refresh-tab-kwrd)
+                                                        refresh-tab-kwd
                                                         data-parsing-fun)]
 
-    (object/create (object/object* (keyword command-output-str)
+    (object/create (object/object* command-output-kwd
                                    :tags #{:gitlight-tab-output}
                                    :behaviors [parse-command-output]))))
 
