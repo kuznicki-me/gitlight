@@ -36,7 +36,7 @@
 
 (defui diff-panel [this]
   (let [output (:results @this)]
-    [:div.diff-panel {:style "overflow: scroll;"}
+    [:div.gitlight-diff {:style "overflow: scroll;"}
      [:h1 (:command output)]
      [:h1 (:header output)]
      [:table
@@ -54,7 +54,7 @@
              [:td.right [:pre right]]])))]]))
 
 
-(def context 1000000)
+(def context 2)
 
 (defn git-diff []
   (git/git-command git-diff-output

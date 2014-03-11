@@ -47,3 +47,15 @@
   background-color: #c05623;
 }
 
+.gitlight-diff table tr.context {
+  background-color: #737373;
+}
+
+.gitlight-diff table tr.changed td.left {
+  background-color: #b20202;
+}
+
+.gitlight-diff table tr.changed td.right {
+  background-color: #159908;
+}
+
