@@ -6,22 +6,47 @@
             [lt.util.dom :as dom]
             [lt.objs.editor.pool :as pool]
             [clojure.string :as string]
+            [clojure.walk :as walk]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
+(defn val-or-emptystr [what]
+  (if (nil? what)
+    "(intentionally left empty)"
+    what))
+
+
+(defn breaker [left right]
+  (let [l (first left)
+        r (first right)]
+    (if (some identity [l r])
+      (cons [(val-or-emptystr l) (val-or-emptystr r)]
+            (breaker (rest left) (rest right))))))
+
+
+(defn columner [lines]
+  (if (= \space (first (first lines)))
+    (breaker lines lines)
+    (let [partitioned (walk/keywordize-keys (group-by first lines))
+          left (:- partitioned)
+          right (:+ partitioned)]
+      (breaker left right))))
+
+
 (defui diff-panel [this]
   (let [output (:results @this)]
-  [:div
+  [:div.diff-panel {:style "overflow: scroll;"}
   [:h1 (:title output)]
-   [:p (:content output)]
-   ]
-  ))
+   [:table
+    [:tr [:td "first"] [:td "second"]]
+    (for [line-groups (:content output)]
+      (for [[left right] (columner line-groups)]
+        [:tr [:td [:pre left]] [:td [:pre right]]]))]]))
 
 
 (def context 1000000)
-
 
 (defn git-diff []
   (git/git-command git-diff-output
@@ -36,7 +61,7 @@
         title (take 2 data)
         ;left (nth data 3)
         ;right (nth data 4)
-        content (drop 5 data)]
+        content (partition-by #(= \space (first %)) (drop 5 data))]
     {:title title
      :content content}
 
