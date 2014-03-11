@@ -12,27 +12,6 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn val-or-emptystr [what]
-  (if (nil? what)
-    ">>>>>>>intentionally left empty<<<<<<<<<"
-    what))
-
-
-(defn breaker [left right]
-  (let [m [(first left) (first right)]]
-    (if (some identity m)
-      (cons (map val-or-emptystr m)
-            (breaker (rest left) (rest right))))))
-
-
-(defn columner [lines]
-  (if (= \space (first (first lines)))
-    {:class "context" :cols (breaker lines lines)}
-    (let [partitioned (walk/keywordize-keys (group-by first lines))
-          left (:- partitioned)
-          right (:+ partitioned)]
-      {:class "changed" :cols (breaker left right)})))
-
 
 (defui diff-panel [this]
   (let [output (:results @this)]
@@ -66,7 +45,35 @@
      ]))
 
 
+
 (def context (atom 3))
+
+
+
+(defn val-or-emptystr [what]
+  (if (nil? what)
+    ""
+    what))
+
+
+
+(defn breaker [left right]
+  (let [m [(first left) (first right)]]
+    (if (some identity m)
+      (cons (map val-or-emptystr m)
+            (breaker (rest left) (rest right))))))
+
+
+
+(defn columner [lines]
+  (if (= \space (first (first lines)))
+    {:class "context" :cols (breaker lines lines)}
+    (let [partitioned (walk/keywordize-keys (group-by first lines))
+          left (:- partitioned)
+          right (:+ partitioned)]
+      {:class "changed" :cols (breaker left right)})))
+
+
 
 (defn git-diff []
   (git/git-command git-diff-output
@@ -75,14 +82,15 @@
                    "--"
                    (-> @(pool/last-active) :info :path)))
 
+
+
 (defn split-into-groups [lines]
   (when (not (empty? lines))
     (let [where (first lines)
           [content leftovers] (split-with #(not= "@" (first %)) (rest lines))]
-      (println "cont:" content)
-      (println "party:" (partition-by #(= \space (first %)) content))
-
-      (println "lefto:" leftovers)
+;      (println "cont:" content)
+;      (println "party:" (partition-by #(= \space (first %)) content))
+;      (println "lefto:" leftovers)
 
       (cons {:location where
              :content (partition-by #(= \space (first %)) content)}
@@ -102,17 +110,17 @@
      :header header
      :left left
      :right right
-     :groups groups}
+     :groups groups}))
 
-        ))
 
-(def git-diff-output (cui/make-output-tab-object "Git diff"
-                                                 ::gitlight-diff
-                                                 parse-git-diff
-                                                 diff-panel))
+
+(def git-diff-output
+  (cui/make-output-tab-object "Git diff"
+                              ::gitlight-diff
+                              parse-git-diff
+                              diff-panel))
 
 
 (cmd/command {:command ::git-diff
               :desc "gitlight: diff"
-              :exec (fn []
-                      (git-diff))})
+              :exec git-diff})
