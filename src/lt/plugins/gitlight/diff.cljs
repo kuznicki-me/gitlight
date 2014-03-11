@@ -27,11 +27,11 @@
 
 (defn columner [lines]
   (if (= \space (first (first lines)))
-    {:class "context" :content (breaker lines lines)}
+    {:class "context" :cols (breaker lines lines)}
     (let [partitioned (walk/keywordize-keys (group-by first lines))
           left (:- partitioned)
           right (:+ partitioned)]
-      {:class "changed" :content (breaker left right)})))
+      {:class "changed" :cols (breaker left right)})))
 
 
 (defui diff-panel [this]
@@ -44,17 +44,21 @@
        [:td.left [:b (:left output)]]
        [:td.left [:b (:right output)]]]
 
-      (for [line-group (:content output)]
-        (let [columned (columner line-group)
-              c (:class columned)
-              columns (:content columned)]
-          (for [[left right] columns]
-            [:tr {:class c}
-             [:td.left [:pre left]]
-             [:td.right [:pre right]]])))]]))
+      (for [changes-group (:groups output)]
+        (cons [:tr.where [:td [:b (:location changes-group)]]]
+              (for [line-group (:content changes-group)]
+                (let [columned (columner line-group)
+                      c (:class columned)
+                      columns (:cols columned)]
+                  (for [[left right] columns]
+                    [:tr {:class c}
+                     [:td.left [:pre left]]
+                     [:td.right [:pre right]]])))))
+      ]
+     ]))
 
 
-(def context 2)
+(def context 3)
 
 (defn git-diff []
   (git/git-command git-diff-output
@@ -64,18 +68,43 @@
                    (-> @(pool/last-active) :info :path)))
 
 
+(defn diff-group->map [group]
+  (let [where (first group)
+        lines (rest group)]
+    {:where where
+     :content (partition-by #(= \space %) lines)}
+    )
+  )
+
+
+(defn split-into-groups [lines]
+  (when (not (empty? lines))
+    (let [where (first lines)
+          [content leftovers] (split-with #(not= "@" (first %)) (rest lines))]
+      (println "cont:" content)
+      (println "party:" (partition-by #(= \space (first %)) content))
+
+      (println "lefto:" leftovers)
+
+      (cons {:location where
+             :content (partition-by #(= \space (first %)) content)}
+            (split-into-groups leftovers))
+      )))
+
+
 (defn parse-git-diff [raw-data]
   (let [data (string/split-lines (.toString raw-data))
         [command
          header
          left
          right] (take 4 data)
-        content (partition-by #(= \space (first %)) (drop 5 data))]
+        groups (split-into-groups (drop 4 data))]
+    (print groups)
     {:command command
      :header header
      :left left
      :right right
-     :content content}
+     :groups groups}
 
         ))
 
