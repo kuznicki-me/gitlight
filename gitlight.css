@@ -52,10 +52,11 @@
 }
 
 .gitlight-diff table tr.changed td.left {
-  background-color: #b20202;
+
+  background-color: #2964db;
 }
 
 .gitlight-diff table tr.changed td.right {
-  background-color: #159908;
+  background-color: #468e2a;
 }
 
