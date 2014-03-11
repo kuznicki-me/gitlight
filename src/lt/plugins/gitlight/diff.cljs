@@ -37,6 +37,14 @@
 (defui diff-panel [this]
   (let [output (:results @this)]
     [:div.gitlight-diff {:style "overflow: scroll;"}
+     [:div.context
+      (cui/make-button "-" "-" (fn [x y] (swap! context dec) (git-diff)))
+      (str "context: " @context)
+      (cui/make-button "+" "+" (fn [x y] (swap! context inc) (git-diff)))]
+     [:div.more-context
+      (cui/make-button "whole file" "whole file" (fn [x y] (reset! context 100000) (git-diff)))
+      (cui/make-button "reset" "reset" (fn [x y] (reset! context 3) (git-diff)))]
+
      [:h1 (:command output)]
      [:h1 (:header output)]
      [:table
@@ -58,24 +66,14 @@
      ]))
 
 
-(def context 3)
+(def context (atom 3))
 
 (defn git-diff []
   (git/git-command git-diff-output
                    "diff"
-                   (str "-U" context)
+                   (str "-U" @context)
                    "--"
                    (-> @(pool/last-active) :info :path)))
-
-
-(defn diff-group->map [group]
-  (let [where (first group)
-        lines (rest group)]
-    {:where where
-     :content (partition-by #(= \space %) lines)}
-    )
-  )
-
 
 (defn split-into-groups [lines]
   (when (not (empty? lines))
