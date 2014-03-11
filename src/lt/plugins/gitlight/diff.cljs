@@ -14,15 +14,14 @@
 
 (defn val-or-emptystr [what]
   (if (nil? what)
-    "(intentionally left empty)"
+    ">>>>>>>intentionally left empty<<<<<<<<<"
     what))
 
 
 (defn breaker [left right]
-  (let [l (first left)
-        r (first right)]
-    (if (some identity [l r])
-      (cons [(val-or-emptystr l) (val-or-emptystr r)]
+  (let [m [(first left) (first right)]]
+    (if (some identity m)
+      (cons (map val-or-emptystr m)
             (breaker (rest left) (rest right))))))
 
 
