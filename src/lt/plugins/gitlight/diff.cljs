@@ -27,22 +27,31 @@
 
 (defn columner [lines]
   (if (= \space (first (first lines)))
-    (breaker lines lines)
+    {:class "context" :content (breaker lines lines)}
     (let [partitioned (walk/keywordize-keys (group-by first lines))
           left (:- partitioned)
           right (:+ partitioned)]
-      (breaker left right))))
+      {:class "changed" :content (breaker left right)})))
 
 
 (defui diff-panel [this]
   (let [output (:results @this)]
-  [:div.diff-panel {:style "overflow: scroll;"}
-  [:h1 (:title output)]
-   [:table
-    [:tr [:td "first"] [:td "second"]]
-    (for [line-groups (:content output)]
-      (for [[left right] (columner line-groups)]
-        [:tr [:td [:pre left]] [:td [:pre right]]]))]]))
+    [:div.diff-panel {:style "overflow: scroll;"}
+     [:h1 (:command output)]
+     [:h1 (:header output)]
+     [:table
+      [:tr
+       [:td.left [:b (:left output)]]
+       [:td.left [:b (:right output)]]]
+
+      (for [line-group (:content output)]
+        (let [columned (columner line-group)
+              c (:class columned)
+              columns (:content columned)]
+          (for [[left right] columns]
+            [:tr {:class c}
+             [:td.left [:pre left]]
+             [:td.right [:pre right]]])))]]))
 
 
 (def context 1000000)
@@ -57,16 +66,23 @@
 
 (defn parse-git-diff [raw-data]
   (let [data (string/split-lines (.toString raw-data))
-        title (take 2 data)
-        ;left (nth data 3)
-        ;right (nth data 4)
+        [command
+         header
+         left
+         right] (take 4 data)
         content (partition-by #(= \space (first %)) (drop 5 data))]
-    {:title title
+    {:command command
+     :header header
+     :left left
+     :right right
      :content content}
 
         ))
 
-(def git-diff-output (cui/make-output-tab-object "Git diff" ::gitlight-diff parse-git-diff diff-panel))
+(def git-diff-output (cui/make-output-tab-object "Git diff"
+                                                 ::gitlight-diff
+                                                 parse-git-diff
+                                                 diff-panel))
 
 
 (cmd/command {:command ::git-diff
