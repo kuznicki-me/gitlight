@@ -13,24 +13,32 @@
 
 
 
+(defn make-context []
+   [:div.context
+    (cui/make-button "-" "-" (partial click-run-function-update
+                                      #(swap! context dec)
+                                      git-diff-update-fun))
+    (str "context: " @context)
+    (cui/make-button "+" "+" (partial click-run-function-update
+                                      #(swap! context inc)
+                                      git-diff-update-fun))])
+
+(defn make-more-context []
+   [:div.more-context
+    (cui/make-button "whole file" "whole file" (partial click-run-function-update
+                                                        #(reset! context 100000)
+                                                        git-diff-update-fun))
+    (cui/make-button "reset" "reset" (partial click-run-function-update
+                                              #(reset! context 3)
+                                              git-diff-update-fun))] )
+
+
+
 (defui diff-panel [this]
   (let [output (:results @this)]
     [:div.gitlight-diff {:style "overflow: scroll;"}
-     [:div.context
-      (cui/make-button "-" "-" (partial click-run-function-update
-                                        #(swap! context dec)
-                                        git-diff-update-fun))
-      (str "context: " @context)
-      (cui/make-button "+" "+" (partial click-run-function-update
-                                        #(swap! context inc)
-                                        git-diff-update-fun))]
-     [:div.more-context
-            (cui/make-button "whole file" "whole file" (partial click-run-function-update
-                                        #(reset! context 100000)
-                                        git-diff-update-fun))
-            (cui/make-button "reset" "reset" (partial click-run-function-update
-                                        #(reset! context 3)
-                                        git-diff-update-fun))]
+     (make-context)
+     (make-more-context)
 
      (for [file output
            :let [filename (:filename file)
