@@ -17,12 +17,20 @@
   (let [output (:results @this)]
     [:div.gitlight-diff {:style "overflow: scroll;"}
      [:div.context
-      (cui/make-button "-" "-" (fn [x y] (swap! context dec) (git-diff)))
+      (cui/make-button "-" "-" (partial click-run-function-update
+                                        #(swap! context dec)
+                                        git-diff-update-fun))
       (str "context: " @context)
-      (cui/make-button "+" "+" (fn [x y] (swap! context inc) (git-diff)))]
+      (cui/make-button "+" "+" (partial click-run-function-update
+                                        #(swap! context inc)
+                                        git-diff-update-fun))]
      [:div.more-context
-      (cui/make-button "whole file" "whole file" (fn [x y] (reset! context 100000) (git-diff)))
-      (cui/make-button "reset" "reset" (fn [x y] (reset! context 3) (git-diff)))]
+            (cui/make-button "whole file" "whole file" (partial click-run-function-update
+                                        #(reset! context 100000)
+                                        git-diff-update-fun))
+            (cui/make-button "reset" "reset" (partial click-run-function-update
+                                        #(reset! context 3)
+                                        git-diff-update-fun))]
 
      [:h1 (:command output)]
      [:h1 (:header output)]
@@ -44,6 +52,13 @@
       ]
      ]))
 
+(defn git-diff-update-fun []
+  (git-diff (-> @(pool/last-active) :info :path)))
+
+
+(defn click-run-function-update [fun up x y]
+  (fun)
+  (up))
 
 
 (def context (atom 3))
@@ -72,16 +87,6 @@
           left (:- partitioned)
           right (:+ partitioned)]
       {:class "changed" :cols (breaker left right)})))
-
-
-
-(defn git-diff []
-  (git/git-command git-diff-output
-                   "diff"
-                   (str "-U" @context)
-                   "--"
-                   (-> @(pool/last-active) :info :path)))
-
 
 
 (defn split-into-groups [lines]
@@ -121,6 +126,19 @@
                               diff-panel))
 
 
+(defn git-diff [filepath]
+  (git/git-command git-diff-output
+                   "diff"
+                   (str "-U" @context)
+                   "--"
+                   filepath))
+
+
+
+(defn git-diff-button [action filename]
+  (git-diff (str (git/get-git-root) "/" filename)))
+
+
 (cmd/command {:command ::git-diff
-              :desc "gitlight: diff"
-              :exec git-diff})
+              :desc "gitlight: diff this file"
+              :exec git-diff-update-fun})
