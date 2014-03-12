@@ -53,7 +53,7 @@
      ]))
 
 (defn git-diff-update-fun []
-  (git-diff (-> @(pool/last-active) :info :path)))
+  (git-diff @last-filename))
 
 
 (defn click-run-function-update [fun up x y]
@@ -62,6 +62,9 @@
 
 
 (def context (atom 3))
+
+; necessary for update
+(def last-filename (atom nil))
 
 
 
@@ -127,6 +130,7 @@
 
 
 (defn git-diff [filepath]
+  (reset! last-filename filepath)
   (git/git-command git-diff-output
                    "diff"
                    (str "-U" @context)
@@ -141,4 +145,5 @@
 
 (cmd/command {:command ::git-diff
               :desc "gitlight: diff this file"
-              :exec git-diff-update-fun})
+              :exec (fn []
+                      (git-diff (-> @(pool/last-active) :info :path)))})
