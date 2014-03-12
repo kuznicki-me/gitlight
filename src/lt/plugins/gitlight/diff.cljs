@@ -160,14 +160,6 @@
                    filepath))
 
 
-(defn git-diff-repo []
-  (git/git-command git-diff-output
-                   "diff"
-                   (str "-U" @context)
-                   "--"
-                   ""))
-
-
 (defn git-diff-button [action filename]
   (git-diff (str (git/get-git-root) "/" filename)))
 
