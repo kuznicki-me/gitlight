@@ -106,13 +106,42 @@
       )))
 
 
+(defn split-into-headered-groups [lines fun result-fun headkey contkey]
+  (when (not (empty? lines))
+    (let [fst (first lines)
+          [content leftovers] (split-with fun (rest lines))]
+    (cons {headkey fst
+           contkey (result-fun content)}
+          (split-into-headered-groups leftovers fun result-fun headkey contkey)))
+    ))
+; )
+
+(defn split-into-groups2 [lines]
+  (split-into-headered-groups lines
+                              (fn [x] (not= "@" (first x)))
+                              (fn [x] (partition-by #(= \space (first %)) x))
+                              :location
+                              :content
+                              ))
+
+
+(defn split-into-files [lines]
+  (split-into-headered-groups lines
+                              (partial re-matches #"^diff --git ")
+                              split-into-groups2
+                              :filename
+                              :line-groups
+                              )
+
+  )
+
 (defn parse-git-diff [raw-data]
   (let [data (string/split-lines (.toString raw-data))
         [command
          header
          left
          right] (take 4 data)
-        groups (split-into-groups (drop 4 data))]
+        groups (split-into-groups2 (drop 4 data))]
     (print groups)
     {:command command
      :header header
