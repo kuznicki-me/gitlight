@@ -11,6 +11,7 @@
             [lt.plugins.gitlight.remote-com :as remote]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.branch :as branch]
+            [lt.plugins.gitlight.diff :as diff]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -46,8 +47,8 @@
 
 (def file-ops {:merge-conflict[["resolve" back/git-add]]
                                ;["diff"   nil]]
-               :not-staged [["stage" back/git-add]]
-                            ;["diff"   nil]
+               :not-staged [["stage" back/git-add]
+                            ["diff"   diff/git-diff-button]]
                             ;["revert" nil]
                             ;["stash"  nil]]
                :untracked [["add"    back/git-add]
