@@ -32,24 +32,28 @@
                                         #(reset! context 3)
                                         git-diff-update-fun))]
 
-     [:h1 (:command output)]
-     [:h1 (:header output)]
-     [:table
-      [:tr
-       [:td.left [:b (:left output)]]
-       [:td.left [:b (:right output)]]]
+     (for [file output
+           :let [filename (:filename file)
+                 file-diff (:file-diff file)]]
+       [:table
+        [:tr [:td.filename filename]]
 
-      (for [changes-group (:groups output)]
-        (cons [:tr.where [:td [:b (:location changes-group)]]]
-              (for [line-group (:content changes-group)]
-                (let [columned (columner line-group)
-                      c (:class columned)
-                      columns (:cols columned)]
+        [:tr [:td.header (:header file-diff)]]
+        [:tr
+         [:td.left [:b (:left file-diff)]]
+         [:td.right [:b (:right file-diff)]]]
+
+        (for [changes-group (:groups file-diff)]
+          (cons [:tr.where [:td [:b (:location changes-group)]]]
+                (for [line-group (:content changes-group)
+                      :let [columned (columner line-group)
+                            c (:class columned)
+                            columns (:cols columned)]]
                   (for [[left right] columns]
                     [:tr {:class c}
                      [:td.left [:pre left]]
-                     [:td.right [:pre right]]])))))
-      ]
+                     [:td.right [:pre right]]]))))
+        ])
      ]))
 
 (defn git-diff-update-fun []
@@ -92,19 +96,6 @@
       {:class "changed" :cols (breaker left right)})))
 
 
-(defn split-into-groups [lines]
-  (when (not (empty? lines))
-    (let [where (first lines)
-          [content leftovers] (split-with #(not= "@" (first %)) (rest lines))]
-;      (println "cont:" content)
-;      (println "party:" (partition-by #(= \space (first %)) content))
-;      (println "lefto:" leftovers)
-
-      (cons {:location where
-             :content (partition-by #(= \space (first %)) content)}
-            (split-into-groups leftovers))
-      )))
-
 
 (defn split-into-headered-groups [lines fun result-fun headkey contkey]
   (when (not (empty? lines))
@@ -114,9 +105,10 @@
            contkey (result-fun content)}
           (split-into-headered-groups leftovers fun result-fun headkey contkey)))
     ))
-; )
 
-(defn split-into-groups2 [lines]
+
+
+(defn split-into-groups [lines]
   (split-into-headered-groups lines
                               (fn [x] (not= "@" (first x)))
                               (fn [x] (partition-by #(= \space (first %)) x))
@@ -125,30 +117,31 @@
                               ))
 
 
-(defn split-into-files [lines]
-  (split-into-headered-groups lines
-                              (partial re-matches #"^diff --git ")
-                              split-into-groups2
-                              :filename
-                              :line-groups
-                              )
-
-  )
-
-(defn parse-git-diff [raw-data]
-  (let [data (string/split-lines (.toString raw-data))
-        [command
-         header
+(defn parse-single-git-diff [data]
+  (let [[header
          left
-         right] (take 4 data)
-        groups (split-into-groups2 (drop 4 data))]
-    (print groups)
-    {:command command
-     :header header
+         right] (take 3 data)
+        groups (split-into-groups (drop 3 data))]
+    {:header header
      :left left
      :right right
      :groups groups}))
 
+
+(defn split-into-files [lines]
+  (split-into-headered-groups lines
+                              (fn [x] (nil? (re-matches #"diff --git .*" x)))
+                              parse-single-git-diff
+                              :filename
+                              :file-diff
+                              )
+
+  )
+
+
+(defn parse-git-diff [raw-data]
+  (println raw-data)
+  (split-into-files (string/split-lines (.toString raw-data))))
 
 
 (def git-diff-output
@@ -167,12 +160,25 @@
                    filepath))
 
 
+(defn git-diff-repo []
+  (git/git-command git-diff-output
+                   "diff"
+                   (str "-U" @context)
+                   "--"
+                   ""))
+
 
 (defn git-diff-button [action filename]
   (git-diff (str (git/get-git-root) "/" filename)))
 
 
-(cmd/command {:command ::git-diff
+(cmd/command {:command ::git-diff-file
               :desc "gitlight: diff this file"
               :exec (fn []
                       (git-diff (-> @(pool/last-active) :info :path)))})
+
+
+(cmd/command {:command ::git-diff-repo
+              :desc "gitlight: diff this repo"
+              :exec (fn []
+                      (git-diff ""))})
