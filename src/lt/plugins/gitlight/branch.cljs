@@ -16,7 +16,7 @@
 (defui branch-panel [this]
   [:div.gitlight-branches [:h1 "Branches"]
    [:table
-    (for [[this-one? [branch sha1 desc]] (:results @this)]
+    (for [[this-one? [branch sha1 desc]] @(:results @this)]
       [:tr
        [:td (if this-one? "->" "")]
        [:td {:class (if this-one? "current" "not-current")}

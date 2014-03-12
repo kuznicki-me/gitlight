@@ -40,7 +40,7 @@
      (make-context)
      (make-more-context)
 
-     (for [file output
+     (for [file @output
            :let [filename (:filename file)
                  file-diff (:file-diff file)]]
        [:table
@@ -162,7 +162,9 @@
 (defn git-diff [filepath]
   (reset! last-filename filepath)
   (git/git-command git-diff-output
+                   "--no-pager"
                    "diff"
+                   "--no-color"
                    (str "-U" @context)
                    "--"
                    filepath))

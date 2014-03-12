@@ -73,7 +73,11 @@
             :triggers #{:proc.out}
             :reaction (fn [this data]
                         (tabs/add-or-focus! obj)
-                        (object/merge! obj {:results (data-parsing-fun data)})
+                        ;(object/merge! obj {:results (data-parsing-fun data)})
+                        (reset! (:results @obj) (data-parsing-fun data))
+                        (println (str @(:results @obj)))
+
+
                         (object/raise obj :refresh))))
 
 
@@ -94,7 +98,7 @@
         tab-obj (object/object* tab-kwd
                                 :tags [:gitlight-tab.out]
                                 :name window-name
-                                :results []
+                                :results (atom [])
                                 :behaviors [::on-close-destroy
                                             refresh-results]
                                 :init (fn [this]
