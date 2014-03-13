@@ -154,7 +154,6 @@
 
 
 (defn parse-git-diff [raw-data]
-  (println raw-data)
   (split-into-files (string/split-lines (.toString raw-data))))
 
 

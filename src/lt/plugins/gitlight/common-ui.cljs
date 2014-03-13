@@ -100,7 +100,6 @@
                         (tabs/add-or-focus! obj)
                         ;(object/merge! obj {:results (data-parsing-fun data)})
                         (reset! (:results @obj) (data-parsing-fun data))
-                        (println (str @(:results @obj)))
                         (object/raise obj :refresh))))
 
 
