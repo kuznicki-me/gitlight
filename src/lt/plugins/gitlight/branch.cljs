@@ -40,16 +40,20 @@
       [active? splitted]))
 
 
+
 (defn parse-data [data]
   (let [lines (string/split-lines (.toString data))]
     (map git-branch-splitter lines)))
 
 
+
 (def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches parse-data branch-panel))
+
 
 
 (defn git-branches []
   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
+
 
 
 (defn git-merge [action branch]
@@ -57,9 +61,11 @@
   (git-branches))
 
 
+
 (defn git-checkout [branch action]
   (git/git-command-ignore-out "checkout" branch)
   (git-branches))
+
 
 
 (defn git-push-it! [action branch]
@@ -67,13 +73,17 @@
   (git-branches))
 
 
+
 (defn git-new-branch [action branch]
-  (cui/input-popup "new branch name" "create" git-create-new-branch))
+  (cui/input-popup "new branch name" "create" git-create-new-branch)
+  (git-branches))
+
 
 
 (defn git-create-new-branch [branch]
   (git/git-command-ignore-out "branch" branch)
   (git-branches))
+
 
 
 (cmd/command {:command ::branches
