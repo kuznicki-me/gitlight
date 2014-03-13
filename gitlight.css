@@ -1,4 +1,4 @@
-
+/* gitlight: status */
 
 .gitlight-status .merge-conflict li {
   color: #ca2d2d
@@ -17,6 +17,10 @@
 .gitlight-status .untracked li.untracked {
   color: #43acd8;
 }
+
+
+
+/* gitlight: branches */
 
 .gitlight-branches table td {
   padding-left: 5px;
@@ -47,6 +51,20 @@
   background-color: #c05623;
 }
 
+
+
+/* gitlight: diff */
+
+
+.gitlight-diff table {
+  margin-bottom: 30px;
+}
+
+.gitlight-diff table tr.where td {
+  padding-top: 10px;
+  text-align: center;
+}
+
 .gitlight-diff table tr.context {
   background-color: #737373;
 }
@@ -59,4 +77,3 @@
 .gitlight-diff table tr.changed td.right {
   background-color: #468e2a;
 }
-

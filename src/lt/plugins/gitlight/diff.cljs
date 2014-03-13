@@ -12,6 +12,20 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
+(defn click-run-function-update [fun up x y]
+  (fun)
+  (up))
+
+
+(def context (atom 3))
+
+; necessary for update
+(def last-filename (atom nil))
+
+
+(defn git-diff-update-fun []
+  (git-diff @last-filename))
+
 
 (defn make-context []
    [:div.context
@@ -44,7 +58,7 @@
            :let [filename (:filename file)
                  file-diff (:file-diff file)]]
        [:table
-        [:tr [:td.filename filename]]
+        ;[:tr [:td.filename filename]]
 
         [:tr [:td.header (:header file-diff)]]
         [:tr
@@ -52,7 +66,9 @@
          [:td.right [:b (:right file-diff)]]]
 
         (for [changes-group (:groups file-diff)]
-          (cons [:tr.where [:td [:b (:location changes-group)]]]
+          (cons [:tr.where [:td
+                            {:colspan 2}
+                            [:b (:location changes-group)]]]
                 (for [line-group (:content changes-group)
                       :let [columned (columner line-group)
                             c (:class columned)
@@ -63,20 +79,6 @@
                      [:td.right [:pre right]]]))))
         ])
      ]))
-
-(defn git-diff-update-fun []
-  (git-diff @last-filename))
-
-
-(defn click-run-function-update [fun up x y]
-  (fun)
-  (up))
-
-
-(def context (atom 3))
-
-; necessary for update
-(def last-filename (atom nil))
 
 
 
