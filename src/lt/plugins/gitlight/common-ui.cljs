@@ -9,6 +9,11 @@
 
 
 
+(defui button [n f fun]
+  [:button [:nobr n]]
+  :click (fn [] (fun n f)))
+
+
 
 (defui input [this]
   [:input.option {:type "text"
@@ -29,6 +34,7 @@
                         (input this)))
 
 
+
 (def common-input (object/create ::common-input))
 
 
@@ -39,16 +45,22 @@
     value))
 
 
+
 (def mesg-atom
   (:message @common-input))
+
+
 
 (defn handle-input-and-clear [fun]
   (apply fun [@mesg-atom])
   (clear-input))
 
 
+
 (defn clear-input []
   (reset! mesg-atom nil))
+
+
 
 (defn input-popup [mesg label fun]
   (popup/popup! {:header  mesg
@@ -57,6 +69,18 @@
                             :action (fn [] (handle-input-and-clear fun))}
                             {:label "cancel"
                             :action clear-input}]}))
+
+
+
+(defn dom-truncate [node]
+  (set! (.-innerHTML node) ""))
+
+
+
+(defn dom-reset [node new-cnt]
+  (dom-truncate node)
+  (dom/append node new-cnt))
+
 
 
 (defn make-refresh-behavior [k ui-fun]
@@ -68,6 +92,7 @@
                         (object/merge! this {:content new-cnt} )))))
 
 
+
 (defn make-refresh-tab-behavior [obj k data-parsing-fun]
   (behavior k
             :triggers #{:proc.out}
@@ -76,15 +101,15 @@
                         ;(object/merge! obj {:results (data-parsing-fun data)})
                         (reset! (:results @obj) (data-parsing-fun data))
                         (println (str @(:results @obj)))
-
-
                         (object/raise obj :refresh))))
+
 
 
 (defn make-keywords [k]
    (let [kwrdstr (subs (str k) 1)]
      (map (fn [x] (keyword (str kwrdstr x)))
           ["-out" "-refresh-results" "-refresh-tab-results""-output"])))
+
 
 
 (defn make-output-tab-object [window-name k data-parsing-fun ui-fun]
@@ -115,22 +140,6 @@
 
 
 
-(defn dom-truncate [node]
-  (set! (.-innerHTML node) ""))
-
-
-
-(defn dom-reset [node new-cnt]
-  (dom-truncate node)
-  (dom/append node new-cnt))
-
-
-
-(defui button [n f fun]
-  [:button [:nobr n]]
-  :click (fn [] (fun n f)))
-
-
 
 (defn make-button [n f fun]
   (button n f (if (= fun nil)
@@ -144,7 +153,6 @@
    {:header "Not yet implemented..."
     :body (str "perform action " n " on " f)
     :buttons [{:label "ok"}]}))
-
 
 
 
