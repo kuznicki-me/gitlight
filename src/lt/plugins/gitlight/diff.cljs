@@ -176,6 +176,10 @@
   (git-diff (str (git/get-git-root) "/" filename)))
 
 
+(defn git-diff-repo-button [action filename]
+  (git-diff ""))
+
+
 (cmd/command {:command ::git-diff-file
               :desc "gitlight: diff this file"
               :exec (fn []

@@ -45,8 +45,8 @@
 
 
 
-(def file-ops {:merge-conflict[["resolve" back/git-add]]
-                               ;["diff"   nil]]
+(def file-ops {:merge-conflict[["resolve" back/git-add]
+                               ["diff"   diff/git-diff-button]]
                :not-staged [["stage" back/git-add]
                             ["diff"   diff/git-diff-button]]
                             ;["revert" nil]
@@ -61,7 +61,8 @@
 (def repo-ops {:commit ["commit" commit/git-commit]
                :push   ["push"   remote/git-push]
                :pull   ["pull"   remote/git-pull]
-               :fetch  ["fetch"  remote/git-fetch]})
+               :fetch  ["fetch"  remote/git-fetch]
+               :diff   ["diff"  diff/git-diff-repo-button]})
                ;:log    ["log"    nil]
                ;:merge  ["merge"  nil]
                ;:tag    ["tag"    nil]})
