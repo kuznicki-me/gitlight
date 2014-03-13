@@ -1,3 +1,11 @@
+version 0.0.4
+=============
+New Features:
+ * Do the "diff" to delightfully detect disparities in data.  Difficult?
+   Definitely doubtful!
+
+
+
 version 0.0.3
 =============
 New Features:
