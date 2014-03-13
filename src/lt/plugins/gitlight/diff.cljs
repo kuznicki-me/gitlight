@@ -23,8 +23,10 @@
 (def last-filename (atom nil))
 
 
+
 (defn git-diff-update-fun []
   (git-diff @last-filename))
+
 
 
 (defn make-context []
@@ -36,6 +38,7 @@
     (cui/make-button "+" "+" (partial click-run-function-update
                                       #(swap! context inc)
                                       git-diff-update-fun))])
+
 
 (defn make-more-context []
    [:div.more-context
@@ -113,18 +116,21 @@
           [content leftovers] (split-with fun (rest lines))]
     (cons {headkey fst
            contkey (result-fun content)}
-          (split-into-headered-groups leftovers fun result-fun headkey contkey)))
-    ))
+          (split-into-headered-groups leftovers
+                                      fun
+                                      result-fun
+                                      headkey
+                                      contkey)))))
 
 
 
 (defn split-into-groups [lines]
-  (split-into-headered-groups lines
-                              (fn [x] (not= "@" (first x)))
-                              (fn [x] (partition-by #(= \space (first %)) x))
-                              :location
-                              :content
-                              ))
+  (split-into-headered-groups
+   lines
+   (fn [x] (not= "@" (first x)))
+   (fn [x] (partition-by #(= \space (first %)) x))
+   :location
+   :content))
 
 
 (defn parse-single-git-diff [data]
@@ -139,14 +145,12 @@
 
 
 (defn split-into-files [lines]
-  (split-into-headered-groups lines
-                              (fn [x] (nil? (re-matches #"diff --git .*" x)))
-                              parse-single-git-diff
-                              :filename
-                              :file-diff
-                              )
-
-  )
+  (split-into-headered-groups
+   lines
+   (fn [x] (nil? (re-matches #"diff --git .*" x)))
+   parse-single-git-diff
+   :filename
+   :file-diff))
 
 
 (defn parse-git-diff [raw-data]
@@ -154,11 +158,13 @@
   (split-into-files (string/split-lines (.toString raw-data))))
 
 
+
 (def git-diff-output
   (cui/make-output-tab-object "Git diff"
                               ::gitlight-diff
                               parse-git-diff
                               diff-panel))
+
 
 
 (defn git-diff [filepath]
@@ -172,18 +178,22 @@
                    filepath))
 
 
+
 (defn git-diff-button [action filename]
   (git-diff (str (git/get-git-root) "/" filename)))
+
 
 
 (defn git-diff-repo-button [action filename]
   (git-diff ""))
 
 
+
 (cmd/command {:command ::git-diff-file
               :desc "gitlight: diff this file"
               :exec (fn []
                       (git-diff (-> @(pool/last-active) :info :path)))})
+
 
 
 (cmd/command {:command ::git-diff-repo
