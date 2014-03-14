@@ -74,8 +74,7 @@
 
 
 (defn git-new-branch [action branch]
-  (cui/input-popup "new branch name" "create" git-create-new-branch)
-  (git-branches))
+  (cui/input-popup "new branch name" "create" git-create-new-branch))
 
 
 

@@ -73,4 +73,5 @@
    (object/object*
     ::git-ignore-out
     :tags [:git-ignore-out]
-    :behaviors [::ignore.out])))
+    :behaviors [::ignore.out-success
+                ::ignore.out-error])))
