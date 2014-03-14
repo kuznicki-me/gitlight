@@ -3,7 +3,6 @@
             [lt.objs.popup :as popup]
             [lt.objs.context :as ctx]
             [lt.objs.command :as cmd]
-            [lt.objs.proc :as proc]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [clojure.string :as string]

@@ -6,8 +6,6 @@
 (def exec (.-exec (js/require "child_process")))
 
 (defn run [return-obj path command input]
-  "path, command and input - strings
-  raises :err and :out to return-obj on failure/success"
   (notifos/working (str "Running: " command))
   (let [child-proc (exec command
                          (clj->js {"cwd" path})
@@ -17,3 +15,7 @@
                              (object/raise return-obj :out stdout stderr))))
         proc-input (.-stdin child-proc)]
     (.end proc-input input)))
+
+
+(defn run-deaf [return-obj path command]
+  (run return-obj path command ""))

@@ -95,8 +95,8 @@
 
 (defn make-refresh-tab-behavior [obj k data-parsing-fun]
   (behavior k
-            :triggers #{:proc.out}
-            :reaction (fn [this data]
+            :triggers #{:out}
+            :reaction (fn [this data err]
                         (tabs/add-or-focus! obj)
                         ;(object/merge! obj {:results (data-parsing-fun data)})
                         (reset! (:results @obj) (data-parsing-fun data))

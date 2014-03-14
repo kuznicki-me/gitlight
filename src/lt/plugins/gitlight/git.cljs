@@ -6,6 +6,7 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.popup :as popup]
+            [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight :refer [config error]]
             [clojure.string :as string])
     (:require-macros [lt.macros :refer [defui behavior]]))
@@ -31,11 +32,16 @@
 
 
 (defn git-command-cwd [obj cwd & args]
-  (proc/exec {:command (:git-binary @config)
-              :args    args
-              :cwd     cwd
-              :obj     obj})
-  true)
+  (println args)
+  (let [git-path (:git-binary @config)
+        command (str git-path " " (string/join " " args))]
+    (exec/run-deaf obj cwd command)
+    true))
+;;   (proc/exec {:command (:git-binary @config)
+;;               :args    args
+;;               :cwd     cwd
+;;               :obj     obj})
+;;   true)
 
 
 (defn git-command [obj & args]
@@ -51,13 +57,18 @@
 
 
 
-(behavior ::ignore.out
+(behavior ::ignore.out-success
           :desc "Ignore git command output."
-          :triggers #{:proc.exit}
-          :reaction (fn [ obj data ]
-                      (notifos/set-msg! (if (= data 0)
-                                          "git: success!"
-                                          "git: failed!"))))
+          :triggers #{:out}
+          :reaction (fn [obj data err]
+                      (notifos/set-msg! "git: success!")))
+
+
+(behavior ::ignore.out-error
+          :desc "Ignore git command output."
+          :triggers #{:err}
+          :reaction (fn [obj err stderr]
+                      (notifos/set-msg! (str "git failed!: " (.toString stderr)))))
 
 
 
