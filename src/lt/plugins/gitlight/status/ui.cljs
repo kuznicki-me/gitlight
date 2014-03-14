@@ -89,11 +89,13 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (make-button-and-update branch (str "Branch menu") (fn [x y] (branch/git-branches)))]]
+   [:h1 [:nobr (str "Branch: ")
+         (make-button-and-update branch
+                                 (str "Branch menu")
+                                 (fn [x y] (branch/git-branches)))]]
    [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
    [:br]
-   ;(make-button "commit" git-root commit/git-commit)
-   (for [[bname fun] (vals repo-ops)] ;  "remote"
+   (for [[bname fun] (vals repo-ops)]
      (make-button-and-update bname git-root fun))
 
    [:br]

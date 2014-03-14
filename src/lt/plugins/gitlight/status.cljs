@@ -13,22 +13,15 @@
 
 
 
-
-;; (defn run-git-status []
-;;   (if (back/git-status)
-;;     (if (not (ui/is-open?)) (object/raise sidebar/rightbar :toggle ui/status-bar))
-;;     (if (ui/is-open?) (object/raise sidebar/rightbar :close! ui/status-bar))))
-
-
-
-
 (behavior ::init ; added to app in gitlight.behaviors
           :triggers #{:object.instant}
           :desc "Init gitlight status"
           :reaction (fn [this]
                       (sidebar/add-item sidebar/rightbar ui/status-bar)
-                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)
-                      (object/add-behavior! back/git-status-out ::close-ui-on-failure)))
+                      (object/add-behavior! back/git-status-out
+                                            ::refresh-ui-on-new-status)
+                      (object/add-behavior! back/git-status-out
+                                            ::close-ui-on-failure)))
 
 
 
@@ -54,11 +47,15 @@
                                     (:branch-name data))))
 
 
+(def pool-watch-keyword
+  :lt.plugins.gitlight.status.back/status-pool-watch)
+
+
 (behavior ::close-ui-on-failure
           :desc "refresh ui on new status"
           :triggers #{:status-failed}
           :reaction (fn [ obj data ]
-                      (remove-watch pool/pool :lt.plugins.gitlight.status.back/status-pool-watch)
+                      (remove-watch pool/pool pool-watch-keyword)
                       (if (ui/is-open?)
                         (object/raise sidebar/rightbar :close! ui/status-bar))
                       (object/raise error :raise-error-popup)))

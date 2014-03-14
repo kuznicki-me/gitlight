@@ -27,6 +27,9 @@
 (defn new-branch-button []
   (cui/make_button "make a new branch" nil git-new-branch))
 
+
+
+
 (defui branch-panel [this]
   [:div.gitlight-branches [:h1 "Branches"]
    [:table
@@ -47,6 +50,7 @@
      [:td]
      [:td.new-branch (new-branch-button)]]
     ]])
+
 
 
 (defn git-branch-splitter [line]
