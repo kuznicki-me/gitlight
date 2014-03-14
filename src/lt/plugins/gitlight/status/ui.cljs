@@ -44,6 +44,8 @@
      status-bar))
 
 
+(defn make-button-and-update [n f fun]
+  (cui/make-button n f (fn [x y] (fun x y) (back/git-status))))
 
 (def file-ops {:merge-conflict[["resolve" back/git-add]
                                ["diff"   diff/git-diff-button]]
@@ -72,7 +74,7 @@
   [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
    [:br]
    (for [[bt fun] (g-name file-ops)]
-     (cui/make-button bt f fun))
+     (make-button-and-update bt f fun))
    [:br]
    [:br]])
 
@@ -87,12 +89,12 @@
 (defui status-ui [this branch git-root]
   [:div
    ;[:h1 (str "test: " (.random js/Math))]
-   [:h1 [:nobr (str "Branch: ") (cui/make-button branch (str "Branch menu") (fn [x y] (branch/git-branches)))]]
-   [:h2 [:nobr "Root: " (cui/make-button git-root "Change repo" nil)]]
+   [:h1 [:nobr (str "Branch: ") (make-button-and-update branch (str "Branch menu") (fn [x y] (branch/git-branches)))]]
+   [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
    [:br]
    ;(make-button "commit" git-root commit/git-commit)
    (for [[bname fun] (vals repo-ops)] ;  "remote"
-     (cui/make-button bname git-root fun))
+     (make-button-and-update bname git-root fun))
 
    [:br]
    [:br]
