@@ -12,23 +12,40 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
+(defn checkout-button [branch]
+  (cui/make_button branch "checkout branch" git-checkout))
+
+(defn pull-button [branch]
+  (cui/make_button "pull!" branch (fn [x y] (remcom/git-pull))))
+
+(defn merge-button [branch]
+  (cui/make_button "merge" branch git-merge))
+
+(defn push-button [branch]
+  (cui/make_button "push it!" branch git-push-it!))
+
+(defn new-branch-button []
+  (cui/make_button "make a new branch" nil git-new-branch))
+
 (defui branch-panel [this]
   [:div.gitlight-branches [:h1 "Branches"]
    [:table
-    (for [[this-one? [branch sha1 desc]] @(:results @this)]
+    (for [parsed (parse-data @(:results @this))
+          :let [[this-one? [branch sha1 desc]] parsed]]
       [:tr
        [:td (if this-one? "->" "")]
-       [:td {:class (if this-one? "current" "not-current")}
-             (cui/make_button branch "checkout branch" git-checkout)]
+       [:td {:class (if this-one?
+                      "current"
+                      "not-current")} (checkout-button branch)]
        (if this-one?
-         [:td.pull (cui/make_button "pull!" branch (fn [x y] (remcom/git-pull)))]
-         [:td.merge (cui/make_button "merge" branch git-merge)])
+         [:td.pull (pull-button branch)]
+         [:td.merge (merge-button branch)])
        [:td sha1]
-       [:td.push (cui/make_button "push it!" branch git-push-it!)]
+       [:td.push (push-button branch)]
        [:td desc]])
     [:tr
      [:td]
-     [:td.new-branch (cui/make_button "make a new branch" nil git-new-branch)]]
+     [:td.new-branch (new-branch-button)]]
     ]])
 
 
@@ -46,7 +63,7 @@
 
 
 
-(def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches parse-data branch-panel))
+(def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches branch-panel))
 
 
 

@@ -15,6 +15,13 @@
 
 
 
+(defn ->value [{:keys [value]}]
+  (if-not value
+    ""
+    value))
+
+
+
 (defui input [this]
   [:input.option {:type "text"
                   :placeholder (bound this :placeholder)
@@ -36,13 +43,6 @@
 
 
 (def common-input (object/create ::common-input))
-
-
-
-(defn ->value [{:keys [value]}]
-  (if-not value
-    ""
-    value))
 
 
 
@@ -93,13 +93,12 @@
 
 
 
-(defn make-refresh-tab-behavior [obj k data-parsing-fun]
+(defn make-refresh-tab-behavior [obj k]
   (behavior k
             :triggers #{:out}
             :reaction (fn [this data err]
                         (tabs/add-or-focus! obj)
-                        ;(object/merge! obj {:results (data-parsing-fun data)})
-                        (reset! (:results @obj) (data-parsing-fun data))
+                        (reset! (:results @obj) data)
                         (object/raise obj :refresh))))
 
 
@@ -107,11 +106,11 @@
 (defn make-keywords [k]
    (let [kwrdstr (subs (str k) 1)]
      (map (fn [x] (keyword (str kwrdstr x)))
-          ["-out" "-refresh-results" "-refresh-tab-results""-output"])))
+          ["-out" "-refresh-results" "-refresh-tab-results" "-output"])))
 
 
 
-(defn make-output-tab-object [window-name k data-parsing-fun ui-fun]
+(defn make-output-tab-object [window-name k ui-fun]
   (let [[tab-kwd
          refresh-kwd
          refresh-tab-kwd
@@ -129,13 +128,11 @@
                                         (ui-fun this)))
         tab (object/create tab-obj)
 
-        parse-command-output (make-refresh-tab-behavior tab
-                                                        refresh-tab-kwd
-                                                        data-parsing-fun)]
+        command-output (make-refresh-tab-behavior tab refresh-tab-kwd)]
 
     (object/create (object/object* command-output-kwd
                                    :tags #{:gitlight-tab-output}
-                                   :behaviors [parse-command-output]))))
+                                   :behaviors [command-output]))))
 
 
 

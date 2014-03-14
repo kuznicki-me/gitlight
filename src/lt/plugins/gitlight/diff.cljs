@@ -57,7 +57,7 @@
      (make-context)
      (make-more-context)
 
-     (for [file @output
+     (for [file (parse-git-diff @output)
            :let [filename (:filename file)
                  file-diff (:file-diff file)]]
        [:table
@@ -161,7 +161,6 @@
 (def git-diff-output
   (cui/make-output-tab-object "Git diff"
                               ::gitlight-diff
-                              parse-git-diff
                               diff-panel))
 
 

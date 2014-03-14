@@ -35,11 +35,6 @@
   (let [git-path (:git-binary @config)
         command (str git-path " " (string/join " " args))]
     (exec/run-deaf obj cwd command)))
-;;   (proc/exec {:command (:git-binary @config)
-;;               :args    args
-;;               :cwd     cwd
-;;               :obj     obj})
-;;   true)
 
 
 (defn git-command [obj & args]
