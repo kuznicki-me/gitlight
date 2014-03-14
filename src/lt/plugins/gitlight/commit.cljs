@@ -19,5 +19,9 @@
 
 
 
+(defn add-quotes [s]
+  (str "\"" s "\""))
+
+
 (defn git-cmd-commit [msg]
-  (git/git-command-ignore-out "commit" "-m" msg))
+  (git/git-command-ignore-out "commit" "-m" (add-quotes msg)))
