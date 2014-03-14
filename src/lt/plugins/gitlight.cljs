@@ -1,6 +1,7 @@
 (ns lt.plugins.gitlight
   (:require [lt.object :as object]
-            [lt.objs.popup :as popup])
+            [lt.objs.popup :as popup]
+            [lt.objs.editor.pool :as pool])
   (:require-macros [lt.macros :refer [behavior]]))
 
 
@@ -28,6 +29,7 @@
           :triggers #{:raise-error-popup}
           :desc "Raise error popup."
           :reaction (fn [ obj ]
+                      (remove-watch pool/pool :lt.plugins.gitlight.status.back/status-pool-watch)
                       (popup/popup! {:header  "We couldn't guess git root"
                                      :body    "Please rerun the command again on a file that is in a git repo."
                                      :buttons [{:label "ok"}]})))

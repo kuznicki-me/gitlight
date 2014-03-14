@@ -74,6 +74,7 @@
           :desc "When git status is executed, parse its output."
           :triggers #{:out}
           :reaction (fn [obj data err]
+                      (add-watch pool/pool ::status-pool-watch (fn [k r old new] (git-status)))
                       (object/raise obj :status (parse-porcelain data))))
 
 

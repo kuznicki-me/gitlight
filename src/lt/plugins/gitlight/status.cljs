@@ -26,8 +26,8 @@
           :desc "Init gitlight status"
           :reaction (fn [this]
                       (sidebar/add-item sidebar/rightbar ui/status-bar)
-                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)
-                      (object/add-behavior! back/git-status-out ::auto-refresh-git-status)))
+                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)))
+                      ;(object/add-behavior! back/git-status-out ::auto-refresh-git-status)))
 
 
 
@@ -50,18 +50,15 @@
 
 
 
-
-(behavior ::auto-refresh-git-status
-          :desc "auto refresh git status"
-          :triggers #{:status}
-          :reaction (fn [ obj data ]
-                      (if (and (ui/is-open?) (pos? (:git-status-refresh-rate @config)))
-                        (wait (:git-status-refresh-rate @config)
-                              (fn []
-                                (if (and (ui/is-open?) (not (back/git-status)))
-                                  (object/raise sidebar/rightbar :close! ui/status-bar)))))))
-
-
+(behavior ::refresh-git-status-on-save
+          :triggers #{:save+}
+          :type :user
+          :desc "Save: refresh gitlight status"
+          :exclusive true
+          :reaction (fn [editor content]
+                      (if (ui/is-open?)
+                        (back/git-status))
+                      content))
 
 
 (behavior ::debug-new-status
