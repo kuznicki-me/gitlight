@@ -2,8 +2,9 @@
   (:require [lt.object :as object]
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.status.ui :as ui]
-            [lt.plugins.gitlight :refer [config]]
+            [lt.plugins.gitlight :refer [config error]]
             [lt.objs.sidebar :as sidebar]
+            [lt.objs.editor.pool :as pool]
             [lt.objs.command :as command]
             [lt.util.js :refer [wait]]
             [lt.util.dom :as dom]
@@ -13,10 +14,10 @@
 
 
 
-(defn run-git-status []
-  (if (back/git-status)
-    (if (not (ui/is-open?)) (object/raise sidebar/rightbar :toggle ui/status-bar))
-    (if (ui/is-open?) (object/raise sidebar/rightbar :close! ui/status-bar))))
+;; (defn run-git-status []
+;;   (if (back/git-status)
+;;     (if (not (ui/is-open?)) (object/raise sidebar/rightbar :toggle ui/status-bar))
+;;     (if (ui/is-open?) (object/raise sidebar/rightbar :close! ui/status-bar))))
 
 
 
@@ -26,15 +27,15 @@
           :desc "Init gitlight status"
           :reaction (fn [this]
                       (sidebar/add-item sidebar/rightbar ui/status-bar)
-                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)))
-                      ;(object/add-behavior! back/git-status-out ::auto-refresh-git-status)))
+                      (object/add-behavior! back/git-status-out ::refresh-ui-on-new-status)
+                      (object/add-behavior! back/git-status-out ::close-ui-on-failure)))
 
 
 
 
 (cmd/command {:command :gitlight-status
               :desc "gitlight: Status"
-              :exec run-git-status})
+              :exec back/git-status})
 
 
 
@@ -43,10 +44,24 @@
           :desc "refresh ui on new status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
+                      (if-not (ui/is-open?)
+                        (object/raise sidebar/rightbar
+                                      :toggle
+                                      ui/status-bar))
+                      (object/raise ui/status-bar
+                                    :refresh
+                                    (:status data)
+                                    (:branch-name data))))
+
+
+(behavior ::close-ui-on-failure
+          :desc "refresh ui on new status"
+          :triggers #{:status-failed}
+          :reaction (fn [ obj data ]
+                      (remove-watch pool/pool :lt.plugins.gitlight.status.back/status-pool-watch)
                       (if (ui/is-open?)
-                        (object/raise ui/status-bar :refresh
-                                      (:status data)
-                                      (:branch-name data)))))
+                        (object/raise sidebar/rightbar :close! ui/status-bar))
+                      (object/raise error :raise-error-popup)))
 
 
 

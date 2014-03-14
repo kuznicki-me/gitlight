@@ -34,8 +34,7 @@
 (defn git-command-cwd [obj cwd & args]
   (let [git-path (:git-binary @config)
         command (str git-path " " (string/join " " args))]
-    (exec/run-deaf obj cwd command)
-    true))
+    (exec/run-deaf obj cwd command)))
 ;;   (proc/exec {:command (:git-binary @config)
 ;;               :args    args
 ;;               :cwd     cwd
@@ -44,10 +43,8 @@
 
 
 (defn git-command [obj & args]
-  (if-let [cwd (get-git-root)]
-    (apply (partial git-command-cwd obj cwd) args)
-    (do (object/raise error :raise-error-popup)
-      false)))
+  (let [cwd (get-git-root)]
+    (apply (partial git-command-cwd obj cwd) args)))
 
 
 

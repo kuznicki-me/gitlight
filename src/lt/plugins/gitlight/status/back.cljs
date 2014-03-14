@@ -70,22 +70,28 @@
      :status      (sort (group-by (fn [a] (nth a 2)) parsed))}))
 
 
-(behavior ::git-status.out
+(behavior ::git-status-out-success
           :desc "When git status is executed, parse its output."
           :triggers #{:out}
-          :reaction (fn [obj data err]
+          :reaction (fn [obj data stderr]
                       (add-watch pool/pool ::status-pool-watch (fn [k r old new] (git-status)))
                       (object/raise obj :status (parse-porcelain data))))
 
+(behavior ::git-status-out-failure
+          :desc "When git status fails."
+          :triggers #{:err}
+          :reaction (fn [obj err stderr]
+                      (remove-watch pool/pool ::status-pool-watch)
+                      (object/raise obj :status-failed)))
 
 (def git-status-out
   (object/create
    (object/object*
     ::git-status-out
     :tags [:git-status-out]
-    :behaviors [::git-status.out
-                ::refresh-ui-on-new-status
-                ::auto-refresh-git-status])))
+    :behaviors [::git-status-out-success
+                ::git-status-out-failure
+                ::refresh-ui-on-new-status])))
 
 
 (defn git-status []
