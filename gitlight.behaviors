@@ -1,3 +1,5 @@
 {:+ {:app [(:lt.objs.plugins/load-js "gitlight_compiled.js" true)
            (:lt.objs.plugins/load-css "gitlight.css")
-           :lt.plugins.gitlight.status/init]}}
+           :lt.plugins.gitlight.status/init]
+     :editor [:lt.plugins.gitlight.status/refresh-git-status-on-save]
+     }}
