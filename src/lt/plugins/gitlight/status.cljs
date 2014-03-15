@@ -11,6 +11,9 @@
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [behavior]]))
 
+(defn status-if-open []
+  (if (ui/is-open?)
+    (back/git-status)))
 
 
 (behavior ::init ; added to app in gitlight.behaviors
@@ -21,7 +24,9 @@
                       (object/add-behavior! back/git-status-out
                                             ::refresh-ui-on-new-status)
                       (object/add-behavior! back/git-status-out
-                                            ::close-ui-on-failure)))
+                                            ::close-ui-on-failure)
+                      (object/add-behavior! back/git-status-out
+                                            ::add-watch)))
 
 
 
@@ -47,19 +52,24 @@
                                     (:branch-name data))))
 
 
-(def pool-watch-keyword
-  :lt.plugins.gitlight.status.back/status-pool-watch)
-
 
 (behavior ::close-ui-on-failure
           :desc "refresh ui on new status"
           :triggers #{:status-failed}
           :reaction (fn [ obj data ]
-                      (remove-watch pool/pool pool-watch-keyword)
+                      (remove-watch pool/pool ::status-pool-watch)
                       (if (ui/is-open?)
                         (object/raise sidebar/rightbar :close! ui/status-bar))
                       (object/raise error :raise-error-popup)))
 
+
+(behavior ::add-watch
+          :desc "add pool watch"
+          :triggers #{:add-watch}
+          :reaction (fn [obj]
+                      (add-watch pool/pool
+                                 ::status-pool-watch
+                                 (fn [k r old new] (status-if-open)))))
 
 
 (behavior ::refresh-git-status-on-save
@@ -68,8 +78,7 @@
           :desc "Save: refresh gitlight status"
           :exclusive true
           :reaction (fn [editor content]
-                      (if (ui/is-open?)
-                        (back/git-status))
+                      (status-if-open)
                       content))
 
 

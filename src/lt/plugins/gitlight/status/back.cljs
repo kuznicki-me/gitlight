@@ -74,7 +74,7 @@
           :desc "When git status is executed, parse its output."
           :triggers #{:out}
           :reaction (fn [obj data stderr]
-                      (add-watch pool/pool ::status-pool-watch (fn [k r old new] (git-status)))
+                      (object/raise obj :add-watch)
                       (object/raise obj :status (parse-porcelain data))))
 
 (behavior ::git-status-out-failure
@@ -100,13 +100,16 @@
 
 
 (defn git-add [action filename]
-  (git/git-command-ignore-out "add" filename))
+  (git/git-command-ignore-out "add" "--" filename))
 
 
 
 (defn git-reset [action filename]
-  (git/git-command-ignore-out "reset" filename))
+  (git/git-command-ignore-out "reset" "--" filename))
 
+
+(defn git-checkout-file [action filename]
+  (git/git-command-ignore-out "checkout" "--" filename))
 
 
 (defn bin-rm [action filename]

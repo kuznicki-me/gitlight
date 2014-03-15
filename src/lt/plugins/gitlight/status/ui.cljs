@@ -50,8 +50,8 @@
 (def file-ops {:merge-conflict[["resolve" back/git-add]
                                ["diff"   diff/git-diff-button]]
                :not-staged [["stage" back/git-add]
-                            ["diff"   diff/git-diff-button]]
-                            ;["revert" nil]
+                            ["diff"   diff/git-diff-button]
+                            ["checkout" back/git-checkout-file]]
                             ;["stash"  nil]]
                :untracked [["add"    back/git-add]
                            ;["ignore" nil]
@@ -71,7 +71,7 @@
 
 
 (defui file [g-name [f t]]
-  [:li {:class (name t)} [:nobr (str (.toUpperCase (first (name t))) " " f)]
+  [:li {:class (name t)} [:nobr (.toUpperCase (first (name t))) (make-button-and-update f f nil)]
    [:br]
    (for [[bt fun] (g-name file-ops)]
      (make-button-and-update bt f fun))

@@ -6,7 +6,8 @@
 (def exec (.-exec (js/require "child_process")))
 
 (defn run [return-obj path command input]
-  ;(notifos/working (str "Running: " command))
+;;   (notifos/working (str "Running: " command))
+;;   (println path command input)
   (let [child-proc (exec command
                          (clj->js {"cwd" path})
                          (fn [err stdout stderr]
