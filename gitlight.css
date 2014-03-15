@@ -5,7 +5,8 @@
 }
 
 .gitlight-status .merge-conflict li button:first-child {
-  color: #ca2d2d
+  background-color: #ca2d2d;
+  font-weight: bold;
 }
 
 .gitlight-status .staged li {
@@ -13,7 +14,8 @@
 }
 
 .gitlight-status .staged li button:first-child {
-  color: #07ae8f;
+  background-color: #216a36;
+  font-weight: bold;
 }
 
 .gitlight-status .not-staged li.modified {
@@ -21,7 +23,8 @@
 }
 
 .gitlight-status .not-staged li.modified button:first-child {
-  color: #d7ce00;
+  background-color: #6a6721;
+  font-weight: bold;
 }
 
 .gitlight-status .untracked li.untracked {
@@ -29,7 +32,8 @@
 }
 
 .gitlight-status .untracked li.untracked button:first-child {
-  color: #43acd8;
+  background-color: #21626a;
+  font-weight: bold;
 }
 
 

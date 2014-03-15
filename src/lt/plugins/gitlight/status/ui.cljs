@@ -71,7 +71,8 @@
 
 
 (defui file [g-name [f t]]
-  [:li {:class (name t)} [:nobr (.toUpperCase (first (name t))) (make-button-and-update f f nil)]
+  [:li {:class (name t)}
+   (make-button-and-update f f nil)
    [:br]
    (for [[bt fun] (g-name file-ops)]
      (make-button-and-update bt f fun))
@@ -93,7 +94,8 @@
          (make-button-and-update branch
                                  (str "Branch menu")
                                  (fn [x y] (branch/git-branches)))]]
-   [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
+;;    [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
+   [:h2 [:nobr "Root: " git-root]]
    [:br]
    (for [[bname fun] (vals repo-ops)]
      (make-button-and-update bname git-root fun))
