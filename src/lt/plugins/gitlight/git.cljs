@@ -48,6 +48,19 @@
 
 
 
+(defn git-add [filename]
+  (git-command-ignore-out "add" "--" filename))
+
+
+
+(defn git-reset [filename]
+  (git-command-ignore-out "reset" "--" filename))
+
+
+(defn git-checkout-file [filename]
+  (git-command-ignore-out "checkout" "--" filename))
+
+
 (behavior ::ignore.out-success
           :desc "Ignore git command output."
           :triggers #{:out}
@@ -61,6 +74,21 @@
           :reaction (fn [obj err stderr]
                       (notifos/set-msg! (str "git failed!: " (.toString stderr)))))
 
+
+
+(cmd/command {:command ::git-add
+             :desc "gitlight: add this file"
+             :exec (fn [] (git-add (-> @(pool/last-active) :info :path)))})
+
+
+(cmd/command {:command ::git-reset
+             :desc "gitlight: reset this file"
+             :exec (fn [] (git-reset (-> @(pool/last-active) :info :path)))})
+
+
+(cmd/command {:command ::git-checkout
+             :desc "gitlight: checkout this file"
+             :exec (fn [] (git-checkout (-> @(pool/last-active) :info :path)))})
 
 
 (def git-ignore-out

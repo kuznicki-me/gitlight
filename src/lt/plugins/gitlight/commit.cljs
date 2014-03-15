@@ -10,8 +10,7 @@
 
 (cmd/command {:command ::git-commit
               :desc "gitlight: commit"
-              :exec (fn []
-                      (git-commit))})
+              :exec git-commit})
 
 
 (defn git-commit []

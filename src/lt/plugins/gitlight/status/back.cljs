@@ -100,16 +100,16 @@
 
 
 (defn git-add [action filename]
-  (git/git-command-ignore-out "add" "--" filename))
+  (git/git-add filename))
 
 
 
 (defn git-reset [action filename]
-  (git/git-command-ignore-out "reset" "--" filename))
+  (git/git-reset filename))
 
 
 (defn git-checkout-file [action filename]
-  (git/git-command-ignore-out "checkout" "--" filename))
+  (git/git-checkout-file filename))
 
 
 (defn bin-rm [action filename]
