@@ -5,6 +5,7 @@
             [lt.objs.popup :as popup]
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
+            [lt.objs.cli :as cli]
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
@@ -47,6 +48,12 @@
 (defn make-button-and-update [n f fun]
   (cui/make-classy-button n f (fn [x y] (fun x y) (back/git-status))))
 
+
+
+(defn open-file [action filename]
+  (cli/open-paths [(str (git/get-git-root) "/" filename)] false))
+
+
 (def file-ops {:merge-conflict[["resolve" back/git-add]
                                ["diff"   diff/git-diff-button]]
                :not-staged [["stage" back/git-add]
@@ -72,7 +79,7 @@
 
 (defui file [g-name [f t]]
   [:li {:class (name t)}
-   (make-button-and-update f f nil)
+   (make-button-and-update f f open-file)
    [:br]
    (for [[bt fun] (g-name file-ops)]
      (make-button-and-update bt f fun))
