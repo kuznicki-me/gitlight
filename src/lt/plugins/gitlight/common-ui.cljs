@@ -14,6 +14,10 @@
   :click (fn [] (fun n f)))
 
 
+(defui classy-button [cls n f fun]
+  [:button {:class cls} [:nobr n]]
+  :click (fn [] (fun n f)))
+
 
 (defn ->value [{:keys [value]}]
   (if-not value
@@ -142,6 +146,10 @@
                 not-implemented-popup
                 fun)))
 
+(defn make-classy-button [n f fun]
+  (classy-button (str n) n f (if (= fun nil)
+                               not-implemented-popup
+                               fun)))
 
 
 (defn not-implemented-popup [ n f ]

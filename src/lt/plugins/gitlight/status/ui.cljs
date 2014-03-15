@@ -45,7 +45,7 @@
 
 
 (defn make-button-and-update [n f fun]
-  (cui/make-button n f (fn [x y] (fun x y) (back/git-status))))
+  (cui/make-classy-button n f (fn [x y] (fun x y) (back/git-status))))
 
 (def file-ops {:merge-conflict[["resolve" back/git-add]
                                ["diff"   diff/git-diff-button]]

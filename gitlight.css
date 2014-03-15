@@ -36,6 +36,17 @@
   font-weight: bold;
 }
 
+.gitlight-status .not-staged li.modified button.checkout {
+  margin-left: 32px;
+  background-color: #6a2f21;
+}
+
+.gitlight-status .untracked li.untracked button.delete {
+  margin-left: 32px;
+  background-color: #6a2f21;
+}
+
+
 
 /* gitlight: branches */
 
