@@ -1,3 +1,31 @@
+version 0.0.5
+=============
+New Features:
+ * Checkout file changes.  Now losing changes is just a click away!  Try it
+   now on Your unstaged and important work.
+ * Shinier buttons in status!  Add Your own colors, or css them out if they
+   make You vomit.
+ * Filenames in status are now buttons.  Click to open the file.  Surprisingly
+   handy.
+
+Changes:
+ * Dumping proc/exec in favor of exec from child_process.  Better errors, can
+   handle larger files (previous version sometimes choked on diffs larger than
+   4096 chars), although it might cause some problems with special characters
+   that need escaping.  Report such problems, will think how to fix them.
+ * No more auto refresh on a timer.  Instead, we have new and exciting watch on
+   pool/pool and behavior on save.  Clicking on buttons has never been this
+   responsive.
+
+Known Issues:
+ * There are some things that might not refresh the status window.  A common
+   problem: diff files, check what goes into the commit, stage, commit, git
+   success!  and yet the files remain staged.  Most probably, they are already
+   commited, it's just that the status has not been refreshed.
+ * Quote marks in commit messages... I really need to sanitize all inputs, but
+   for now... just don't.
+
+
 version 0.0.4
 =============
 New Features:
