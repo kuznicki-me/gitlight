@@ -1,16 +1,8 @@
 /* gitlight: status */
 
-.gitlight-status .merge-conflict li {
-  color: #ca2d2d
-}
-
 .gitlight-status .merge-conflict li button:first-child {
   background-color: #ca2d2d;
   font-weight: bold;
-}
-
-.gitlight-status .staged li {
-  color: #07ae8f;
 }
 
 .gitlight-status .staged li button:first-child {
@@ -18,17 +10,9 @@
   font-weight: bold;
 }
 
-.gitlight-status .not-staged li.modified {
-  color: #d7ce00;
-}
-
 .gitlight-status .not-staged li.modified button:first-child {
   background-color: #6a6721;
   font-weight: bold;
-}
-
-.gitlight-status .untracked li.untracked {
-  color: #43acd8;
 }
 
 .gitlight-status .untracked li.untracked button:first-child {
