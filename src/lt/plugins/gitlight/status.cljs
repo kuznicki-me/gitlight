@@ -6,7 +6,6 @@
             [lt.objs.sidebar :as sidebar]
             [lt.objs.editor.pool :as pool]
             [lt.objs.command :as command]
-            [lt.util.js :refer [wait]]
             [lt.util.dom :as dom]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [behavior]]))
