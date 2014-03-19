@@ -6,7 +6,6 @@
             [lt.util.dom :as dom]
             [lt.objs.editor.pool :as pool]
             [clojure.string :as string]
-            [clojure.walk :as walk]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -85,27 +84,25 @@
 
 
 
-(defn val-or-emptystr [what]
-  (if (nil? what)
-    ""
-    what))
-
-
-
 (defn breaker [left right]
   (let [m [(first left) (first right)]]
     (if (some identity m)
-      (cons (map val-or-emptystr m)
-            (breaker (rest left) (rest right))))))
+      (cons m (breaker (rest left) (rest right))))))
 
+
+(defn separate [fun coll]
+  (reduce (fn [[left right] line]
+            (if (fun line)
+              [(conj left line) right]
+              [left (conj right line)]))
+          [[] []]
+          coll))
 
 
 (defn columner [lines]
   (if (= \space (first (first lines)))
     {:class "context" :cols (breaker lines lines)}
-    (let [partitioned (walk/keywordize-keys (group-by first lines))
-          left (:- partitioned)
-          right (:+ partitioned)]
+    (let [[left right] (separate #(= \- (first %)) lines)]
       {:class "changed" :cols (breaker left right)})))
 
 
