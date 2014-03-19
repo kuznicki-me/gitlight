@@ -2,8 +2,9 @@
   (:require [lt.object :as object]
             [lt.objs.tabs :as tabs]
             [lt.objs.popup :as popup]
-            [crate.core :as crate]
-            [crate.binding :refer [subatom bound map-bound computed]]
+            ;[crate.core :as crate]
+            [crate.binding :refer [bound map-bound]]
+            ;[crate.binding :refer [subatom bound map-bound computed]]
             [lt.util.dom :as dom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
