@@ -101,7 +101,9 @@
                         (show-gutter-data
                          (pool/last-active)
                          (if (empty? firsts)
-                           [" "]
+                           (repeat
+                            (-> @(editor/->cm-ed (pool/last-active )) :doc :size)
+                            " ")
                            (side-by-side firsts))))))
 
 
