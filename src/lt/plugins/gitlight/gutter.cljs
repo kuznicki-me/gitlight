@@ -72,7 +72,6 @@
   (let [partitioned (partition-by first firsts)]
     (first
      (reduce (fn [[ok stack] part]
-               (println ok stack part)
                (let [[fst rst] (split-at 1 part)
                      left (count stack)
                      right (count part)]
@@ -80,7 +79,7 @@
                    \space  [(concat ok
                                     (if (empty? stack)
                                       fst
-                                      [(str " -" (dec (count stack)) "↑")])
+                                      [(str " -" (count stack) "↑")])
                                     rst)
                             []]
                    \- [ok part]
@@ -102,7 +101,7 @@
                          (pool/last-active)
                          (if (empty? firsts)
                            (repeat
-                            (-> @(editor/->cm-ed (pool/last-active )) :doc :size)
+                            (.-size (.-doc (editor/->cm-ed (pool/last-active))))
                             " ")
                            (side-by-side firsts))))))
 
