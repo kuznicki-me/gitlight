@@ -56,17 +56,6 @@
 
   )
 
-(defn char-to-val [c]
-  (case c
-    (\space nil) 0
-    \+ 1
-    \- -1
-    0))
-
-
-(defn line-value [line]
-  (char-to-val (first line)))
-
 
 (defn side-by-side [firsts]
   (let [partitioned (partition-by first firsts)]
