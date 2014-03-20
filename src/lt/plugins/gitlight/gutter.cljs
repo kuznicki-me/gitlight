@@ -11,6 +11,7 @@
             [lt.objs.notifos :as notifos]
             [lt.objs.tabs :as tabs]
             [lt.objs.editor.pool :as pool]
+            [clojure.string :as string]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.diff :as diff]
             [lt.plugins.gitlight.git :as git])
@@ -55,22 +56,51 @@
 
   )
 
+(defn char-to-val [c]
+  (case c
+    (\space nil) 0
+    \+ 1
+    \- -1
+    0))
+
+
+(defn line-value [line]
+  (char-to-val (first line)))
+
+
+(defn side-by-side [firsts]
+  (let [partitioned (partition-by first firsts)]
+    (first
+     (reduce (fn [[ok stack] part]
+               (println ok stack part)
+               (let [[fst rst] (split-at 1 part)
+                     left (count stack)
+                     right (count part)]
+                 (case (first fst)
+                   \space  [(concat ok
+                                    (if (empty? stack)
+                                      fst
+                                      [(str " -" (dec (count stack)) "↑")])
+                                    rst)
+                            []]
+                   \- [ok part]
+                   \+ [(concat ok
+                               (map str part stack)
+                               (repeat (- right left) "+"))
+                       (repeat (- left right) "-")
+                       ])))
+             [[][]] partitioned))))
+
+
 
 (behavior ::parse-diff-out
           :triggers [:out]
           :reaction (fn [this stdout stderr]
-                      (let [parsed (diff/parse-git-diff (.toString stdout))
-                            groups (-> (first parsed) :file-diff :groups)
-                            file-diff (:content (first groups))
-                            columns (apply concat (map #(:cols (diff/columner %)) file-diff))
-                            firsts (map #(map first %) columns)]
+                      (let [parsed (drop 5 (string/split-lines (.toString stdout)))
+                            firsts (map first parsed)]
+                        (show-gutter-data (pool/last-active)
+                                          (side-by-side firsts)))))
 
-                        (println parsed)
-                        (println groups)
-                        (println file-diff)
-                        (println columns)
-                        (println firsts)
-                        (show-gutter-data (pool/last-active) firsts))))
 
 (behavior ::diff-err
           :triggers [:err]
