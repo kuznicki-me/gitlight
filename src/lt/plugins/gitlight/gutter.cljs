@@ -101,7 +101,7 @@
                         (show-gutter-data
                          (pool/last-active)
                          (if (empty? firsts)
-                           (" ")
+                           [" "]
                            (side-by-side firsts))))))
 
 
