@@ -61,13 +61,16 @@
           :reaction (fn [this stdout stderr]
                       (let [parsed (diff/parse-git-diff (.toString stdout))
                             groups (-> (first parsed) :file-diff :groups)
-                            d (:content (first groups))]
-                        (println "hello")
+                            file-diff (:content (first groups))
+                            columns (apply concat (map #(:cols (diff/columner %)) file-diff))
+                            firsts (map #(map first %) columns)]
+
                         (println parsed)
                         (println groups)
-                        (println d)
-;;                       (println (-> (first (diff/parse-git-diff (.toString stdout))) :file-diff :groups))
-                        (show-gutter-data (pool/last-active) ["+/-" "+ " "  -4" "+/-4" ]))))
+                        (println file-diff)
+                        (println columns)
+                        (println firsts)
+                        (show-gutter-data (pool/last-active) firsts))))
 
 (behavior ::diff-err
           :triggers [:err]
