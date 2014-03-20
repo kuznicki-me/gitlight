@@ -98,8 +98,11 @@
           :reaction (fn [this stdout stderr]
                       (let [parsed (drop 5 (string/split-lines (.toString stdout)))
                             firsts (map first parsed)]
-                        (show-gutter-data (pool/last-active)
-                                          (side-by-side firsts)))))
+                        (show-gutter-data
+                         (pool/last-active)
+                         (if (empty? firsts)
+                           (" ")
+                           (side-by-side firsts))))))
 
 
 (behavior ::diff-err
