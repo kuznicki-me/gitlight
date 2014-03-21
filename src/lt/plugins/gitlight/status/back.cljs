@@ -2,6 +2,7 @@
   (:require [lt.object :as object]
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
+            [lt.objs.notifos :as notifos]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.commit :as commit]
@@ -73,18 +74,27 @@
 
 
 (behavior ::git-status-out-success
-          :desc "When git status is executed, parse its output."
+          :desc "gitlight: When git status is executed, parse its output."
           :triggers #{:out}
           :reaction (fn [obj data stderr]
                       (object/raise obj :add-watch)
                       (object/raise obj :status (parse-porcelain data))))
 
 (behavior ::git-status-out-failure
-          :desc "When git status fails."
+          :desc "gitlight: When git status fails."
           :triggers #{:err}
           :reaction (fn [obj err stderr]
                       (remove-watch pool/pool ::status-pool-watch)
                       (object/raise obj :status-failed)))
+
+
+(behavior ::git-status-out-failure-verbose
+          :desc "gitlight: Be verbose about git status fail"
+          :type :user
+          :triggers #{:err}
+          :reaction (fn [obj err stderr]
+                      (notifos/set-msg! (str "git status failed! " (.toString stderr)))))
+
 
 (def git-status-out
   (object/create
@@ -93,6 +103,7 @@
     :tags [:git-status-out]
     :behaviors [::git-status-out-success
                 ::git-status-out-failure
+;;                 ::git-status-out-failure-verbose
                 ::refresh-ui-on-new-status])))
 
 

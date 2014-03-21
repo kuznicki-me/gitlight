@@ -17,7 +17,7 @@
 
 (behavior ::init ; added to app in gitlight.behaviors
           :triggers #{:object.instant}
-          :desc "Init gitlight status"
+          :desc "gitlight: Init gitlight status"
           :reaction (fn [this]
                       (sidebar/add-item sidebar/rightbar ui/status-bar)
                       (object/add-behavior! back/git-status-out
@@ -38,7 +38,7 @@
 
 
 (behavior ::refresh-ui-on-new-status
-          :desc "refresh ui on new status"
+          :desc "gitlight: refresh ui on new status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (if-not (ui/is-open?)
@@ -53,13 +53,12 @@
 
 
 (behavior ::close-ui-on-failure
-          :desc "refresh ui on new status"
+          :desc "gitlight: close ui on failure"
           :triggers #{:status-failed}
           :reaction (fn [ obj data ]
                       (remove-watch pool/pool ::status-pool-watch)
                       (if (ui/is-open?)
-                        (object/raise sidebar/rightbar :close! ui/status-bar))
-                      (object/raise error :raise-error-popup)))
+                        (object/raise sidebar/rightbar :close! ui/status-bar))))
 
 
 (behavior ::add-watch
@@ -74,7 +73,7 @@
 (behavior ::refresh-git-status-on-save
           :triggers #{:save+}
           :type :user
-          :desc "Save: refresh gitlight status"
+          :desc "gitlight: refresh gitlight status"
           :exclusive true
           :reaction (fn [editor content]
                       (status-if-open)
@@ -82,7 +81,7 @@
 
 
 (behavior ::debug-new-status
-          :desc "debug status"
+          :desc "gitlight: debug status"
           :triggers #{:status}
           :reaction (fn [ obj data ]
                       (.log js/console "refresh" (clj->js data))))
