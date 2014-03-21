@@ -7,7 +7,6 @@
             [lt.util.dom :as dom]
             [lt.objs.cli :as cli]
             [lt.plugins.gitlight.status.back :as back]
-            [lt.plugins.gitlight.commit :as commit]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.remote-com :as remote]
             [lt.plugins.gitlight.common-ui :as cui]
@@ -54,7 +53,7 @@
   (cli/open-paths [(str (git/get-git-root) "/" filename)] false))
 
 
-(def file-ops {:merge-conflict[["resolve" back/git-add]
+(def file-ops {:merge-conflict [["resolve" back/git-add]
                                ["diff"   diff/git-diff-button]]
                :not-staged [["stage" back/git-add]
                             ["diff"   diff/git-diff-button]
@@ -67,7 +66,7 @@
 
 
 
-(def repo-ops {:commit ["commit" commit/git-commit]
+(def repo-ops {:commit ["commit" back/git-commit]
                :push   ["push"   remote/git-push]
                :pull   ["pull"   remote/git-pull]
                :fetch  ["fetch"  remote/git-fetch]
@@ -106,6 +105,8 @@
    [:br]
    (for [[bname fun] (vals repo-ops)]
      (make-button-and-update bname git-root fun))
+   [:br]
+   (make-button-and-update "refresh" "refresh" (fn [x y]))
 
    [:br]
    [:br]

@@ -6,8 +6,9 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.popup :as popup]
-            [lt.plugin.gitlight.common-ui :as cui]
+            [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.execute :as exec]
+            [lt.plugins.gitlight.lib :as lib]
             [lt.plugins.gitlight :refer [config error]]
             [clojure.string :as string])
     (:require-macros [lt.macros :refer [defui behavior]]))
