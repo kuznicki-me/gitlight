@@ -41,20 +41,25 @@
     (editor/operation this
                       (fn []
                         (editor/set-options this
-                                            {:gutters (clj->js (conj current-gutters "gutter"))})
-                        (dom/set-css (dom/$ :div.gutter gutter-div)
-                                     {"width" (str (:width @gutter-settings "px"))})
+                                            {:gutters (clj->js (conj current-gutters "gitlight-gutter"))})
+                        (dom/set-css (dom/$ :div.gitlight-gutter gutter-div)
+                                     {"width" (str (:width @gutter-settings) "px")})
                         (doall (map-indexed (fn [idx gutter-marker]
-                                              (.setGutterMarker ed idx "gutter" gutter-marker))
+                                              (.setGutterMarker ed idx "gitlight-gutter" gutter-marker))
                                gutter-markers))
-                        (object/raise this :refresh!)
-                        ;; (object/add-tags this #{::git-blame-on})
-                        ))
+                        (object/raise this :refresh!)))))
 
 
-    )
-
-  )
+(defn remove-gutters [this]
+  (.clearGutter (editor/->cm-ed this) "gitlight-gutter")
+  (dom/remove :div.gitlight-gutter (object/->content this))
+  (let [gutter (js->clj (editor/option this "gutters"))]
+    (editor/set-options this
+                        {:gutters (clj->js
+                                   (remove #{"gitlight-gutter"}
+                                           gutter
+                                           ))}))
+  (object/raise this :refresh!))
 
 
 (defn side-by-side [firsts]
@@ -100,6 +105,7 @@
           :reaction (fn [this err stderr]
                       (println "error" stderr)))
 
+
 (def diff-out
   (object/create
    (object/object* ::diff-file-out
@@ -107,10 +113,20 @@
                    :behaviors [::parse-diff-out ::diff-err])))
 
 
+(defn add-git-diff-gutter []
+  (exec/run-deaf diff-out
+                 (git/get-git-root)
+                 (str "git diff -U10000 -- " (-> @(pool/last-active) :info :path))))
 
-(cmd/command {:command ::whatevers
-              :desc "gutter test add"
-              :exec (fn []
-                      (exec/run-deaf diff-out
-                                     (git/get-git-root)
-                                     (str "git diff -U10000 -- " (-> @(pool/last-active) :info :path))))})
+(defn remove-git-diff-gutter []
+  (remove-gutters (pool/last-active)))
+
+
+(cmd/command {:command ::gitlight-add-diff-gutter
+              :desc "gitlight: add gutter diff"
+              :exec add-git-diff-gutter})
+
+
+(cmd/command {:command ::gitlight-remove-diff-gutter
+              :desc "gitlight: remove gutter diff"
+              :exec remove-git-diff-gutter})
