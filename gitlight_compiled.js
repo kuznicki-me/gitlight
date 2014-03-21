@@ -2055,9 +2055,33 @@ lt.plugins.gitlight.status.back.git_checkout_file = (function git_checkout_file(
 lt.plugins.gitlight.status.back.bin_rm = (function bin_rm(action,filename){return lt.objs.files.delete_BANG_.call(null,[cljs.core.str(lt.plugins.gitlight.git.get_git_root.call(null)),cljs.core.str("/"),cljs.core.str(filename)].join(''));
 });
 }
+if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.lib')) {
+goog.provide('lt.plugins.gitlight.lib');
+goog.require('cljs.core');
+goog.require('clojure.string');
+goog.require('clojure.string');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.objs.command');
+goog.require('lt.objs.command');
+goog.require('lt.object');
+goog.require('lt.object');
+lt.plugins.gitlight.lib.qu = (function qu(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
+});
+lt.plugins.gitlight.lib.sanitize = (function sanitize(s){return clojure.string.escape.call(null,s,new cljs.core.PersistentArrayMap(null, 3, ["$","\\$","`","\\`","\"","\\\""], null));
+});
+lt.plugins.gitlight.lib.q_AMPERSAND_s = (function q_AMPERSAND_s(s){return lt.plugins.gitlight.lib.qu.call(null,lt.plugins.gitlight.lib.sanitize.call(null,s));
+});
+lt.plugins.gitlight.lib.qsprint = (function qsprint(s){return cljs.core.println.call(null,lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,s));
+});
+lt.plugins.gitlight.lib.popup = (function popup(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"try to break us","commit",lt.plugins.gitlight.lib.qsprint);
+});
+lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.lib","input-test","lt.plugins.gitlight.lib/input-test",2633420103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: input sanitize test",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.lib.popup], null));
+}
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.commit')) {
 goog.provide('lt.plugins.gitlight.commit');
 goog.require('cljs.core');
+goog.require('lt.plugins.gitlight.lib');
 goog.require('lt.util.dom');
 goog.require('lt.objs.context');
 goog.require('lt.objs.popup');
@@ -2071,13 +2095,12 @@ goog.require('lt.object');
 goog.require('lt.plugins.gitlight.common_ui');
 goog.require('lt.plugins.gitlight.git');
 goog.require('lt.objs.command');
+goog.require('lt.plugins.gitlight.lib');
 goog.require('lt.plugins.gitlight.git');
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.commit","git-commit","lt.plugins.gitlight.commit/git-commit",1069137844),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: commit",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.commit.git_commit], null));
 lt.plugins.gitlight.commit.git_commit = (function git_commit(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"commit message?","commit",lt.plugins.gitlight.commit.git_cmd_commit);
 });
-lt.plugins.gitlight.commit.add_quotes = (function add_quotes(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
-});
-lt.plugins.gitlight.commit.git_cmd_commit = (function git_cmd_commit(msg){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"commit","-m",lt.plugins.gitlight.commit.add_quotes.call(null,msg));
+lt.plugins.gitlight.commit.git_cmd_commit = (function git_cmd_commit(msg){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"commit","-m",lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,msg));
 });
 }
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.remote-com')) {
@@ -3019,29 +3042,6 @@ lt.plugins.gitlight.tests.remote_com.git_test_repo = lt.object.create.call(null,
 lt.plugins.gitlight.tests.remote_com.dir = [cljs.core.str(lt.objs.plugins.user_plugins_dir),cljs.core.str("/gitlight/src/lt/plugins/gitlight/tests/status/")].join('');
 return lt.objs.proc.exec.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),[cljs.core.str(lt.plugins.gitlight.tests.remote_com.dir),cljs.core.str("mkremote.sh")].join(''),new cljs.core.Keyword(null,"cwd","cwd",1014003170),lt.plugins.gitlight.tests.remote_com.dir,new cljs.core.Keyword(null,"obj","obj",1014014057),lt.plugins.gitlight.tests.remote_com.git_test_repo], null));
 }));
-}
-if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.lib')) {
-goog.provide('lt.plugins.gitlight.lib');
-goog.require('cljs.core');
-goog.require('clojure.string');
-goog.require('clojure.string');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.objs.command');
-goog.require('lt.objs.command');
-goog.require('lt.object');
-goog.require('lt.object');
-lt.plugins.gitlight.lib.qu = (function qu(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
-});
-lt.plugins.gitlight.lib.sanitize = (function sanitize(s){return clojure.string.escape.call(null,s,new cljs.core.PersistentArrayMap(null, 3, ["$","\\$","`","\\`","\"","\\\""], null));
-});
-lt.plugins.gitlight.lib.q_AMPERSAND_s = (function q_AMPERSAND_s(s){return lt.plugins.gitlight.lib.qu.call(null,lt.plugins.gitlight.lib.sanitize.call(null,s));
-});
-lt.plugins.gitlight.lib.qsprint = (function qsprint(s){return cljs.core.println.call(null,lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,s));
-});
-lt.plugins.gitlight.lib.popup = (function popup(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"try to break us","commit",lt.plugins.gitlight.lib.qsprint);
-});
-lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.lib","input-test","lt.plugins.gitlight.lib/input-test",2633420103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: input sanitize test",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.lib.popup], null));
 }
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.tests.status.ui')) {
 goog.provide('lt.plugins.gitlight.tests.status.ui');
