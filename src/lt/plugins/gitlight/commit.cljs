@@ -4,6 +4,7 @@
             [lt.objs.context :as ctx]
             [lt.objs.command :as cmd]
             [lt.util.dom :as dom]
+            [lt.plugins.gitlight.lib :as lib]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.git :as git])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -18,9 +19,5 @@
 
 
 
-(defn add-quotes [s]
-  (str "\"" s "\""))
-
-
 (defn git-cmd-commit [msg]
-  (git/git-command-ignore-out "commit" "-m" (add-quotes msg)))
+  (git/git-command-ignore-out "commit" "-m" (lib/q&s msg)))

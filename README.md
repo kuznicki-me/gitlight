@@ -34,3 +34,15 @@ You can also add shortcut in your user keymap:
          }
 
      }}
+     
+Git versions warning
+--------------------
+The plugin might not work with certain versions of git.  Users (thanks https://github.com/mortalapeman !) have reported situations in which gitlight status throws null pointer exceptions or displays wrong information, for instance on a git version 1.7.9.5.  The plugin has been tested on git >= 1.8, although You might still experience problems with different versions.
+
+In case of seeing something similar to these: <br>
+https://github.com/kuznicki-me/gitlight/issues/4 <br>
+https://github.com/kuznicki-me/gitlight/issues/5
+
+please check that Your git properly displays the output of git status --porcelain --branch.  The first line should include the branch name, like this:
+
+ ## master
