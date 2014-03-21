@@ -6,6 +6,7 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.objs.popup :as popup]
+            [lt.plugin.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight :refer [config error]]
             [clojure.string :as string])
@@ -61,6 +62,14 @@
   (git-command-ignore-out "checkout" "--" filename))
 
 
+(defn git-commit []
+  (cui/input-popup "commit message?" "commit" git-cmd-commit))
+
+
+(defn git-cmd-commit [msg]
+  (git-command-ignore-out "commit" "-m" (lib/q&s msg)))
+
+
 (behavior ::ignore.out-success
           :desc "Ignore git command output."
           :triggers #{:out}
@@ -90,6 +99,10 @@
              :desc "gitlight: checkout this file"
              :exec (fn [] (git-checkout (-> @(pool/last-active) :info :path)))})
 
+
+(cmd/command {:command ::git-commit
+              :desc "gitlight: commit"
+              :exec git-commit})
 
 (def git-ignore-out
   (object/create

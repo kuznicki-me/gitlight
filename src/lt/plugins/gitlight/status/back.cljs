@@ -3,6 +3,7 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
             [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.commit :as commit]
             [clojure.string :as string])
   (:require-macros [lt.macros :refer [behavior]]))
 
@@ -102,6 +103,12 @@
 (defn git-add [action filename]
   (git/git-add filename))
 
+
+(defn git-commit [action filename]
+  (cui/input-popup "commit message?" "commit"
+                   (fn [msg]
+                     (git-cmd-commit msg)
+                     (git-status))))
 
 
 (defn git-reset [action filename]

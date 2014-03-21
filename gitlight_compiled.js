@@ -49,10 +49,12 @@ goog.require('lt.objs.editor.pool');
 goog.require('clojure.string');
 goog.require('lt.objs.command');
 goog.require('lt.objs.files');
+goog.require('lt.plugin.gitlight.common_ui');
 goog.require('clojure.string');
 goog.require('lt.object');
 goog.require('lt.object');
 goog.require('lt.plugins.gitlight.execute');
+goog.require('lt.plugin.gitlight.common_ui');
 goog.require('lt.objs.proc');
 goog.require('lt.objs.editor.pool');
 goog.require('lt.objs.command');
@@ -82,11 +84,11 @@ var args = null;if (arguments.length > 2) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 2),0);} 
 return git_command_cwd__delegate.call(this,obj,cwd,args);};
 git_command_cwd.cljs$lang$maxFixedArity = 2;
-git_command_cwd.cljs$lang$applyTo = (function (arglist__10048){
-var obj = cljs.core.first(arglist__10048);
-arglist__10048 = cljs.core.next(arglist__10048);
-var cwd = cljs.core.first(arglist__10048);
-var args = cljs.core.rest(arglist__10048);
+git_command_cwd.cljs$lang$applyTo = (function (arglist__10833){
+var obj = cljs.core.first(arglist__10833);
+arglist__10833 = cljs.core.next(arglist__10833);
+var cwd = cljs.core.first(arglist__10833);
+var args = cljs.core.rest(arglist__10833);
 return git_command_cwd__delegate(obj,cwd,args);
 });
 git_command_cwd.cljs$core$IFn$_invoke$arity$variadic = git_command_cwd__delegate;
@@ -104,9 +106,9 @@ var args = null;if (arguments.length > 1) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 1),0);} 
 return git_command__delegate.call(this,obj,args);};
 git_command.cljs$lang$maxFixedArity = 1;
-git_command.cljs$lang$applyTo = (function (arglist__10049){
-var obj = cljs.core.first(arglist__10049);
-var args = cljs.core.rest(arglist__10049);
+git_command.cljs$lang$applyTo = (function (arglist__10834){
+var obj = cljs.core.first(arglist__10834);
+var args = cljs.core.rest(arglist__10834);
 return git_command__delegate(obj,args);
 });
 git_command.cljs$core$IFn$_invoke$arity$variadic = git_command__delegate;
@@ -124,8 +126,8 @@ var args = null;if (arguments.length > 0) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return git_command_ignore_out__delegate.call(this,args);};
 git_command_ignore_out.cljs$lang$maxFixedArity = 0;
-git_command_ignore_out.cljs$lang$applyTo = (function (arglist__10050){
-var args = cljs.core.seq(arglist__10050);
+git_command_ignore_out.cljs$lang$applyTo = (function (arglist__10835){
+var args = cljs.core.seq(arglist__10835);
 return git_command_ignore_out__delegate(args);
 });
 git_command_ignore_out.cljs$core$IFn$_invoke$arity$variadic = git_command_ignore_out__delegate;
@@ -137,6 +139,10 @@ lt.plugins.gitlight.git.git_add = (function git_add(filename){return lt.plugins.
 lt.plugins.gitlight.git.git_reset = (function git_reset(filename){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"reset","--",filename);
 });
 lt.plugins.gitlight.git.git_checkout_file = (function git_checkout_file(filename){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"checkout","--",filename);
+});
+lt.plugins.gitlight.git.git_commit = (function git_commit(){return lt.plugin.gitlight.common_ui.input_popup.call(null,"commit message?","commit",lt.plugins.gitlight.git.git_cmd_commit);
+});
+lt.plugins.gitlight.git.git_cmd_commit = (function git_cmd_commit(msg){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"commit","-m",lib.q_AMPERSAND_s.call(null,msg));
 });
 lt.plugins.gitlight.git.__BEH__ignore__DOT__out_success = (function __BEH__ignore__DOT__out_success(obj,data,err){return lt.objs.notifos.set_msg_BANG_.call(null,"git: success!");
 });
@@ -150,6 +156,7 @@ lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new
 })], null));
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.git","git-checkout","lt.plugins.gitlight.git/git-checkout",2494382294),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: checkout this file",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return lt.plugins.gitlight.git.git_checkout.call(null,new cljs.core.Keyword(null,"path","path",1017337751).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"info","info",1017141280).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.objs.editor.pool.last_active.call(null)))));
 })], null));
+lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.git","git-commit","lt.plugins.gitlight.git/git-commit",3023680103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: commit",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.git.git_commit], null));
 lt.plugins.gitlight.git.git_ignore_out = lt.object.create.call(null,lt.object.object_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","git-ignore-out","lt.plugins.gitlight.git/git-ignore-out",1518510219),new cljs.core.Keyword(null,"tags","tags",1017456523),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"git-ignore-out","git-ignore-out",3448111392)], null),new cljs.core.Keyword(null,"behaviors","behaviors",607554515),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-success","lt.plugins.gitlight.git/ignore.out-success",2272362317),new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-error","lt.plugins.gitlight.git/ignore.out-error",2426640522)], null)));
 }
 if(!lt.util.load.provided_QMARK_('crate.binding')) {
@@ -1868,13 +1875,63 @@ lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.diff","git-diff-repo","lt.plugins.gitlight.diff/git-diff-repo",4564349286),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: diff this repo",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return lt.plugins.gitlight.diff.git_diff.call(null,"");
 })], null));
 }
+if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.lib')) {
+goog.provide('lt.plugins.gitlight.lib');
+goog.require('cljs.core');
+goog.require('clojure.string');
+goog.require('clojure.string');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.objs.command');
+goog.require('lt.objs.command');
+goog.require('lt.object');
+goog.require('lt.object');
+lt.plugins.gitlight.lib.qu = (function qu(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
+});
+lt.plugins.gitlight.lib.sanitize = (function sanitize(s){return clojure.string.escape.call(null,s,new cljs.core.PersistentArrayMap(null, 3, ["$","\\$","`","\\`","\"","\\\""], null));
+});
+lt.plugins.gitlight.lib.q_AMPERSAND_s = (function q_AMPERSAND_s(s){return lt.plugins.gitlight.lib.qu.call(null,lt.plugins.gitlight.lib.sanitize.call(null,s));
+});
+lt.plugins.gitlight.lib.qsprint = (function qsprint(s){return cljs.core.println.call(null,lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,s));
+});
+lt.plugins.gitlight.lib.popup = (function popup(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"try to break us","commit",lt.plugins.gitlight.lib.qsprint);
+});
+lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.lib","input-test","lt.plugins.gitlight.lib/input-test",2633420103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: input sanitize test",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.lib.popup], null));
+}
+if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.commit')) {
+goog.provide('lt.plugins.gitlight.commit');
+goog.require('cljs.core');
+goog.require('lt.plugins.gitlight.lib');
+goog.require('lt.util.dom');
+goog.require('lt.objs.context');
+goog.require('lt.objs.popup');
+goog.require('lt.objs.popup');
+goog.require('lt.objs.context');
+goog.require('lt.util.dom');
+goog.require('lt.objs.command');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.object');
+goog.require('lt.object');
+goog.require('lt.plugins.gitlight.common_ui');
+goog.require('lt.plugins.gitlight.git');
+goog.require('lt.objs.command');
+goog.require('lt.plugins.gitlight.lib');
+goog.require('lt.plugins.gitlight.git');
+lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.commit","git-commit","lt.plugins.gitlight.commit/git-commit",1069137844),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: commit",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.commit.git_commit], null));
+lt.plugins.gitlight.commit.git_commit = (function git_commit(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"commit message?","commit",lt.plugins.gitlight.commit.git_cmd_commit);
+});
+lt.plugins.gitlight.commit.git_cmd_commit = (function git_cmd_commit(msg){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"commit","-m",lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,msg));
+});
+}
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.status.back')) {
 goog.provide('lt.plugins.gitlight.status.back');
 goog.require('cljs.core');
 goog.require('lt.objs.files');
+goog.require('lt.plugins.gitlight.commit');
 goog.require('lt.objs.editor.pool');
 goog.require('clojure.string');
 goog.require('lt.objs.files');
+goog.require('lt.plugins.gitlight.commit');
 goog.require('clojure.string');
 goog.require('lt.object');
 goog.require('lt.object');
@@ -1958,59 +2015,15 @@ lt.plugins.gitlight.status.back.git_status = (function git_status(){return lt.pl
 });
 lt.plugins.gitlight.status.back.git_add = (function git_add(action,filename){return lt.plugins.gitlight.git.git_add.call(null,filename);
 });
+lt.plugins.gitlight.status.back.git_commit = (function git_commit(action,filename){return cui.input_popup.call(null,"commit message?","commit",(function (msg){lt.plugins.gitlight.status.back.git_cmd_commit.call(null,msg);
+return lt.plugins.gitlight.status.back.git_status.call(null);
+}));
+});
 lt.plugins.gitlight.status.back.git_reset = (function git_reset(action,filename){return lt.plugins.gitlight.git.git_reset.call(null,filename);
 });
 lt.plugins.gitlight.status.back.git_checkout_file = (function git_checkout_file(action,filename){return lt.plugins.gitlight.git.git_checkout_file.call(null,filename);
 });
 lt.plugins.gitlight.status.back.bin_rm = (function bin_rm(action,filename){return lt.objs.files.delete_BANG_.call(null,[cljs.core.str(lt.plugins.gitlight.git.get_git_root.call(null)),cljs.core.str("/"),cljs.core.str(filename)].join(''));
-});
-}
-if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.lib')) {
-goog.provide('lt.plugins.gitlight.lib');
-goog.require('cljs.core');
-goog.require('clojure.string');
-goog.require('clojure.string');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.objs.command');
-goog.require('lt.objs.command');
-goog.require('lt.object');
-goog.require('lt.object');
-lt.plugins.gitlight.lib.qu = (function qu(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
-});
-lt.plugins.gitlight.lib.sanitize = (function sanitize(s){return clojure.string.escape.call(null,s,new cljs.core.PersistentArrayMap(null, 3, ["$","\\$","`","\\`","\"","\\\""], null));
-});
-lt.plugins.gitlight.lib.q_AMPERSAND_s = (function q_AMPERSAND_s(s){return lt.plugins.gitlight.lib.qu.call(null,lt.plugins.gitlight.lib.sanitize.call(null,s));
-});
-lt.plugins.gitlight.lib.qsprint = (function qsprint(s){return cljs.core.println.call(null,lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,s));
-});
-lt.plugins.gitlight.lib.popup = (function popup(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"try to break us","commit",lt.plugins.gitlight.lib.qsprint);
-});
-lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.lib","input-test","lt.plugins.gitlight.lib/input-test",2633420103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: input sanitize test",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.lib.popup], null));
-}
-if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.commit')) {
-goog.provide('lt.plugins.gitlight.commit');
-goog.require('cljs.core');
-goog.require('lt.plugins.gitlight.lib');
-goog.require('lt.util.dom');
-goog.require('lt.objs.context');
-goog.require('lt.objs.popup');
-goog.require('lt.objs.popup');
-goog.require('lt.objs.context');
-goog.require('lt.util.dom');
-goog.require('lt.objs.command');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.object');
-goog.require('lt.object');
-goog.require('lt.plugins.gitlight.common_ui');
-goog.require('lt.plugins.gitlight.git');
-goog.require('lt.objs.command');
-goog.require('lt.plugins.gitlight.lib');
-goog.require('lt.plugins.gitlight.git');
-lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.commit","git-commit","lt.plugins.gitlight.commit/git-commit",1069137844),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: commit",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.commit.git_commit], null));
-lt.plugins.gitlight.commit.git_commit = (function git_commit(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"commit message?","commit",lt.plugins.gitlight.commit.git_cmd_commit);
-});
-lt.plugins.gitlight.commit.git_cmd_commit = (function git_cmd_commit(msg){return lt.plugins.gitlight.git.git_command_ignore_out.call(null,"commit","-m",lt.plugins.gitlight.lib.q_AMPERSAND_s.call(null,msg));
 });
 }
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.remote-com')) {
