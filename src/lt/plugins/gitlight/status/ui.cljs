@@ -107,6 +107,7 @@
      (make-button-and-update bname git-root fun))
    [:br]
    (make-button-and-update "refresh" "refresh" (fn [x y]))
+   (make-button-and-update "toggle inline diff" "toggle inline diff" diff/toggle-git-diff-gutter)
 
    [:br]
    [:br]
