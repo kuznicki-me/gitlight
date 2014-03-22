@@ -35,7 +35,7 @@
 
 (defn git-command-cwd [obj cwd & args]
   (let [git-path (:git-binary @config)
-        command (str git-path " " (string/join " " args))]
+        command (str (lib/qu git-path) " " (string/join " " args))]
     (exec/run-deaf obj cwd command)))
 
 
