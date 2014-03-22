@@ -12,7 +12,7 @@
     ::config
     :tags #{::config}
     :git-status-refresh-rate 1000
-    :git-binary "/usr/bin/git")))
+    :git-binary "git")))
 
 
 
