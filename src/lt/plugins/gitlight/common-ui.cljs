@@ -2,9 +2,7 @@
   (:require [lt.object :as object]
             [lt.objs.tabs :as tabs]
             [lt.objs.popup :as popup]
-            ;[crate.core :as crate]
-            [crate.binding :refer [bound map-bound]]
-            ;[crate.binding :refer [subatom bound map-bound computed]]
+            [lt.objs.context :as ctx]
             [lt.util.dom :as dom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -20,61 +18,22 @@
   :click (fn [] (fun n f)))
 
 
-(defn ->value [{:keys [value]}]
-  (if-not value
-    ""
-    value))
-
-
-
-(defui input [this]
-  [:input.option {:type "text"
-                  :placeholder (bound this :placeholder)
-                  :value (bound this ->value)}]
-  :keyup (fn [e]
-           (this-as me
-                    (reset! (:message @common-input) (dom/val me)))))
-
-
-
-(object/object* ::common-input
-                :tags #{:commit-input}
-                :placeholder "message"
-                :message (atom nil)
-                :init (fn [this opts]
-                        (object/merge! this opts)
-                        (input this)))
-
-
-
-(def common-input (object/create ::common-input))
-
-
-
-(def mesg-atom
-  (:message @common-input))
-
-
-
-(defn handle-input-and-clear [fun]
-  (apply fun [@mesg-atom])
-  (clear-input))
-
-
-
-(defn clear-input []
-  (reset! mesg-atom nil))
-
+(defui text-input []
+  [:input {:type "text" :placeholder "message"}]
+  :focus (fn []
+           (ctx/in! :popup.input))
+  :blur (fn []
+          (ctx/out! :popup.input)))
 
 
 (defn input-popup [mesg label fun]
-  (popup/popup! {:header  mesg
-                 :body (input common-input)
-                 :buttons [{:label label
-                            :action (fn [] (handle-input-and-clear fun))}
-                            {:label "cancel"
-                            :action clear-input}]}))
-
+  (let [input (text-input)
+        p (popup/popup! {:header mesg
+                         :body input
+                         :buttons [{:label label
+                                    :action (fn []
+                                              (fun (dom/val input)))}
+                                   {:label "cancel"}]})]))
 
 
 (defn dom-truncate [node]
