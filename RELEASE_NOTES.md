@@ -1,3 +1,34 @@
+version 0.0.6
+=============
+New Features:
+ * Do the cached diff to view what changes will go to Your next commit, and
+   then use a nice form to write Your message.
+ * The commit messages *should* be sanitized.  That means that entering a
+   'fixed "rm somethingimportant"' in the message should no longer cause havoc.
+   I wouldn't trust it too much though, I might have missed something that
+   needs to be escaped.  Stick to alphanumerics and nobody gets hurt.
+ * Inline information about git diff line state.  Very experimental, but toggle
+   it and take it for a spin.  By default it should even update on save (though
+   You can disable this).  Magic made possible with code stolen from
+   https://github.com/bfabry/gblame/
+ * Manual refresh button.  For those special moments that happen all the time
+   when the UI does not refresh properly.
+
+Changes:
+ * Popup about not being in git repo?  What popup?  I deny that we've ever had
+   such an unwieldy thing.
+ * Buttons moved around in the git status.  Some things got renamed.  Most
+   probably they shall move and change again.  And again.  UI is such a fickle
+   thing.
+ * After using some more code from devs, the input field in the quick commit
+   popup works as it should now.  Arrows properly move the cursor instead of
+   the selected button.  Use TAB to move it now.
+
+Known Issues:
+ * The inline diff might make Your LightTable very unresponsive.  It might be
+   the editors fault or my awful spaghetti code.
+
+
 version 0.0.5
 =============
 New Features:
