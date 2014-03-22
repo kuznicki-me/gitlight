@@ -10,22 +10,22 @@
   font-weight: bold;
 }
 
-.gitlight-status .not-staged li.modified button:first-child {
+.gitlight-status .not-staged li button:first-child {
   background-color: #6a6721;
   font-weight: bold;
 }
 
-.gitlight-status .untracked li.untracked button:first-child {
+.gitlight-status .untracked li button:first-child {
   background-color: #21626a;
   font-weight: bold;
 }
 
-.gitlight-status .not-staged li.modified button.checkout {
+.gitlight-status .not-staged li button.checkout {
   margin-left: 32px;
   background-color: #6a2f21;
 }
 
-.gitlight-status .untracked li.untracked button.delete {
+.gitlight-status .untracked li button.delete {
   margin-left: 32px;
   background-color: #6a2f21;
 }
