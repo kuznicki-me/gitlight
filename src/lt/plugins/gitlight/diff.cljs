@@ -55,8 +55,37 @@
 
 (defn cached-toggle-button []
   (let [cached-txt (if @last-cached "unstaged changes" "staged changes")]
-    (swap! last-cached not)
-    (cui/make-button cached-txt cached-txt git-diff-update-fun)))
+    (cui/make-button cached-txt cached-txt
+                     (fn []
+                       (swap! last-cached not)
+                       (git-diff-update-fun)))))
+
+
+(defui commit-input []
+  [:input.title {:type "text"
+                 :size 81
+           :placeholder "commit title"}])
+;;   :focus (fn []
+;;            (ctx/in! :popup.input))
+;;   :blur (fn []
+;;           (ctx/out! :popup.input)))
+
+
+(defui commit-body []
+  [:textarea.body {:placeholder "commit body"
+                   :cols 81
+                   :rows 10}])
+
+(defn make-commit-form []
+   (let [title (commit-input)
+         body (commit-body)]
+
+  [:div.commit-form
+   title [:br]
+   body [:br]
+   (cui/make-button "submit" "submit" (fn [x y]
+                                        (git/git-form-commit (dom/val title) (dom/val body))
+                                        (git-diff-update-fun)))]))
 
 
 (defui diff-panel [this]
@@ -66,6 +95,8 @@
      (make-more-context)
      (cached-toggle-button)
 
+     (when @last-cached
+       (make-commit-form))
 
      (for [file (parse-git-diff @output)
            :let [filename (:filename file)

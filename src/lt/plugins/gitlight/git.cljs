@@ -70,6 +70,8 @@
 (defn git-cmd-commit [msg]
   (git-command-ignore-out "commit" "-m" (lib/q&s msg)))
 
+(defn git-form-commit [title body]
+  (git-command-ignore-out "commit" "-m" (lib/q&s title) "-m" (lib/q&s body)))
 
 (behavior ::ignore.out-success
           :desc "gitlight: Ignore git command output."
