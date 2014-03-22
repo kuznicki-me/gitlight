@@ -1,13 +1,11 @@
 (ns lt.plugins.gitlight.status
   (:require [lt.object :as object]
-            [lt.plugins.gitlight.status.back :as back]
-            [lt.plugins.gitlight.status.ui :as ui]
-            [lt.plugins.gitlight :refer [config error]]
             [lt.objs.sidebar :as sidebar]
             [lt.objs.editor.pool :as pool]
-            [lt.objs.command :as command]
-            [lt.util.dom :as dom]
-            [lt.objs.command :as cmd])
+            [lt.objs.command :as cmd]
+            [lt.plugins.gitlight.status.back :as back]
+            [lt.plugins.gitlight.status.ui :as ui]
+            [lt.plugins.gitlight :refer [config]])
   (:require-macros [lt.macros :refer [behavior]]))
 
 (defn status-if-open []

@@ -1,10 +1,6 @@
 (ns lt.plugins.gitlight.branch
   (:require [lt.object :as object]
-            [lt.objs.popup :as popup]
-            [lt.objs.context :as ctx]
             [lt.objs.command :as cmd]
-            [lt.objs.tabs :as tabs]
-            [lt.util.dom :as dom]
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui]

@@ -1,14 +1,11 @@
 (ns lt.plugins.gitlight.diff
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
-            [lt.objs.proc :as proc]
-            [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [lt.objs.editor.pool :as pool]
             [lt.objs.editor :as editor]
             [clojure.string :as string]
             [lt.plugins.gitlight.gutter :as gut]
-            [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))

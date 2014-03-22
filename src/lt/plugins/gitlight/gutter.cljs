@@ -6,7 +6,7 @@
             [lt.util.dom :as dom]
             [lt.objs.editor :as editor]
             [lt.objs.editor.pool :as pool])
-  (:require-macros [lt.macros :refer [behavior defui]]))
+  (:require-macros [lt.macros :refer [defui]]))
 
 (object/object* ::gutter-settings
                 :width 50)

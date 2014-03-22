@@ -1,17 +1,15 @@
 (ns lt.plugins.gitlight.git
   (:require [lt.object :as object]
-            [lt.objs.proc :as proc]
             [lt.objs.command :as cmd]
             [lt.objs.notifos :as notifos]
             [lt.objs.editor.pool :as pool]
             [lt.objs.files :as files]
-            [lt.objs.popup :as popup]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.lib :as lib]
-            [lt.plugins.gitlight :refer [config error]]
+            [lt.plugins.gitlight :refer [config]]
             [clojure.string :as string])
-    (:require-macros [lt.macros :refer [defui behavior]]))
+    (:require-macros [lt.macros :refer [behavior]]))
 
 
 
