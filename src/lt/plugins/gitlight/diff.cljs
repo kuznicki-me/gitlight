@@ -165,16 +165,19 @@
 
 
 
-(defn git-diff [filepath]
+(defn git-diff-cached [cached? filepath]
   (reset! last-filename filepath)
   (git/git-command git-diff-output
                    "--no-pager"
                    "diff"
+                   (when cached? "--cached")
                    "--no-color"
                    (str "-U" @context)
                    "--"
                    filepath))
 
+(defn git-diff [filepath]
+  (git-diff-cached false filepath))
 
 
 (defn git-diff-button [action filename]
