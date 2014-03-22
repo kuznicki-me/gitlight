@@ -205,8 +205,9 @@
                    \+ [(concat ok
                                (map str part stack)
                                (repeat (- right left) "+"))
-                       (repeat (- left right) "-")
-                       ])))
+                       (repeat (- left right) "-")]
+                   \\ [ok part]
+                   )))
              [[][]] partitioned))))
 
 
@@ -224,16 +225,25 @@
                            (repeat
                             (.-size (.-doc (editor/->cm-ed (pool/last-active))))
                             " ")
-                           (side-by-side firsts))))
-                      (object/add-tags this #{::gitlight-gutter-on})
-                      (println (object/has-tag? this ::gitlight-gutter-on))
-                      ))
+                           (side-by-side firsts))))))
 
 
 (behavior ::diff-gutter-err
           :triggers [:err]
           :reaction (fn [this err stderr]
                       (println "error" stderr)))
+
+
+(behavior ::refresh-diff-gutter-on-save
+          :triggers #{:save+}
+          :type :user
+          :desc "gitlight: refresh diff gutter"
+          :reaction (fn [editor content]
+                      (if (object/has-tag? editor ::gitlight-gutter-on)
+                        (do
+                          (object/remove-tags editor #{::gitlight-gutter-on})
+                          (add-git-diff-gutter)))
+                      content))
 
 
 (def git-diff-gutter-out
@@ -244,22 +254,20 @@
 
 
 (defn add-git-diff-gutter []
-  (exec/run-deaf git-diff-gutter-out
-                 (git/get-git-root)
-                 (str "git diff -U10000 -- " (-> @(pool/last-active) :info :path))))
+  (object/add-tags (pool/last-active) #{::gitlight-gutter-on})
+  (git/git-command git-diff-gutter-out
+                   "diff" "-U10000" "--" (-> @(pool/last-active) :info :path)))
+
 
 (defn remove-git-diff-gutter []
   (gut/remove-gutters (pool/last-active))
-  (object/remove-tags (pool/last-active) #{::gitlight-gutter-on})
-  )
+  (object/remove-tags (pool/last-active) #{::gitlight-gutter-on}))
 
 
 (defn toggle-git-diff-gutter []
-  ()
   (if (object/has-tag? (pool/last-active) ::gitlight-gutter-on)
     (remove-git-diff-gutter)
-    (add-git-diff-gutter)
-    ))
+    (add-git-diff-gutter)))
 
 (cmd/command {:command ::gitlight-add-diff-gutter
               :desc "gitlight: add gutter diff (experimental)"
@@ -280,7 +288,6 @@
               :desc "gitlight: diff this file"
               :exec (fn []
                       (git-diff (-> @(pool/last-active) :info :path)))})
-
 
 
 (cmd/command {:command ::git-diff-repo

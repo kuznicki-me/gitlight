@@ -20,7 +20,7 @@
    {:style (str "width: " (:width @gutter-settings) "px; "
                 "white-space: nowrap; "
                 "overflow: hidden;")}
-   [:pre content]]
+   content]
   :click (fn [] (on-click content)))
 
 
