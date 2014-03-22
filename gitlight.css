@@ -30,7 +30,18 @@
   background-color: #6a2f21;
 }
 
-textarea { color: var(highlight-fg); background:var(highlight-bg); }
+.commit-form {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+textarea {
+  color: var(highlight-fg);
+  background: var(highlight-bg);
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+}
 
 
 
