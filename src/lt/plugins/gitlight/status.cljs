@@ -28,13 +28,23 @@
                                             ::add-watch)))
 
 
+(defn status-toggle []
+  (if (ui/is-open?)
+    (do
+      (object/raise ui/status-bar ::close-ui-on-failure)
+      (object/raise sidebar/rightbar :close! ui/status-bar))
+    (back/git-status)))
+
 
 
 (cmd/command {:command :gitlight-status
-              :desc "gitlight: Status"
+              :desc "gitlight: status"
               :exec back/git-status})
 
 
+(cmd/command {:command :gitlight-status-toggle
+              :desc "gitlight: status toggle"
+              :exec status-toggle})
 
 
 (behavior ::refresh-ui-on-new-status
