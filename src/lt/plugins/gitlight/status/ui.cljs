@@ -62,7 +62,8 @@
                :untracked [["add"    back/git-add]
                            ;["ignore" nil]
                            ["delete" back/bin-rm]]
-               :staged [["unstage" back/git-reset]]})
+               :staged [["unstage" back/git-reset]
+                        ["diff"   diff/git-diff-cached-button]]})
 
 
 
