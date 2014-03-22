@@ -67,15 +67,13 @@
 
 
 
-(def repo-ops [{:commit ["commit" back/git-commit]
-                :detailed-commit ["detailed commit" nil]}
-               {:push   ["push"   remote/git-push]
+(def repo-ops [{:push   ["push"   remote/git-push]
                 :pull   ["pull"   remote/git-pull]
                 :fetch  ["fetch"  remote/git-fetch]}
+               {:cached-diff ["cached diff" diff/git-diff-cached-repo-button]
+                :commit ["quitck commit" back/git-commit]}
                {:diff   ["diff"  diff/git-diff-repo-button]
-                :cached-diff ["cached diff" diff/git-diff-cached-repo-button]
-                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]
-                }])
+                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]}])
                ;:log    ["log"    nil]
                ;:merge  ["merge"  nil]
                ;:tag    ["tag"    nil]})
