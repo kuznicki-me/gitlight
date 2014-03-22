@@ -53,12 +53,19 @@
                                               git-diff-update-fun))] )
 
 
+(defn cached-toggle-button []
+  (let [cached-txt (if @last-cached "unstaged changes" "staged changes")]
+    (swap! last-cached not)
+    (cui/make-button cached-txt cached-txt git-diff-update-fun)))
+
 
 (defui diff-panel [this]
   (let [output (:results @this)]
     [:div.gitlight-diff {:style "overflow: scroll;"}
      (make-context)
      (make-more-context)
+     (cached-toggle-button)
+
 
      (for [file (parse-git-diff @output)
            :let [filename (:filename file)
