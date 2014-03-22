@@ -23,11 +23,12 @@
 
 ; necessary for update
 (def last-filename (atom nil))
+(def last-cached (atom false))
 
 
 
 (defn git-diff-update-fun []
-  (git-diff @last-filename))
+  (git-diff-cached @last-cached @last-filename))
 
 
 
@@ -167,6 +168,7 @@
 
 (defn git-diff-cached [cached? filepath]
   (reset! last-filename filepath)
+  (reset! last-cached cached?)
   (git/git-command git-diff-output
                    "--no-pager"
                    "diff"
@@ -183,10 +185,14 @@
 (defn git-diff-button [action filename]
   (git-diff (str (git/get-git-root) "/" filename)))
 
-
+(defn git-diff-cached-button [action filename]
+  (git-diff-cached true (str (git/get-git-root) "/" filename)))
 
 (defn git-diff-repo-button [action filename]
   (git-diff ""))
+
+(defn git-diff-cached-repo-button [action filename]
+  (git-diff-cached true ""))
 
 
 

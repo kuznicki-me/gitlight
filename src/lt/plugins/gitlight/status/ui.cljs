@@ -66,11 +66,15 @@
 
 
 
-(def repo-ops {:commit ["commit" back/git-commit]
-               :push   ["push"   remote/git-push]
-               :pull   ["pull"   remote/git-pull]
-               :fetch  ["fetch"  remote/git-fetch]
-               :diff   ["diff"  diff/git-diff-repo-button]})
+(def repo-ops [{:commit ["commit" back/git-commit]
+                :detailed-commit ["detailed commit" nil]}
+               {:push   ["push"   remote/git-push]
+                :pull   ["pull"   remote/git-pull]
+                :fetch  ["fetch"  remote/git-fetch]}
+               {:diff   ["diff"  diff/git-diff-repo-button]
+                :cached-diff ["cached diff" diff/git-diff-cached-repo-button]
+                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]
+                }])
                ;:log    ["log"    nil]
                ;:merge  ["merge"  nil]
                ;:tag    ["tag"    nil]})
@@ -103,11 +107,12 @@
 ;;    [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
    [:h2 [:nobr "Root: " git-root]]
    [:br]
-   (for [[bname fun] (vals repo-ops)]
-     (make-button-and-update bname git-root fun))
+   (for [option-group repo-ops]
+     [:div
+      (for [[bname fun] (vals option-group)]
+        (make-button-and-update bname git-root fun))])
    [:br]
    (make-button-and-update "refresh" "refresh" (fn [x y]))
-   (make-button-and-update "toggle inline diff" "toggle inline diff" diff/toggle-git-diff-gutter)
 
    [:br]
    [:br]
