@@ -23,6 +23,8 @@
 (defn new-branch-button []
   (cui/make_button "make a new branch" nil git-new-branch))
 
+(defn delete-branch-button [branch]
+  (cui/make_button "delete" branch git-delete-branch))
 
 
 
@@ -32,7 +34,7 @@
     (for [parsed (parse-data @(:results @this))
           :let [[this-one? [branch sha1 desc]] parsed]]
       [:tr
-       [:td (if this-one? "->" "")]
+       [:td (if this-one? "->" (delete-branch-button branch))]
        [:td {:class (if this-one?
                       "current"
                       "not-current")} (checkout-button branch)]
@@ -99,6 +101,10 @@
   (git/git-command-ignore-out "branch" branch)
   (git-branches))
 
+
+(defn git-delete-branch [action branch]
+  (git/git-command-ignore-out "branch" "-D" branch)
+  (git-branches))
 
 
 (cmd/command {:command ::branches
