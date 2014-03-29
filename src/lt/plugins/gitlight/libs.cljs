@@ -1,4 +1,4 @@
-(ns lt.plugins.gitlight.lib
+(ns lt.plugins.gitlight.libs
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
             [lt.plugins.gitlight.common-ui :as cui]

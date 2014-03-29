@@ -6,7 +6,7 @@
             [lt.objs.files :as files]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.execute :as exec]
-            [lt.plugins.gitlight.lib :as lib]
+            [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.history :as hist]
             [lt.plugins.gitlight :refer [config]]
             [clojure.string :as string])

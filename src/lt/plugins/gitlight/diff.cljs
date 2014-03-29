@@ -6,7 +6,7 @@
             [lt.objs.editor :as editor]
             [clojure.string :as string]
             [lt.plugins.gitlight.gutter :as gut]
-            [lt.plugins.gitlight.lib :as lib]
+            [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
