@@ -240,25 +240,6 @@ lt.plugins.gitlight.execute.run = (function run(return_obj,path,command,input){v
 lt.plugins.gitlight.execute.run_deaf = (function run_deaf(return_obj,path,command){return lt.plugins.gitlight.execute.run.call(null,return_obj,path,command,"");
 });
 }
-if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.history')) {
-goog.provide('lt.plugins.gitlight.history');
-goog.require('cljs.core');
-goog.require('lt.plugins.gitlight');
-goog.require('lt.plugins.gitlight');
-goog.require('lt.objs.command');
-goog.require('lt.objs.command');
-goog.require('lt.object');
-goog.require('lt.object');
-lt.plugins.gitlight.history.history = cljs.core.atom.call(null,cljs.core.PersistentVector.EMPTY);
-lt.plugins.gitlight.history.__BEH__history_out_success = (function __BEH__history_out_success(obj,command,data,err){return cljs.core.swap_BANG_.call(null,lt.plugins.gitlight.history.history,cljs.core.conj,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"success","success",3441701749),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [command,data.toString()], null)], null));
-});
-lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.history","history-out-success","lt.plugins.gitlight.history/history-out-success",3203541310),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.history.__BEH__history_out_success,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Log command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"out","out",1014014656),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
-lt.plugins.gitlight.history.__BEH__history_out_error = (function __BEH__history_out_error(obj,command,err,stderr){return cljs.core.swap_BANG_.call(null,lt.plugins.gitlight.history.history,cljs.core.conj,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"error","error",1110689146),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [command,stderr.toString()], null)], null));
-});
-lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.history","history-out-error","lt.plugins.gitlight.history/history-out-error",4273094007),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.history.__BEH__history_out_error,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Log command error output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"err","err",1014004951),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
-lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.history","git-history","lt.plugins.gitlight.history/git-history",1919033520),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: command history",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return cljs.core.println.call(null,cljs.core.deref.call(null,lt.plugins.gitlight.history.history));
-})], null));
-}
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.lib')) {
 goog.provide('lt.plugins.gitlight.lib');
 goog.require('cljs.core');
@@ -270,6 +251,8 @@ goog.require('lt.objs.command');
 goog.require('lt.objs.command');
 goog.require('lt.object');
 goog.require('lt.object');
+lt.plugins.gitlight.lib.now = (function now(){return (new Date()).toString();
+});
 lt.plugins.gitlight.lib.qu = (function qu(s){return [cljs.core.str("\""),cljs.core.str(s),cljs.core.str("\"")].join('');
 });
 lt.plugins.gitlight.lib.sanitize = (function sanitize(s){return clojure.string.escape.call(null,s,new cljs.core.PersistentArrayMap(null, 4, ["$","\\$","`","\\`","\\","\\\\","\"","\\\""], null));
@@ -281,6 +264,27 @@ lt.plugins.gitlight.lib.qsprint = (function qsprint(s){return cljs.core.println.
 lt.plugins.gitlight.lib.popup = (function popup(){return lt.plugins.gitlight.common_ui.input_popup.call(null,"try to break us","commit",lt.plugins.gitlight.lib.qsprint);
 });
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.lib","input-test","lt.plugins.gitlight.lib/input-test",2633420103),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: input sanitize test",new cljs.core.Keyword(null,"exec","exec",1017031683),lt.plugins.gitlight.lib.popup], null));
+}
+if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.history')) {
+goog.provide('lt.plugins.gitlight.history');
+goog.require('cljs.core');
+goog.require('lt.plugins.gitlight');
+goog.require('lt.plugins.gitlight');
+goog.require('lt.plugins.gitlight.lib');
+goog.require('lt.plugins.gitlight.lib');
+goog.require('lt.objs.command');
+goog.require('lt.objs.command');
+goog.require('lt.object');
+goog.require('lt.object');
+lt.plugins.gitlight.history.history = cljs.core.atom.call(null,cljs.core.PersistentVector.EMPTY);
+lt.plugins.gitlight.history.__BEH__history_out_success = (function __BEH__history_out_success(obj,command,data,err){return cljs.core.swap_BANG_.call(null,lt.plugins.gitlight.history.history,cljs.core.conj,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"success","success",3441701749),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [lt.plugins.gitlight.lib.now.call(null),command,data.toString()], null)], null));
+});
+lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.history","history-out-success","lt.plugins.gitlight.history/history-out-success",3203541310),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.history.__BEH__history_out_success,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Log command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"out","out",1014014656),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
+lt.plugins.gitlight.history.__BEH__history_out_error = (function __BEH__history_out_error(obj,command,err,stderr){return cljs.core.swap_BANG_.call(null,lt.plugins.gitlight.history.history,cljs.core.conj,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"error","error",1110689146),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [lt.plugins.gitlight.lib.now.call(null),command,stderr.toString()], null)], null));
+});
+lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.history","history-out-error","lt.plugins.gitlight.history/history-out-error",4273094007),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.history.__BEH__history_out_error,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Log command error output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"err","err",1014004951),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
+lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.history","git-history","lt.plugins.gitlight.history/git-history",1919033520),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: command history",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return cljs.core.println.call(null,cljs.core.deref.call(null,lt.plugins.gitlight.history.history));
+})], null));
 }
 if(!lt.util.load.provided_QMARK_('lt.plugins.gitlight.git')) {
 goog.provide('lt.plugins.gitlight.git');
@@ -332,11 +336,11 @@ var args = null;if (arguments.length > 2) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 2),0);} 
 return git_command_cwd__delegate.call(this,obj,cwd,args);};
 git_command_cwd.cljs$lang$maxFixedArity = 2;
-git_command_cwd.cljs$lang$applyTo = (function (arglist__10863){
-var obj = cljs.core.first(arglist__10863);
-arglist__10863 = cljs.core.next(arglist__10863);
-var cwd = cljs.core.first(arglist__10863);
-var args = cljs.core.rest(arglist__10863);
+git_command_cwd.cljs$lang$applyTo = (function (arglist__9923){
+var obj = cljs.core.first(arglist__9923);
+arglist__9923 = cljs.core.next(arglist__9923);
+var cwd = cljs.core.first(arglist__9923);
+var args = cljs.core.rest(arglist__9923);
 return git_command_cwd__delegate(obj,cwd,args);
 });
 git_command_cwd.cljs$core$IFn$_invoke$arity$variadic = git_command_cwd__delegate;
@@ -354,9 +358,9 @@ var args = null;if (arguments.length > 1) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 1),0);} 
 return git_command__delegate.call(this,obj,args);};
 git_command.cljs$lang$maxFixedArity = 1;
-git_command.cljs$lang$applyTo = (function (arglist__10864){
-var obj = cljs.core.first(arglist__10864);
-var args = cljs.core.rest(arglist__10864);
+git_command.cljs$lang$applyTo = (function (arglist__9924){
+var obj = cljs.core.first(arglist__9924);
+var args = cljs.core.rest(arglist__9924);
 return git_command__delegate(obj,args);
 });
 git_command.cljs$core$IFn$_invoke$arity$variadic = git_command__delegate;
@@ -374,8 +378,8 @@ var args = null;if (arguments.length > 0) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return git_command_ignore_out__delegate.call(this,args);};
 git_command_ignore_out.cljs$lang$maxFixedArity = 0;
-git_command_ignore_out.cljs$lang$applyTo = (function (arglist__10865){
-var args = cljs.core.seq(arglist__10865);
+git_command_ignore_out.cljs$lang$applyTo = (function (arglist__9925){
+var args = cljs.core.seq(arglist__9925);
 return git_command_ignore_out__delegate(args);
 });
 git_command_ignore_out.cljs$core$IFn$_invoke$arity$variadic = git_command_ignore_out__delegate;
@@ -1418,8 +1422,7 @@ lt.plugins.gitlight.status.back.git_status = (function git_status(){return lt.pl
 });
 lt.plugins.gitlight.status.back.git_add = (function git_add(action,filename){return lt.plugins.gitlight.git.git_add.call(null,filename);
 });
-lt.plugins.gitlight.status.back.git_commit = (function git_commit(action,filename){return lt.plugins.gitlight.common_ui.input_popup.call(null,"commit message?","commit",(function (msg){lt.plugins.gitlight.git.git_cmd_commit.call(null,msg);
-return lt.plugins.gitlight.status.back.git_status.call(null);
+lt.plugins.gitlight.status.back.git_commit = (function git_commit(action,filename){return lt.plugins.gitlight.common_ui.input_popup.call(null,"commit message?","commit",(function (msg){return lt.plugins.gitlight.git.git_cmd_commit.call(null,msg);
 }));
 });
 lt.plugins.gitlight.status.back.git_reset = (function git_reset(action,filename){return lt.plugins.gitlight.git.git_reset.call(null,filename);

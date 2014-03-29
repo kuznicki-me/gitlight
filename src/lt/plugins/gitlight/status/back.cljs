@@ -120,7 +120,8 @@
   (cui/input-popup "commit message?" "commit"
                    (fn [msg]
                      (git/git-cmd-commit msg)
-                     (git-status))))
+                     ;(git-status))))
+                     )))
 
 
 (defn git-reset [action filename]

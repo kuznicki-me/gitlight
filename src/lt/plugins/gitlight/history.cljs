@@ -1,6 +1,7 @@
 (ns lt.plugins.gitlight.history
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
+            [lt.plugins.gitlight.lib :as lib]
             [lt.plugins.gitlight :refer [config]])
     (:require-macros [lt.macros :refer [behavior]]))
 
@@ -12,7 +13,7 @@
           :type :user
           :triggers #{:out}
           :reaction (fn [obj command data err]
-                      (swap! history conj {:success [command (.toString data)]})))
+                      (swap! history conj {:success [(lib/now) command (.toString data)]})))
 
 
 (behavior ::history-out-error
@@ -20,7 +21,7 @@
           :type :user
           :triggers #{:err}
           :reaction (fn [obj command err stderr]
-                      (swap! history conj {:error [command (.toString stderr)]})))
+                      (swap! history conj {:error [(lib/now) command (.toString stderr)]})))
 
 
 

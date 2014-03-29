@@ -4,6 +4,8 @@
             [lt.plugins.gitlight.common-ui :as cui]
             [clojure.string :as string]))
 
+(defn now []
+  (.toString (js/Date.)))
 
 (defn qu [s]
   (str \" s \"))
