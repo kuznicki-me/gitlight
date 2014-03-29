@@ -6,6 +6,7 @@
             [lt.objs.editor :as editor]
             [clojure.string :as string]
             [lt.plugins.gitlight.gutter :as gut]
+            [lt.plugins.gitlight.lib :as lib]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -219,10 +220,10 @@
 
 
 (defn git-diff-button [action filename]
-  (git-diff (str (git/get-git-root) "/" filename)))
+  (git-diff filename))
 
 (defn git-diff-cached-button [action filename]
-  (git-diff-cached true (str (git/get-git-root) "/" filename)))
+  (git-diff-cached true filename))
 
 (defn git-diff-repo-button [action filename]
   (git-diff ""))
