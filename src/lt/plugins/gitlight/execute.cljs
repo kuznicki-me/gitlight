@@ -12,8 +12,8 @@
                          (clj->js {"cwd" path})
                          (fn [err stdout stderr]
                            (if err
-                             (object/raise return-obj :err err stderr)
-                             (object/raise return-obj :out stdout stderr))))
+                             (object/raise return-obj :err command err stderr)
+                             (object/raise return-obj :out command stdout stderr))))
         proc-input (.-stdin child-proc)]
     (.end proc-input input)))
 

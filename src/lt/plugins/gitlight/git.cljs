@@ -34,6 +34,10 @@
 (defn git-command-cwd [obj cwd & args]
   (let [git-path (:git-binary @config)
         command (str (lib/qu git-path) " " (string/join " " args))]
+    (println (:history git-ignore-out))
+    (println (:history @git-ignore-out))
+    (println @(:history @git-ignore-out))
+    (swap! (:history @git-ignore-out) conj command)
     (exec/run-deaf obj cwd command)))
 
 
@@ -74,14 +78,14 @@
 (behavior ::ignore.out-success
           :desc "gitlight: Ignore git command output."
           :triggers #{:out}
-          :reaction (fn [obj data err]
+          :reaction (fn [obj command data err]
                       (notifos/set-msg! "git: success!")))
 
 
 (behavior ::ignore.out-error
           :desc "gitlight: Ignore git command output."
           :triggers #{:err}
-          :reaction (fn [obj err stderr]
+          :reaction (fn [obj command err stderr]
                       (notifos/set-msg! (str "git failed!: " (.toString stderr)))))
 
 
@@ -109,6 +113,7 @@
   (object/create
    (object/object*
     ::git-ignore-out
+    :history (atom ["asdf"])
     :tags [:git-ignore-out]
     :behaviors [::ignore.out-success
                 ::ignore.out-error])))

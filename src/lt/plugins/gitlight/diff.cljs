@@ -262,7 +262,7 @@
 
 (behavior ::parse-diff-gutter-out
           :triggers [:out]
-          :reaction (fn [this stdout stderr]
+          :reaction (fn [this command stdout stderr]
                       (let [parsed (drop 5 (string/split-lines (.toString stdout)))
                             firsts (map first parsed)]
                         (gut/show-gutter-data
@@ -276,7 +276,7 @@
 
 (behavior ::diff-gutter-err
           :triggers [:err]
-          :reaction (fn [this err stderr]
+          :reaction (fn [this command err stderr]
                       (println "error" stderr)))
 
 
