@@ -88,7 +88,7 @@
 
 (defui diff-panel [this]
   (let [output (:results @this)]
-    [:div.gitlight-diff {:style "overflow: scroll;"}
+    [:div.gitlight-diff
      [:h1 "diff: " (if (= "" @last-filename) "whole repo" @last-filename)]
      (make-context)
      (make-more-context)

@@ -7,14 +7,14 @@
             [lt.plugins.gitlight :refer [config]])
     (:require-macros [lt.macros :refer [defui behavior]]))
 
-(defui row [[cls [date command out]]]
-  [:tr {:class cls}
-   [:td date]
-   [:td command]
-   (println out)
-   [:td [:textarea out]]
+(defn row [[cls [date command out]]]
+  (if-not (nil? cls)
+    [:tr {:class (name cls)}
+     [:td date]
+     [:td command]
+     [:td [:textarea out]]
 
-   ]
+     ])
   )
 
 (defui ui-fun [this]
@@ -22,7 +22,7 @@
         reversed (reverse @history)
         last-ok (first (drop-while #(= :error (first %)) reversed))
         last-fail (first (drop-while #(= :success (first %)) reversed))]
-    [:div.history
+    [:div.gitlight-command-history
      [:b "last ok: "]
      [:table.last-ok
      (row last-ok)]
@@ -73,7 +73,7 @@
 
 (cmd/command {:command ::git-history
              :desc "gitlight: command history"
-             :exec (fn [] (println @history)
+             :exec (fn []
                      (tabs/add-or-focus! history-tab)
                      (object/raise history-tab :refresh)
                      )})

@@ -47,6 +47,10 @@ textarea {
 
 /* gitlight: branches */
 
+.gitlight-branches {
+  overflow: scroll;
+}
+
 .gitlight-branches table td {
   padding-left: 5px;
   padding-right: 5px;
@@ -80,6 +84,9 @@ textarea {
 
 /* gitlight: diff */
 
+.gitlight-diff {
+  overflow: scroll;
+}
 
 .gitlight-diff table {
   margin-bottom: 30px;
@@ -101,4 +108,25 @@ textarea {
 
 .gitlight-diff table tr.changed td.right {
   background-color: #468e2a;
+}
+
+
+/* gitlight: command history */
+
+
+.gitlight-command-history {
+  overflow: scroll;
+}
+
+.gitlight-command-history * td {
+  vertical-align: top;
+}
+
+.gitlight-command-history * .success {
+  background-color:#115a22;
+}
+
+
+.gitlight-command-history * .error {
+  background-color:#5f2020;
 }
