@@ -7,6 +7,7 @@
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.lib :as lib]
+            [lt.plugins.gitlight.history :as hist]
             [lt.plugins.gitlight :refer [config]]
             [clojure.string :as string])
     (:require-macros [lt.macros :refer [behavior]]))
@@ -34,10 +35,6 @@
 (defn git-command-cwd [obj cwd & args]
   (let [git-path (:git-binary @config)
         command (str (lib/qu git-path) " " (string/join " " args))]
-    (println (:history git-ignore-out))
-    (println (:history @git-ignore-out))
-    (println @(:history @git-ignore-out))
-    (swap! (:history @git-ignore-out) conj command)
     (exec/run-deaf obj cwd command)))
 
 
@@ -113,7 +110,6 @@
   (object/create
    (object/object*
     ::git-ignore-out
-    :history (atom ["asdf"])
     :tags [:git-ignore-out]
     :behaviors [::ignore.out-success
                 ::ignore.out-error])))
