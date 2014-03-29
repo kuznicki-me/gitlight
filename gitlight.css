@@ -122,11 +122,25 @@ textarea {
   vertical-align: top;
 }
 
-.gitlight-command-history * .success {
-  background-color:#115a22;
+.gitlight-command-history * .success td {
+  background-color:#083813;
 }
 
+.gitlight-command-history * .error td {
+  background-color:#320707;
+}
 
-.gitlight-command-history * .error {
-  background-color:#5f2020;
+.gitlight-command-history * .spacer {
+  padding-top: 30px;
+}
+
+.gitlight-command-history * td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+}
+
+.gitlight-command-history * textarea {
+  width: 64em;
+  height: 5em;
 }

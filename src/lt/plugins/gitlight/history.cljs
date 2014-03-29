@@ -17,20 +17,22 @@
      ])
   )
 
+(defn spacer [txt]
+  [:tr.spacer [:td [:b txt]]]
+  )
+
 (defui ui-fun [this]
   (let [history (:history @this)
         reversed (reverse @history)
         last-ok (first (drop-while #(= :error (first %)) reversed))
         last-fail (first (drop-while #(= :success (first %)) reversed))]
     [:div.gitlight-command-history
-     [:b "last ok: "]
-     [:table.last-ok
-     (row last-ok)]
-     [:b "last failed: "]
-     [:table.last-fail
-     (row last-fail)]
-     [:b "history: "]
-     [:table.history
+     [:table
+     (spacer "last ok: ")
+     (row last-ok)
+     (spacer "last failed: ")
+     (row last-fail)
+     (spacer "history: ")
      (map row reversed)]
      ]
     )

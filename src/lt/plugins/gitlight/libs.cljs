@@ -5,7 +5,7 @@
             [clojure.string :as string]))
 
 (defn now []
-  (.toString (js/Date.)))
+  (.toLocaleString (js/Date.)))
 
 (defn qu [s]
   (str \" s \"))
