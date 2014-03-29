@@ -7,25 +7,25 @@
             [lt.plugins.gitlight :refer [config]])
     (:require-macros [lt.macros :refer [defui behavior]]))
 
+
 (defn row [[cls [date command out]]]
   (if-not (nil? cls)
     [:tr {:class (name cls)}
      [:td date]
      [:td command]
-     [:td [:textarea out]]
+     [:td [:textarea out]]]))
 
-     ])
-  )
+
 
 (defn spacer [txt]
-  [:tr.spacer [:td [:b txt]]]
-  )
+  [:tr.spacer [:td [:b txt]]])
+
+
 
 (defui ui-fun [this]
   (let [history (:history @this)
-        reversed (reverse @history)
-        last-ok (first (drop-while #(= :error (first %)) reversed))
-        last-fail (first (drop-while #(= :success (first %)) reversed))]
+        last-ok (first (drop-while #(= :error (first %)) @history))
+        last-fail (first (drop-while #(= :success (first %)) @history))]
     [:div.gitlight-command-history
      [:table
      (spacer "last ok: ")
@@ -33,13 +33,11 @@
      (spacer "last failed: ")
      (row last-fail)
      (spacer "history: ")
-     (map row reversed)]
-     ]
-    )
+     (map row @history)]]))
 
-  )
 
 (def refresh (cui/make-refresh-behavior ::history-refresh ui-fun))
+
 
 (def tab-obj (object/object* ::history-tab
                              :tags [:history-tab]
@@ -50,10 +48,18 @@
                              :init (fn [this]
                                      (ui-fun this))))
 
+
 (def history-tab (object/create tab-obj))
 
 
 (def history (:history @history-tab))
+
+
+(def toomuch (:max-history @config))
+
+
+(defn limited-conj [a b]
+  (take toomuch (conj a b)))
 
 
 (behavior ::history-out-success
@@ -61,7 +67,9 @@
           :type :user
           :triggers #{:out}
           :reaction (fn [obj command data err]
-                      (swap! history conj [:success [(lib/now) command (.toString data)]])))
+                      (swap! history
+                             limited-conj
+                             [:success [(lib/now) command (.toString data)]])))
 
 
 (behavior ::history-out-error
@@ -69,7 +77,9 @@
           :type :user
           :triggers #{:err}
           :reaction (fn [obj command err stderr]
-                      (swap! history conj [:error [(lib/now) command (.toString stderr)]])))
+                      (swap! history
+                             limited-conj
+                             [:error [(lib/now) command (.toString stderr)]])))
 
 
 
