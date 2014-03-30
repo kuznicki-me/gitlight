@@ -73,6 +73,7 @@
   (git-command-ignore-out "commit" "-m" (lib/q&s title) "-m" (lib/q&s body)))
 
 (behavior ::ignore.out-success
+          :type :user
           :desc "gitlight: Ignore git command output."
           :triggers #{:out}
           :reaction (fn [obj command stdout stderr]
@@ -80,12 +81,21 @@
 
 
 (behavior ::ignore.out-error
+          :type :user
           :desc "gitlight: Ignore git command output."
           :triggers #{:err}
           :reaction (fn [obj command stdout stderr]
                       (notifos/set-msg! (str "git failed!: " (.toString stderr)))))
 
 
+(behavior ::dump-output-to-console
+          :type :user
+          :desc "gitlight: dump git command output to console."
+          :triggers #{:out :err}
+          :reaction (fn [obj command stdout stderr]
+                      (.log js/console (string/join "\n" [command
+                                                          (.toString stdout)
+                                                          (.toString stderr)]))))
 
 (cmd/command {:command ::git-add
              :desc "gitlight: add this file"

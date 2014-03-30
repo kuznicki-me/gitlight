@@ -5,5 +5,7 @@
               :lt.plugins.gitlight.diff/refresh-diff-gutter-on-save]
      :git-status-out [:lt.plugins.gitlight.status.back/git-status-out-failure-verbose]
      :git-ignore-out [:lt.plugins.gitlight.history/history-out-success
-                      :lt.plugins.gitlight.history/history-out-error]
+                      :lt.plugins.gitlight.history/history-out-error
+                      ;:lt.plugins.gitlight.git/dump-output-to-console
+                      ]
      }}

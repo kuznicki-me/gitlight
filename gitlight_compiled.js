@@ -418,11 +418,11 @@ var args = null;if (arguments.length > 2) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 2),0);} 
 return git_command_cwd__delegate.call(this,obj,cwd,args);};
 git_command_cwd.cljs$lang$maxFixedArity = 2;
-git_command_cwd.cljs$lang$applyTo = (function (arglist__10036){
-var obj = cljs.core.first(arglist__10036);
-arglist__10036 = cljs.core.next(arglist__10036);
-var cwd = cljs.core.first(arglist__10036);
-var args = cljs.core.rest(arglist__10036);
+git_command_cwd.cljs$lang$applyTo = (function (arglist__11016){
+var obj = cljs.core.first(arglist__11016);
+arglist__11016 = cljs.core.next(arglist__11016);
+var cwd = cljs.core.first(arglist__11016);
+var args = cljs.core.rest(arglist__11016);
 return git_command_cwd__delegate(obj,cwd,args);
 });
 git_command_cwd.cljs$core$IFn$_invoke$arity$variadic = git_command_cwd__delegate;
@@ -440,9 +440,9 @@ var args = null;if (arguments.length > 1) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 1),0);} 
 return git_command__delegate.call(this,obj,args);};
 git_command.cljs$lang$maxFixedArity = 1;
-git_command.cljs$lang$applyTo = (function (arglist__10037){
-var obj = cljs.core.first(arglist__10037);
-var args = cljs.core.rest(arglist__10037);
+git_command.cljs$lang$applyTo = (function (arglist__11017){
+var obj = cljs.core.first(arglist__11017);
+var args = cljs.core.rest(arglist__11017);
 return git_command__delegate(obj,args);
 });
 git_command.cljs$core$IFn$_invoke$arity$variadic = git_command__delegate;
@@ -460,8 +460,8 @@ var args = null;if (arguments.length > 0) {
   args = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return git_command_ignore_out__delegate.call(this,args);};
 git_command_ignore_out.cljs$lang$maxFixedArity = 0;
-git_command_ignore_out.cljs$lang$applyTo = (function (arglist__10038){
-var args = cljs.core.seq(arglist__10038);
+git_command_ignore_out.cljs$lang$applyTo = (function (arglist__11018){
+var args = cljs.core.seq(arglist__11018);
 return git_command_ignore_out__delegate(args);
 });
 git_command_ignore_out.cljs$core$IFn$_invoke$arity$variadic = git_command_ignore_out__delegate;
@@ -482,10 +482,13 @@ lt.plugins.gitlight.git.git_form_commit = (function git_form_commit(title,body){
 });
 lt.plugins.gitlight.git.__BEH__ignore__DOT__out_success = (function __BEH__ignore__DOT__out_success(obj,command,stdout,stderr){return lt.objs.notifos.set_msg_BANG_.call(null,"git: success!");
 });
-lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-success","lt.plugins.gitlight.git/ignore.out-success",2272362317),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.git.__BEH__ignore__DOT__out_success,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Ignore git command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"out","out",1014014656),null], null), null));
+lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-success","lt.plugins.gitlight.git/ignore.out-success",2272362317),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.git.__BEH__ignore__DOT__out_success,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Ignore git command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"out","out",1014014656),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
 lt.plugins.gitlight.git.__BEH__ignore__DOT__out_error = (function __BEH__ignore__DOT__out_error(obj,command,stdout,stderr){return lt.objs.notifos.set_msg_BANG_.call(null,[cljs.core.str("git failed!: "),cljs.core.str(stderr.toString())].join(''));
 });
-lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-error","lt.plugins.gitlight.git/ignore.out-error",2426640522),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.git.__BEH__ignore__DOT__out_error,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Ignore git command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"err","err",1014004951),null], null), null));
+lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","ignore.out-error","lt.plugins.gitlight.git/ignore.out-error",2426640522),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.git.__BEH__ignore__DOT__out_error,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: Ignore git command output.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"err","err",1014004951),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
+lt.plugins.gitlight.git.__BEH__dump_output_to_console = (function __BEH__dump_output_to_console(obj,command,stdout,stderr){return console.log(clojure.string.join.call(null,"\n",new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [command,stdout.toString(),stderr.toString()], null)));
+});
+lt.object.behavior_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.git","dump-output-to-console","lt.plugins.gitlight.git/dump-output-to-console",3183590781),new cljs.core.Keyword(null,"reaction","reaction",4441361819),lt.plugins.gitlight.git.__BEH__dump_output_to_console,new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: dump git command output to console.",new cljs.core.Keyword(null,"triggers","triggers",2516997421),new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"err","err",1014004951),null,new cljs.core.Keyword(null,"out","out",1014014656),null], null), null),new cljs.core.Keyword(null,"type","type",1017479852),new cljs.core.Keyword(null,"user","user",1017503549));
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.git","git-add","lt.plugins.gitlight.git/git-add",3411206675),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: add this file",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return lt.plugins.gitlight.git.git_add.call(null,new cljs.core.Keyword(null,"path","path",1017337751).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"info","info",1017141280).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.objs.editor.pool.last_active.call(null)))));
 })], null));
 lt.objs.command.command.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"command","command",1964298941),new cljs.core.Keyword("lt.plugins.gitlight.git","git-reset","lt.plugins.gitlight.git/git-reset",1466075745),new cljs.core.Keyword(null,"desc","desc",1016984067),"gitlight: reset this file",new cljs.core.Keyword(null,"exec","exec",1017031683),(function (){return lt.plugins.gitlight.git.git_reset.call(null,new cljs.core.Keyword(null,"path","path",1017337751).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"info","info",1017141280).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.objs.editor.pool.last_active.call(null)))));
@@ -508,46 +511,46 @@ goog.require('lt.object');
 goog.require('lt.object');
 lt.object.object_STAR_.call(null,new cljs.core.Keyword("lt.plugins.gitlight.gutter","gutter-settings","lt.plugins.gitlight.gutter/gutter-settings",3270956924),new cljs.core.Keyword(null,"width","width",1127031096),32);
 lt.plugins.gitlight.gutter.gutter_settings = lt.object.create.call(null,new cljs.core.Keyword("lt.plugins.gitlight.gutter","gutter-settings","lt.plugins.gitlight.gutter/gutter-settings",3270956924));
-lt.plugins.gitlight.gutter.make_gutter_marker = (function make_gutter_marker(this$,on_click,style_content,content){var e__8183__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.gutter-content","div.gutter-content",4072529974),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"style","style",1123684643),[cljs.core.str("width: "),cljs.core.str(new cljs.core.Keyword(null,"width","width",1127031096).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.plugins.gitlight.gutter.gutter_settings))),cljs.core.str("px;"),cljs.core.str("white-space: nowrap; "),cljs.core.str("overflow: hidden;")].join('')], null),style_content.call(null,content)], null));var seq__11130_11137 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"click","click",1108654330),(function (){return on_click.call(null,content);
-})], null)));var chunk__11131_11138 = null;var count__11132_11139 = 0;var i__11133_11140 = 0;while(true){
-if((i__11133_11140 < count__11132_11139))
-{var vec__11134_11141 = cljs.core._nth.call(null,chunk__11131_11138,i__11133_11140);var ev__8184__auto___11142 = cljs.core.nth.call(null,vec__11134_11141,0,null);var func__8185__auto___11143 = cljs.core.nth.call(null,vec__11134_11141,1,null);lt.util.dom.on.call(null,e__8183__auto__,ev__8184__auto___11142,func__8185__auto___11143);
+lt.plugins.gitlight.gutter.make_gutter_marker = (function make_gutter_marker(this$,on_click,style_content,content){var e__8183__auto__ = crate.core.html.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.gutter-content","div.gutter-content",4072529974),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"style","style",1123684643),[cljs.core.str("width: "),cljs.core.str(new cljs.core.Keyword(null,"width","width",1127031096).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.plugins.gitlight.gutter.gutter_settings))),cljs.core.str("px;"),cljs.core.str("white-space: nowrap; "),cljs.core.str("overflow: hidden;")].join('')], null),style_content.call(null,content)], null));var seq__10045_10052 = cljs.core.seq.call(null,cljs.core.partition.call(null,2,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"click","click",1108654330),(function (){return on_click.call(null,content);
+})], null)));var chunk__10046_10053 = null;var count__10047_10054 = 0;var i__10048_10055 = 0;while(true){
+if((i__10048_10055 < count__10047_10054))
+{var vec__10049_10056 = cljs.core._nth.call(null,chunk__10046_10053,i__10048_10055);var ev__8184__auto___10057 = cljs.core.nth.call(null,vec__10049_10056,0,null);var func__8185__auto___10058 = cljs.core.nth.call(null,vec__10049_10056,1,null);lt.util.dom.on.call(null,e__8183__auto__,ev__8184__auto___10057,func__8185__auto___10058);
 {
-var G__11144 = seq__11130_11137;
-var G__11145 = chunk__11131_11138;
-var G__11146 = count__11132_11139;
-var G__11147 = (i__11133_11140 + 1);
-seq__11130_11137 = G__11144;
-chunk__11131_11138 = G__11145;
-count__11132_11139 = G__11146;
-i__11133_11140 = G__11147;
+var G__10059 = seq__10045_10052;
+var G__10060 = chunk__10046_10053;
+var G__10061 = count__10047_10054;
+var G__10062 = (i__10048_10055 + 1);
+seq__10045_10052 = G__10059;
+chunk__10046_10053 = G__10060;
+count__10047_10054 = G__10061;
+i__10048_10055 = G__10062;
 continue;
 }
 } else
-{var temp__4092__auto___11148 = cljs.core.seq.call(null,seq__11130_11137);if(temp__4092__auto___11148)
-{var seq__11130_11149__$1 = temp__4092__auto___11148;if(cljs.core.chunked_seq_QMARK_.call(null,seq__11130_11149__$1))
-{var c__7561__auto___11150 = cljs.core.chunk_first.call(null,seq__11130_11149__$1);{
-var G__11151 = cljs.core.chunk_rest.call(null,seq__11130_11149__$1);
-var G__11152 = c__7561__auto___11150;
-var G__11153 = cljs.core.count.call(null,c__7561__auto___11150);
-var G__11154 = 0;
-seq__11130_11137 = G__11151;
-chunk__11131_11138 = G__11152;
-count__11132_11139 = G__11153;
-i__11133_11140 = G__11154;
+{var temp__4092__auto___10063 = cljs.core.seq.call(null,seq__10045_10052);if(temp__4092__auto___10063)
+{var seq__10045_10064__$1 = temp__4092__auto___10063;if(cljs.core.chunked_seq_QMARK_.call(null,seq__10045_10064__$1))
+{var c__7561__auto___10065 = cljs.core.chunk_first.call(null,seq__10045_10064__$1);{
+var G__10066 = cljs.core.chunk_rest.call(null,seq__10045_10064__$1);
+var G__10067 = c__7561__auto___10065;
+var G__10068 = cljs.core.count.call(null,c__7561__auto___10065);
+var G__10069 = 0;
+seq__10045_10052 = G__10066;
+chunk__10046_10053 = G__10067;
+count__10047_10054 = G__10068;
+i__10048_10055 = G__10069;
 continue;
 }
 } else
-{var vec__11135_11155 = cljs.core.first.call(null,seq__11130_11149__$1);var ev__8184__auto___11156 = cljs.core.nth.call(null,vec__11135_11155,0,null);var func__8185__auto___11157 = cljs.core.nth.call(null,vec__11135_11155,1,null);lt.util.dom.on.call(null,e__8183__auto__,ev__8184__auto___11156,func__8185__auto___11157);
+{var vec__10050_10070 = cljs.core.first.call(null,seq__10045_10064__$1);var ev__8184__auto___10071 = cljs.core.nth.call(null,vec__10050_10070,0,null);var func__8185__auto___10072 = cljs.core.nth.call(null,vec__10050_10070,1,null);lt.util.dom.on.call(null,e__8183__auto__,ev__8184__auto___10071,func__8185__auto___10072);
 {
-var G__11158 = cljs.core.next.call(null,seq__11130_11149__$1);
-var G__11159 = null;
-var G__11160 = 0;
-var G__11161 = 0;
-seq__11130_11137 = G__11158;
-chunk__11131_11138 = G__11159;
-count__11132_11139 = G__11160;
-i__11133_11140 = G__11161;
+var G__10073 = cljs.core.next.call(null,seq__10045_10064__$1);
+var G__10074 = null;
+var G__10075 = 0;
+var G__10076 = 0;
+seq__10045_10052 = G__10073;
+chunk__10046_10053 = G__10074;
+count__10047_10054 = G__10075;
+i__10048_10055 = G__10076;
 continue;
 }
 }
@@ -559,7 +562,7 @@ break;
 return e__8183__auto__;
 });
 lt.plugins.gitlight.gutter.show_gutter_data = (function show_gutter_data(this$,on_click,style_content,data){var current_gutters = cljs.core.set.call(null,cljs.core.js__GT_clj.call(null,lt.objs.editor.option.call(null,this$,"gutters")));var gutter_div = lt.util.dom.$.call(null,new cljs.core.Keyword(null,"div.CodeMirror-gutters","div.CodeMirror-gutters",1932435974),lt.object.__GT_content.call(null,this$));var gutter_markers = cljs.core.map.call(null,((function (current_gutters,gutter_div){
-return (function (p1__11136_SHARP_){return lt.plugins.gitlight.gutter.make_gutter_marker.call(null,this$,on_click,style_content,p1__11136_SHARP_);
+return (function (p1__10051_SHARP_){return lt.plugins.gitlight.gutter.make_gutter_marker.call(null,this$,on_click,style_content,p1__10051_SHARP_);
 });})(current_gutters,gutter_div))
 ,data);var ed = lt.objs.editor.__GT_cm_ed.call(null,this$);return lt.objs.editor.operation.call(null,this$,(function (){lt.objs.editor.set_options.call(null,this$,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"gutters","gutters",1397798442),cljs.core.clj__GT_js.call(null,cljs.core.conj.call(null,current_gutters,"gitlight-gutter"))], null));
 lt.util.dom.set_css.call(null,lt.util.dom.$.call(null,new cljs.core.Keyword(null,"div.gitlight-gutter","div.gitlight-gutter",3002550937),gutter_div),new cljs.core.PersistentArrayMap(null, 1, ["width",[cljs.core.str(new cljs.core.Keyword(null,"width","width",1127031096).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,lt.plugins.gitlight.gutter.gutter_settings))),cljs.core.str("px")].join('')], null));
@@ -570,7 +573,7 @@ return lt.object.raise.call(null,this$,new cljs.core.Keyword(null,"refresh!","re
 });
 lt.plugins.gitlight.gutter.remove_gutters = (function remove_gutters(this$){lt.objs.editor.__GT_cm_ed.call(null,this$).clearGutter("gitlight-gutter");
 lt.util.dom.remove.call(null,new cljs.core.Keyword(null,"div.gitlight-gutter","div.gitlight-gutter",3002550937),lt.object.__GT_content.call(null,this$));
-var gutter_11162 = cljs.core.js__GT_clj.call(null,lt.objs.editor.option.call(null,this$,"gutters"));lt.objs.editor.set_options.call(null,this$,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"gutters","gutters",1397798442),cljs.core.clj__GT_js.call(null,cljs.core.remove.call(null,new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, ["gitlight-gutter",null], null), null),gutter_11162))], null));
+var gutter_10077 = cljs.core.js__GT_clj.call(null,lt.objs.editor.option.call(null,this$,"gutters"));lt.objs.editor.set_options.call(null,this$,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"gutters","gutters",1397798442),cljs.core.clj__GT_js.call(null,cljs.core.remove.call(null,new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, ["gitlight-gutter",null], null), null),gutter_10077))], null));
 return lt.object.raise.call(null,this$,new cljs.core.Keyword(null,"refresh!","refresh!",4597922840));
 });
 }
