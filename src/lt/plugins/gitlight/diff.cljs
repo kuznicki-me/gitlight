@@ -311,7 +311,7 @@
 (defn add-git-diff-gutter []
   (object/add-tags (pool/last-active) #{::gitlight-gutter-on})
   (git/git-command git-diff-gutter-out
-                   "diff" "-U10000" "--" (-> @(pool/last-active) :info :path)))
+                   "diff" "-U10000" "--" (lib/qu (-> @(pool/last-active) :info :path))))
 
 
 (defn remove-git-diff-gutter []
