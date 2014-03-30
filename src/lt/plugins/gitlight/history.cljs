@@ -73,11 +73,9 @@
 (def history (:history @history-tab))
 
 
-(def toomuch (:max-history @config))
-
-
 (defn limited-conj [a b]
-  (take toomuch (conj a b)))
+  (let [toomuch (:max-history @config)]
+    (take toomuch (conj a b))))
 
 
 (defn command-history []
