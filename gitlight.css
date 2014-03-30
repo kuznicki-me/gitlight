@@ -118,9 +118,26 @@ textarea {
   overflow: scroll;
 }
 
-.gitlight-command-history * td {
-  vertical-align: top;
+.gitlight-command-history * th {
+  vertical-align: middle;
+  text-align: center;
+  padding-right: 5px;
+  font-weight: bold;
 }
+
+.gitlight-command-history * td {
+  vertical-align: middle;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+}
+
+.gitlight-command-history * textarea {
+  width: 32em;
+  height: 5em;
+}
+
 
 .gitlight-command-history * .success td {
   background-color:#083813;
@@ -132,15 +149,4 @@ textarea {
 
 .gitlight-command-history * .spacer {
   padding-top: 30px;
-}
-
-.gitlight-command-history * td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-}
-
-.gitlight-command-history * textarea {
-  width: 32em;
-  height: 5em;
 }

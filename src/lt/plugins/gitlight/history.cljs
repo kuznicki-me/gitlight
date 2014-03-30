@@ -11,15 +11,15 @@
 (defn row [[cls [date command stdout stderr]]]
   (if-not (nil? cls)
     [:tr {:class (name cls)}
-     [:td date]
-     [:td command]
+     [:th command]
+     [:td date [:br] (name cls)]
      [:td [:textarea stdout]]
      [:td [:textarea stderr]]]))
 
 
 
 (defn spacer [txt]
-  [:tr.spacer [:td [:b txt]]])
+  [:tr.spacer [:td [:h1 txt]]])
 
 
 
@@ -34,6 +34,7 @@
      (spacer "last failed: ")
      (row last-fail)
      (spacer "history: ")
+      [:tr [:th] [:th] [:th "stdout"] [:th "stderr"]]
      (map row @history)]]))
 
 
@@ -63,6 +64,11 @@
   (take toomuch (conj a b)))
 
 
+(defn command-history []
+  (tabs/add-or-focus! history-tab)
+  (object/raise history-tab :refresh))
+
+
 (defn add-to-history [kw obj command stdout stderr]
   (swap! history
          limited-conj
@@ -85,7 +91,4 @@
 
 (cmd/command {:command ::git-history
              :desc "gitlight: command history"
-             :exec (fn []
-                     (tabs/add-or-focus! history-tab)
-                     (object/raise history-tab :refresh)
-                     )})
+             :exec command-history})

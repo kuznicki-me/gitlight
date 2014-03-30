@@ -11,7 +11,7 @@
    (object/object*
     ::config
     :tags #{::config}
-    :max-history 10
+    :max-history 64
     :git-binary "git")))
 
 

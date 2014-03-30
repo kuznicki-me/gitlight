@@ -12,6 +12,7 @@
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.branch :as branch]
             [lt.plugins.gitlight.diff :as diff]
+            [lt.plugins.gitlight.history :as hist]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -73,7 +74,8 @@
                {:commit ["quitck commit" back/git-commit]
                 :cached-diff ["cached diff" diff/git-diff-cached-repo-button]}
                {:diff   ["diff"  diff/git-diff-repo-button]
-                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]}])
+                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]}
+               {:command-history ["history" hist/command-history]}])
                ;:log    ["log"    nil]
                ;:merge  ["merge"  nil]
                ;:tag    ["tag"    nil]})
