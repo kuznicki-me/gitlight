@@ -1,3 +1,19 @@
+version 0.0.7
+=============
+
+New Features:
+ * Git command history!  Every ignored output is now remembered, and You can
+   see what failed, what succeeded and how!  You can also dump it into the
+   console, and change the  the max-history limit (by default 64), if that's
+   Your thing.
+   On some strange error, You can also dump it to a file, save it and pester us
+   with it until we fix a bug!
+ * Nicer colors for inline git diff.
+
+Bugfixes:
+ * inline diff should no longer fail on files with spaces in names.
+
+
 version 0.0.6
 =============
 New Features:
