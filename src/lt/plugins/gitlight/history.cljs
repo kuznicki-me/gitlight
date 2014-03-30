@@ -2,13 +2,14 @@
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
             [lt.objs.tabs :as tabs]
+            [clojure.string :as string]
             [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight :refer [config]])
     (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn row [[cls [date command stdout stderr]]]
+(defn row [[cls [command date stdout stderr]]]
   (if-not (nil? cls)
     [:tr {:class (name cls)}
      [:th command]
@@ -21,6 +22,8 @@
 (defn spacer [txt]
   [:tr.spacer [:td [:h1 txt]]])
 
+(defn parse-dump [dump]
+  (string/join "\n" (map str dump)))
 
 
 (defui ui-fun [this]
@@ -28,6 +31,7 @@
         last-ok (first (drop-while #(= :error (first %)) @history))
         last-fail (first (drop-while #(= :success (first %)) @history))]
     [:div.gitlight-command-history
+     (cui/make-button "dump history" (parse-dump @history) println)
      [:table
      (spacer "last ok: ")
      (row last-ok)
@@ -72,7 +76,7 @@
 (defn add-to-history [kw obj command stdout stderr]
   (swap! history
          limited-conj
-         [kw [(lib/now) command (.toString stdout) (.toString stderr)]]))
+         [kw [command (lib/now) (.toString stdout) (.toString stderr)]]))
 
 
 (behavior ::history-out-success
