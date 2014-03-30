@@ -37,7 +37,7 @@
 
 textarea {
   color: var(highlight-fg);
-  background: var(highlight-bg);
+  background: var(pane-bg);
   border: none;
   font-family: inherit;
   font-size: inherit;
@@ -141,6 +141,6 @@ textarea {
 }
 
 .gitlight-command-history * textarea {
-  width: 64em;
+  width: 32em;
   height: 5em;
 }

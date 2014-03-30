@@ -60,9 +60,9 @@
 (defn make-refresh-tab-behavior [obj k]
   (behavior k
             :triggers #{:out}
-            :reaction (fn [this command data err]
+            :reaction (fn [this command stdout stderr]
                         (tabs/add-or-focus! obj)
-                        (reset! (:results @obj) data)
+                        (reset! (:results @obj) stdout)
                         (object/raise obj :refresh))))
 
 

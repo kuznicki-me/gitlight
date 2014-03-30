@@ -276,7 +276,7 @@
 
 (behavior ::diff-gutter-err
           :triggers [:err]
-          :reaction (fn [this command err stderr]
+          :reaction (fn [this command stdout stderr]
                       (println "error" stderr)))
 
 

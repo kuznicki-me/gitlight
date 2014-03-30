@@ -75,14 +75,14 @@
 (behavior ::ignore.out-success
           :desc "gitlight: Ignore git command output."
           :triggers #{:out}
-          :reaction (fn [obj command data err]
+          :reaction (fn [obj command stdout stderr]
                       (notifos/set-msg! "git: success!")))
 
 
 (behavior ::ignore.out-error
           :desc "gitlight: Ignore git command output."
           :triggers #{:err}
-          :reaction (fn [obj command err stderr]
+          :reaction (fn [obj command stdout stderr]
                       (notifos/set-msg! (str "git failed!: " (.toString stderr)))))
 
 

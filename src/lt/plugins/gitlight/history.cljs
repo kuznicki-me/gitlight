@@ -8,12 +8,13 @@
     (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn row [[cls [date command out]]]
+(defn row [[cls [date command stdout stderr]]]
   (if-not (nil? cls)
     [:tr {:class (name cls)}
      [:td date]
      [:td command]
-     [:td [:textarea out]]]))
+     [:td [:textarea stdout]]
+     [:td [:textarea stderr]]]))
 
 
 
@@ -62,25 +63,24 @@
   (take toomuch (conj a b)))
 
 
+(defn add-to-history [kw obj command stdout stderr]
+  (swap! history
+         limited-conj
+         [kw [(lib/now) command (.toString stdout) (.toString stderr)]]))
+
+
 (behavior ::history-out-success
           :desc "gitlight: Log command output."
           :type :user
           :triggers #{:out}
-          :reaction (fn [obj command data err]
-                      (swap! history
-                             limited-conj
-                             [:success [(lib/now) command (.toString data)]])))
+          :reaction (partial add-to-history :success))
 
 
 (behavior ::history-out-error
           :desc "gitlight: Log command error output."
           :type :user
           :triggers #{:err}
-          :reaction (fn [obj command err stderr]
-                      (swap! history
-                             limited-conj
-                             [:error [(lib/now) command (.toString stderr)]])))
-
+          :reaction (partial add-to-history :error))
 
 
 (cmd/command {:command ::git-history

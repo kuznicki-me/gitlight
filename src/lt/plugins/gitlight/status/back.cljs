@@ -76,14 +76,14 @@
 (behavior ::git-status-out-success
           :desc "gitlight: When git status is executed, parse its output."
           :triggers #{:out}
-          :reaction (fn [obj command data stderr]
+          :reaction (fn [obj command stdout stderr]
                       (object/raise obj :add-watch)
-                      (object/raise obj :status (parse-porcelain data))))
+                      (object/raise obj :status (parse-porcelain stdout))))
 
 (behavior ::git-status-out-failure
           :desc "gitlight: When git status fails."
           :triggers #{:err}
-          :reaction (fn [obj command err stderr]
+          :reaction (fn [obj command stdout stderr]
                       (remove-watch pool/pool ::status-pool-watch)
                       (object/raise obj :status-failed)))
 
@@ -92,7 +92,7 @@
           :desc "gitlight: Be verbose about git status fail"
           :type :user
           :triggers #{:err}
-          :reaction (fn [obj command err stderr]
+          :reaction (fn [obj command stdout stderr]
                       (notifos/set-msg! (str "git status failed! " (.toString stderr)))))
 
 

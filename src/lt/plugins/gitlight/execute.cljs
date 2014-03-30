@@ -11,9 +11,7 @@
   (let [child-proc (exec command
                          (clj->js {"cwd" path})
                          (fn [err stdout stderr]
-                           (if err
-                             (object/raise return-obj :err command err stderr)
-                             (object/raise return-obj :out command stdout stderr))))
+                           (object/raise return-obj (if err :err :out) command stdout stderr)))
         proc-input (.-stdin child-proc)]
     (.end proc-input input)))
 
