@@ -71,7 +71,7 @@
 (def repo-ops [{:push   ["push"   remote/git-push]
                 :pull   ["pull"   remote/git-pull]
                 :fetch  ["fetch"  remote/git-fetch]}
-               {:commit ["quitck commit" back/git-commit]
+               {:commit ["quick commit" back/git-commit]
                 :cached-diff ["cached diff" diff/git-diff-cached-repo-button]}
                {:diff   ["diff"  diff/git-diff-repo-button]
                 :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]}

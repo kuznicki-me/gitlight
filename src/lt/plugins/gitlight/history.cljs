@@ -13,8 +13,8 @@
     [:tr {:class (name cls)}
      [:th command]
      [:td date [:br] (name cls)]
-     [:td [:textarea stdout]]
-     [:td [:textarea stderr]]]))
+     [:td [:textarea {:disabled "disabled"} stdout]]
+     [:td [:textarea {:disabled "disabled"} stderr]]]))
 
 
 
