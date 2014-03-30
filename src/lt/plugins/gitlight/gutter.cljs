@@ -9,25 +9,25 @@
   (:require-macros [lt.macros :refer [defui]]))
 
 (object/object* ::gutter-settings
-                :width 50)
+                :width 32)
 
 
 (def gutter-settings (object/create ::gutter-settings))
 
 
-(defui make-gutter-marker [this on-click content]
+(defui make-gutter-marker [this on-click style-content content]
   [:div.gutter-content
-   {:style (str "width: " (:width @gutter-settings) "px; "
+   {:style (str "width: " (:width @gutter-settings) "px;"
                 "white-space: nowrap; "
                 "overflow: hidden;")}
-   content]
+   (style-content content)]
   :click (fn [] (on-click content)))
 
 
-(defn show-gutter-data [this data]
+(defn show-gutter-data [this on-click style-content data]
   (let [current-gutters (set (js->clj (editor/option this "gutters")))
         gutter-div (dom/$ :div.CodeMirror-gutters (object/->content this))
-        gutter-markers (map #(make-gutter-marker this println %) data)
+        gutter-markers (map #(make-gutter-marker this on-click style-content %) data)
         ed (editor/->cm-ed this)]
     (editor/operation this
                       (fn []

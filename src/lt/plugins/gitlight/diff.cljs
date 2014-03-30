@@ -258,6 +258,13 @@
 
 
 
+(defui style-diff-marker [[p m :as content]]
+  [:div {:class (cond
+                 (and (= p " ") (nil? m)) "no-change"
+                 (and (= p "+") (nil? m)) "added-line"
+                 (and (= p " ") (= "-" (first m))) "deleted-lines"
+                 (and (= p "+") (= "-" (first m))) "modified-line")}
+   content])
 
 
 (behavior ::parse-diff-gutter-out
@@ -267,6 +274,8 @@
                             firsts (map first parsed)]
                         (gut/show-gutter-data
                          (pool/last-active)
+                         println
+                         style-diff-marker
                          (if (empty? firsts)
                            (repeat
                             (.-size (.-doc (editor/->cm-ed (pool/last-active))))

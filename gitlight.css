@@ -110,6 +110,23 @@ textarea {
   background-color: #468e2a;
 }
 
+div.no-change {
+
+}
+
+div.added-line {
+  text-align: center;
+  color: greenyellow;
+}
+div.deleted-lines {
+  text-align: center;
+  color: red;
+}
+div.modified-line {
+  text-align: center;
+  color: orange;
+}
+
 
 /* gitlight: command history */
 
