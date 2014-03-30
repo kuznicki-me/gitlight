@@ -2,6 +2,8 @@
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
             [lt.objs.tabs :as tabs]
+            [lt.objs.editor :as editor]
+            [lt.objs.editor.pool :as pool]
             [clojure.string :as string]
             [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.common-ui :as cui]
@@ -22,8 +24,18 @@
 (defn spacer [txt]
   [:tr.spacer [:td [:h1 txt]]])
 
+
 (defn parse-dump [dump]
   (string/join "\n" (map str dump)))
+
+
+(defn landfill-of-history [action dump]
+  (let [landfill (pool/create {:line-separator "\n"
+                               :name "Landfill_of_History"
+                               :tags [:editor.plaintext
+                                      :editor.transient]})]
+    (tabs/add-or-focus! landfill)
+    (editor/set-val landfill dump)))
 
 
 (defui ui-fun [this]
@@ -31,7 +43,7 @@
         last-ok (first (drop-while #(= :error (first %)) @history))
         last-fail (first (drop-while #(= :success (first %)) @history))]
     [:div.gitlight-command-history
-     (cui/make-button "dump history" (parse-dump @history) println)
+     (cui/make-button "dump history" (parse-dump @history) landfill-of-history)
      [:table
      (spacer "last ok: ")
      (row last-ok)
