@@ -2,6 +2,7 @@
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
             [lt.plugins.gitlight.common-ui :as cui]
+            [lt.objs.editor.pool :as pool]
             [clojure.string :as string]))
 
 (defn now []
@@ -21,7 +22,8 @@
 (defn q&s [s]
   (qu (sanitize s)))
 
-
+(defn current-file-path []
+  (qu (-> @(pool/last-active) :info :path)))
 
 (defn qsprint [s]
   (println (q&s s)))
