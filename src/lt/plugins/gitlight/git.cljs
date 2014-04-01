@@ -99,17 +99,17 @@
 
 (cmd/command {:command ::git-add
              :desc "gitlight: add this file"
-             :exec (fn [] (git-add (-> @(pool/last-active) :info :path)))})
+             :exec (fn [] (git-add (lib/current-file-path)))})
 
 
 (cmd/command {:command ::git-reset
              :desc "gitlight: reset this file"
-             :exec (fn [] (git-reset (-> @(pool/last-active) :info :path)))})
+             :exec (fn [] (git-reset (lib/current-file-path)))})
 
 
 (cmd/command {:command ::git-checkout
              :desc "gitlight: checkout this file"
-             :exec (fn [] (git-checkout (-> @(pool/last-active) :info :path)))})
+             :exec (fn [] (git-checkout (lib/current-file-path)))})
 
 
 (cmd/command {:command ::git-commit
