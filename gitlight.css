@@ -84,6 +84,10 @@ textarea {
 
 /* gitlight: diff */
 
+.gitlight-gutter {
+  width: 32px;
+}
+
 .gitlight-diff {
   overflow: scroll;
 }
