@@ -28,30 +28,61 @@
   (cui/make_button "delete" branch git-delete-branch))
 
 
+(defn local-branches-ui [branches]
+  [:table
+   (for [parsed (parse-data branches)
+         :let [[this-one? [branch sha1 desc]] parsed]]
+     [:tr
+      [:td (if this-one? "->" (delete-branch-button branch))]
+      [:td {:class (if this-one?
+                     "current"
+                     "not-current")} (checkout-button branch)]
+      (if this-one?
+        [:td.pull (pull-button branch)]
+        [:td.merge (merge-button branch)])
+      [:td sha1]
+      [:td.push (push-button branch)]
+      [:td desc]])
+   [:tr
+    [:td]
+    [:td.new-branch (new-branch-button)]]])
+
+(defn remote-branches-ui [remote-branches]
+  [:table
+   (for [branch (string/split-lines (.toString remote-branches))
+         :let [[_ branch-name h tail] (string/split branch #"\s+" 4)]
+         ]
+     [:tr
+      [:td branch-name]
+      [:td h]
+      [:td tail]
+      ]
+     )
+   ])
+
+(defn remotes-ui [remotes]
+  [:table
+   (for [remote (string/split-lines (.toString remotes))
+         :let [[r url what] (string/split remote #"\s+" 3)]]
+     [:tr
+      [:td r]
+      [:td url]
+      [:td what]]
+     )
+   ])
+
 
 (defui branch-panel [this]
-  (let [results (:results @this)]
-    [:div.gitlight-branches [:h1 "Branches"]
-     [:table
-      (for [parsed (parse-data (first results))
-            :let [[this-one? [branch sha1 desc]] parsed]]
-        [:tr
-         [:td (if this-one? "->" (delete-branch-button branch))]
-         [:td {:class (if this-one?
-                        "current"
-                        "not-current")} (checkout-button branch)]
-         (if this-one?
-           [:td.pull (pull-button branch)]
-           [:td.merge (merge-button branch)])
-         [:td sha1]
-         [:td.push (push-button branch)]
-         [:td desc]])
-      [:tr
-       [:td]
-       [:td.new-branch (new-branch-button)]]
-      ]
+  (let [[branches remotes remote-branches] (:results @this)]
+    [:div.gitlight-branches
+     [:h1 "Branches"]
+     (local-branches-ui branches)
      [:hr]
-     [:div (rest results)]
+     [:h1 "Remote branches"]
+     (remote-branches-ui remote-branches)
+     [:div ]
+     [:h1 "Remotes"]
+     (remotes-ui remotes)
 
      ]))
 
@@ -71,13 +102,15 @@
 
 
 
+
 (def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches branch-panel))
 
 
 (defn git-branches []
   (exec/runfuns git-branch-output
                 [#(git/git-command % "branch" "--no-color" "-vv")
-                 #(git/git-command % "remote" "-v")]
+                 #(git/git-command % "remote" "-v")
+                 #(git/git-command % "branch" "-r" "-v")]
    ))
 
 
