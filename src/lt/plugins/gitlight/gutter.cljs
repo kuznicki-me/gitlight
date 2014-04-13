@@ -17,9 +17,6 @@
 
 (defui make-gutter-marker [this on-click style-content content]
   [:div.gutter-content
-   {:style (str "width: " (:width @gutter-settings) "px;"
-                "white-space: nowrap; "
-                "overflow: hidden;")}
    (style-content content)]
   :click (fn [] (on-click content)))
 

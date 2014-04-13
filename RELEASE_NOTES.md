@@ -1,3 +1,18 @@
+version 0.0.8
+=============
+
+New Features:
+ * This gitlight release has been sponsored by generous code donations from
+   @seancaffery.  Thanks!
+ * See remote branches.  Not much to do with them yet, but doing just this
+   required synchornizing git commands.  What remains is to script some buttons
+   in and suchlike.  Maybe next time.
+
+Bugfixes:
+ * Gutter width should not be interacting badly with other plugins that use it.
+ * Proper whitespace parsing with git commands.
+
+
 version 0.0.7
 =============
 
