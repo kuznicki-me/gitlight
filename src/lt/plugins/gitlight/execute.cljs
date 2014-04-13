@@ -22,7 +22,6 @@
 
 (defn join-n-run [status this command stdout stderr]
   (swap! (:output @this) conj [status command stdout stderr])
-  (println "hello")
   (let [funs (:funs @this)
         fun (first funs)
         tail (rest funs)]
@@ -43,7 +42,6 @@
 
 
 (defn runfuns [return-obj funs]
-  (println "welp")
   (let [output (object/create
                 (object/object* ::foldl-outputs
                                 :return-obj return-obj

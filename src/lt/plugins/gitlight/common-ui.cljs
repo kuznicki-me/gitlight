@@ -61,7 +61,7 @@
           :triggers #{:out}
           :reaction (fn [this command stdout stderr]
                       (tabs/add-or-focus! this)
-                      (reset! (:results @this) stdout)
+                      (object/merge! this {:result stdout})
                       (object/raise this :refresh)))
 
 
@@ -93,7 +93,8 @@
         tab-obj (object/object* tab-kwd
                                 :tags [:gitlight-tab.out]
                                 :name window-name
-                                :results (atom [[]])
+                                :result nil
+                                :results nil
                                 :behaviors [::on-close-destroy
                                             ::refresh-tab
                                             ::merge-mult-results

@@ -87,7 +87,7 @@
 
 
 (defui diff-panel [this]
-  (let [output (:results @this)]
+  (let [output (:result @this)]
     [:div.gitlight-diff
      [:h1 "diff: " (if (= "" @last-filename) "whole repo" @last-filename)]
      (make-context)
@@ -97,7 +97,7 @@
      (when @last-cached
        (make-commit-form))
 
-     (for [file (parse-git-diff @output)
+     (for [file (parse-git-diff output)
            :let [filename (:filename file)
                  file-diff (:file-diff file)]]
        [:table
