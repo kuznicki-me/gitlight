@@ -57,13 +57,12 @@
 
 
 
-(defn make-refresh-tab-behavior [obj k]
-  (behavior k
-            :triggers #{:out}
-            :reaction (fn [this command stdout stderr]
-                        (tabs/add-or-focus! obj)
-                        (reset! (:results @obj) stdout)
-                        (object/raise obj :refresh))))
+(behavior ::refresh-tab
+          :triggers #{:out}
+          :reaction (fn [this command stdout stderr]
+                      (tabs/add-or-focus! this)
+                      (reset! (:results @this) stdout)
+                      (object/raise this :refresh)))
 
 
 
@@ -72,6 +71,11 @@
      (map (fn [x] (keyword (str kwrdstr x)))
           ["-out" "-refresh-results" "-refresh-tab-results" "-output"])))
 
+
+(behavior ::merge-mult-results
+          :triggers [:mult-outs]
+          :reaction (fn [this results]
+                      (object/merge! this {:results results})))
 
 
 (defn make-output-tab-object [window-name k ui-fun]
@@ -87,16 +91,16 @@
                                 :name window-name
                                 :results (atom [])
                                 :behaviors [::on-close-destroy
+                                            ::refresh-tab
+                                            ::merge-mult-results
                                             refresh-results]
                                 :init (fn [this]
-                                        (ui-fun this)))
-        tab (object/create tab-obj)
+                                        (ui-fun this)))]
 
-        command-output (make-refresh-tab-behavior tab refresh-tab-kwd)]
-
-    (object/create (object/object* command-output-kwd
-                                   :tags #{:gitlight-tab-output}
-                                   :behaviors [command-output]))))
+    (object/create tab-obj)))
+;;      (object/object* command-output-kwd
+;;                                    :tags #{:gitlight-tab-output}
+;;                                    :behaviors [command-output]))))
 
 
 

@@ -45,14 +45,12 @@
                             tail (rest paths&commands&input)]
                         (if-not (nil? cmd)
                           (do
-                            (println "herehere")
                             (object/merge! this {:paths-commands-inputs tail})
                             (run this path cmd input))
                           (object/raise (@this :return-obj) :mult-outs (rest @(@this :output)))))))
 
 
 (defn run-multiple-commands [return-obj paths commands inputs]
-  (println commands)
   (let [output (object/create
                 (object/object* ::join-outputs
                                 :return-obj return-obj
@@ -68,3 +66,26 @@
 
 (defn runds [return-obj path commands]
   (run-mult-same-path return-obj path commands (repeat "")))
+
+
+(behavior ::run-funs
+          :triggers [:out :err]
+          :reaction (fn [this command stdout stderr]
+                      (swap! (:output @this) conj [command stdout stderr])
+                      (let [funs (:funs @this)
+                            [fun tail] (split-at 1 funs)]
+                        (if-not (nil? fun)
+                          (do
+                            (object/merge! this {:paths-commands-inputs tail})
+                            (fun))
+                          (object/raise (@this :return-obj) :mult-outs (rest @(@this :output)))))))
+
+
+(defn runfuns [return-obj funs]
+  (let [output (object/create
+                (object/object* ::join-outputs
+                                :return-obj return-obj
+                                :funs funs
+                                :output (atom [])
+                                :behaviors [::run-funs]))]
+    (object/raise output :out)))
