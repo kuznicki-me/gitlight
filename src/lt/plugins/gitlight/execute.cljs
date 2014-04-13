@@ -20,72 +20,35 @@
   (run return-obj path command ""))
 
 
+(defn join-n-run [status this command stdout stderr]
+  (swap! (:output @this) conj [status command stdout stderr])
+  (println "hello")
+  (let [funs (:funs @this)
+        fun (first funs)
+        tail (rest funs)]
+    (if-not (nil? fun)
+      (do
+        (object/merge! this {:funs tail})
+        (fun this))
+      (object/raise (:return-obj @this) :mult-outs (rest @(:output @this))))))
+
+(behavior ::run-funs-out
+          :triggers [:out]
+          :reaction (partial join-n-run :out))
 
 
-(defn join-outputs [output [path command input]]
-  (println "hello join")
-  (println path command input)
-  (swap! output conj command)
-  (let [child-proc (exec cmnd
-                         (clj->js {"cwd" path})
-                         (fn [err stdout stderr]
-                           (swap! output conj [(if err :err :out)
-                                               command
-                                               stdout
-                                               stderr])))
-        proc-input (.-stdin child-proc)]
-    (.end proc-input input)))
-
-(behavior ::run-mult
-          :triggers [:out :err]
-          :reaction (fn [this command stdout stderr]
-                      (swap! (:output @this) conj [command stdout stderr])
-                      (let [paths&commands&input (:paths-commands-inputs @this)
-                            [path cmd input] (first paths&commands&input)
-                            tail (rest paths&commands&input)]
-                        (if-not (nil? cmd)
-                          (do
-                            (object/merge! this {:paths-commands-inputs tail})
-                            (run this path cmd input))
-                          (object/raise (@this :return-obj) :mult-outs (rest @(@this :output)))))))
-
-
-(defn run-multiple-commands [return-obj paths commands inputs]
-  (let [output (object/create
-                (object/object* ::join-outputs
-                                :return-obj return-obj
-                                :paths-commands-inputs (map vector paths commands inputs)
-                                :output (atom [])
-                                :behaviors [::run-mult]))]
-    (object/raise output :out)))
-
-
-(defn run-mult-same-path [return-obj path commands inputs]
-  (run-multiple-commands return-obj (repeat path) commands inputs))
-
-
-(defn runds [return-obj path commands]
-  (run-mult-same-path return-obj path commands (repeat "")))
-
-
-(behavior ::run-funs
-          :triggers [:out :err]
-          :reaction (fn [this command stdout stderr]
-                      (swap! (:output @this) conj [command stdout stderr])
-                      (let [funs (:funs @this)
-                            [fun tail] (split-at 1 funs)]
-                        (if-not (nil? fun)
-                          (do
-                            (object/merge! this {:paths-commands-inputs tail})
-                            (fun))
-                          (object/raise (@this :return-obj) :mult-outs (rest @(@this :output)))))))
+(behavior ::run-funs-err
+          :triggers [:err]
+          :reaction (partial join-n-run :err))
 
 
 (defn runfuns [return-obj funs]
+  (println "welp")
   (let [output (object/create
-                (object/object* ::join-outputs
+                (object/object* ::foldl-outputs
                                 :return-obj return-obj
                                 :funs funs
                                 :output (atom [])
-                                :behaviors [::run-funs]))]
+                                :behaviors [::run-funs-out
+                                            ::run-funs-err]))]
     (object/raise output :out)))

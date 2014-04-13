@@ -75,8 +75,12 @@
 (behavior ::merge-mult-results
           :triggers [:mult-outs]
           :reaction (fn [this results]
-                      (object/merge! this {:results results})))
+                      (tabs/add-or-focus! this)
+                      (object/merge! this {:results (map #(nth % 2) results)})
+                      (object/raise this :refresh)))
 
+(defui not-a-thing []
+  [:div "nothing"])
 
 (defn make-output-tab-object [window-name k ui-fun]
   (let [[tab-kwd
@@ -89,18 +93,20 @@
         tab-obj (object/object* tab-kwd
                                 :tags [:gitlight-tab.out]
                                 :name window-name
-                                :results (atom [])
+                                :results (atom [[]])
                                 :behaviors [::on-close-destroy
                                             ::refresh-tab
                                             ::merge-mult-results
                                             refresh-results]
                                 :init (fn [this]
-                                        (ui-fun this)))]
+                                        (not-a-thing))
+                                        )
+
+;;                                 :init (fn [this]
+;;                                         (ui-fun this)))]
+       ]
 
     (object/create tab-obj)))
-;;      (object/object* command-output-kwd
-;;                                    :tags #{:gitlight-tab-output}
-;;                                    :behaviors [command-output]))))
 
 
 

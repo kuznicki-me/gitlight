@@ -3,6 +3,7 @@
             [lt.objs.command :as cmd]
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.remote-com :as remcom])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -29,25 +30,30 @@
 
 
 (defui branch-panel [this]
-  [:div.gitlight-branches [:h1 "Branches"]
-   [:table
-    (for [parsed (parse-data @(:results @this))
-          :let [[this-one? [branch sha1 desc]] parsed]]
+  (let [results (:results @this)]
+    [:div.gitlight-branches [:h1 "Branches"]
+     [:table
+      (for [parsed (parse-data (first results))
+            :let [[this-one? [branch sha1 desc]] parsed]]
+        [:tr
+         [:td (if this-one? "->" (delete-branch-button branch))]
+         [:td {:class (if this-one?
+                        "current"
+                        "not-current")} (checkout-button branch)]
+         (if this-one?
+           [:td.pull (pull-button branch)]
+           [:td.merge (merge-button branch)])
+         [:td sha1]
+         [:td.push (push-button branch)]
+         [:td desc]])
       [:tr
-       [:td (if this-one? "->" (delete-branch-button branch))]
-       [:td {:class (if this-one?
-                      "current"
-                      "not-current")} (checkout-button branch)]
-       (if this-one?
-         [:td.pull (pull-button branch)]
-         [:td.merge (merge-button branch)])
-       [:td sha1]
-       [:td.push (push-button branch)]
-       [:td desc]])
-    [:tr
-     [:td]
-     [:td.new-branch (new-branch-button)]]
-    ]])
+       [:td]
+       [:td.new-branch (new-branch-button)]]
+      ]
+     [:hr]
+     [:div (rest results)]
+
+     ]))
 
 
 
@@ -68,8 +74,14 @@
 (def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches branch-panel))
 
 
-
 (defn git-branches []
+  (exec/runfuns git-branch-output
+                [#(git/git-command % "branch" "--no-color" "-vv")
+                 #(git/git-command % "stash" "list")]
+   ))
+
+
+(defn git-branches2 []
   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
 
 
