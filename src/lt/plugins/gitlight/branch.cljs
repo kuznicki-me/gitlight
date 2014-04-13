@@ -77,7 +77,7 @@
 (defn git-branches []
   (exec/runfuns git-branch-output
                 [#(git/git-command % "branch" "--no-color" "-vv")
-                 #(git/git-command % "stash" "list")]
+                 #(git/git-command % "remote" "-v")]
    ))
 
 

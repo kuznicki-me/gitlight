@@ -84,9 +84,10 @@
 
 
 (defn add-to-history [kw obj command stdout stderr]
-  (swap! history
-         limited-conj
-         [kw [command (lib/now) (.toString stdout) (.toString stderr)]]))
+  (if-not (nil? command)
+    (swap! history
+           limited-conj
+           [kw [command (lib/now) (.toString stdout) (.toString stderr)]])))
 
 
 (behavior ::history-out-success

@@ -91,7 +91,8 @@
         refresh-results (make-refresh-behavior refresh-kwd ui-fun)
 
         tab-obj (object/object* tab-kwd
-                                :tags [:gitlight-tab.out]
+                                :tags [:gitlight-tab.out
+                                       :gitlight-log-history]
                                 :name window-name
                                 :result nil
                                 :results nil

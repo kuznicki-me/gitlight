@@ -44,6 +44,7 @@
 (defn runfuns [return-obj funs]
   (let [output (object/create
                 (object/object* ::foldl-outputs
+                                :tags [:gitlight-log-history]
                                 :return-obj return-obj
                                 :funs funs
                                 :output (atom [])
