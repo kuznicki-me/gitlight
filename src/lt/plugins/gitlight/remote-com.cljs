@@ -4,17 +4,17 @@
 
 
 (defn git-fetch []
-  (git/git-command-ignore-out "fetch"))
+  (git/git "fetch"))
 
 
 
 (defn git-push []
-  (git/git-command-ignore-out "push"))
+  (git/git "push"))
 
 
 (defn git-push-remote-branch [remote branch]
-  (git/git-command-ignore-out "push" remote branch))
+  (git/git "push" remote branch))
 
 
 (defn git-pull []
-  (git/git-command-ignore-out "pull"))
+  (git/git "pull"))

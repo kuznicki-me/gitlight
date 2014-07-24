@@ -108,7 +108,7 @@
 
 
 (defn git-status []
-  (git/git-command git-status-out "status" "--porcelain" "--branch"))
+  (git/git ["status" "--porcelain" "--branch"] git-status-out))
 
 
 

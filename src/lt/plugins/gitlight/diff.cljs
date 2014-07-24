@@ -26,7 +26,7 @@
 
 
 (defn git-diff-update-fun []
-  (git-diff-cached @last-cached @last-filename))
+  (git-diff @last-filename @last-cached))
 
 
 
@@ -203,33 +203,28 @@
 
 
 
-(defn git-diff-cached [cached? filepath]
-  (reset! last-filename filepath)
-  (reset! last-cached cached?)
-  (git/git-command git-diff-output
-                   "--no-pager"
-                   "diff"
-                   (when cached? "--cached")
-                   "--no-color"
-                   (str "-U" @context)
-                   "--"
-                   filepath))
-
-(defn git-diff [filepath]
-  (git-diff-cached false filepath))
+(defn git-diff
+  ([filepath] (git-diff filepath false))
+  ([filepath cached?] (let [contextstr (str "-U" @context)
+                            args ["diff" "--no-color" contextstr
+                                  (when cached? "--cached")
+                                  "--" filepath]]
+                        (reset! last-filename filepath)
+                        (reset! last-cached cached?)
+                        (git/git args git-diff-output))))
 
 
 (defn git-diff-button [action filename]
   (git-diff filename))
 
 (defn git-diff-cached-button [action filename]
-  (git-diff-cached true filename))
+  (git-diff filename true))
 
 (defn git-diff-repo-button [action filename]
   (git-diff ""))
 
 (defn git-diff-cached-repo-button [action filename]
-  (git-diff-cached true ""))
+  (git-diff "" true))
 
 
 
@@ -310,8 +305,8 @@
 
 (defn add-git-diff-gutter []
   (object/add-tags (pool/last-active) #{::gitlight-gutter-on})
-  (git/git-command git-diff-gutter-out
-                   "diff" "-U10000" "--" (lib/current-file-path)))
+  (git/git ["diff" "-U10000" "--" (lib/current-file-path)]
+           git-diff-gutter-out))
 
 
 (defn remove-git-diff-gutter []
