@@ -32,45 +32,53 @@
         (files/parent cwd)))))
 
 
-(defn git-command-cwd [obj cwd & args]
+; (defn git-command-cwd [cwd obj args]
+;   (let [git-path (:git-binary @config)
+;         command (str (lib/qu git-path) " " (string/join " " args))]
+;     (exec/run-deaf obj cwd command)))
+
+
+; (defn git-command [obj & args]
+;   (let [cwd (get-git-root)]
+;     (apply (partial git-command-cwd obj cwd) args)))
+
+
+
+(defn run-git-command [args obj cwd]
   (let [git-path (:git-binary @config)
         command (str (lib/qu git-path) " " (string/join " " args))]
     (exec/run-deaf obj cwd command)))
 
 
-(defn git-command [obj & args]
-  (let [cwd (get-git-root)]
-    (apply (partial git-command-cwd obj cwd) args)))
-
-
-
-(defn git-command-ignore-out [& args]
-  (apply (partial git-command git-ignore-out) args))
+(defn git
+  ([args] (git args ignore-out))
+  ([args obj] (git args obj (get-git-root)))
+  ([args obj cwd] (run-command args obj cwd)))
 
 
 
 (defn git-add [filename]
-  (git-command-ignore-out "add" "--" filename))
-
+  (git ["add" "--" filename]))
 
 
 (defn git-reset [filename]
-  (git-command-ignore-out "reset" "--" filename))
+  (git ["reset" "--" filename]))
 
 
 (defn git-checkout-file [filename]
-  (git-command-ignore-out "checkout" "--" filename))
+  (git ["checkout" "--" filename]))
 
 
-(defn git-commit []
+(defn git-commit-popup []
   (cui/input-popup "commit message?" "commit" git-cmd-commit))
 
 
-(defn git-cmd-commit [msg]
-  (git-command-ignore-out "commit" "-m" (lib/q&s msg)))
+(defn git-commit
+  ([msg] (git ["commit" "-m" (lib/q&s msg)]))
+  ([title body] (git ["commit"
+                      "-m" (lib/q&s title)
+                      "-m" (lib/q&s body)])))
 
-(defn git-form-commit [title body]
-  (git-command-ignore-out "commit" "-m" (lib/q&s title) "-m" (lib/q&s body)))
 
 (behavior ::ignore.out-success
           :type :user
