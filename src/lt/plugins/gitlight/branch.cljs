@@ -106,33 +106,34 @@
 (def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches branch-panel))
 
 
+
 (defn git-branches []
-  (exec/runfuns git-branch-output
-                [#(git/git-command % "branch" "--no-color" "-vv")
-                 #(git/git-command % "remote" "-v")
-                 #(git/git-command % "branch" "-r" "-v")]
-   ))
+  (let [commands-args [["branch" "--no-color" "-vv"]
+                       ["remote" "-v"]
+                       ["branch" "-r" "-v"]]
+        commands-to-run (map #(partial git/git %) commands-args)]
+  (exec/runfuns git-branch-output commands-to-run)))
 
 
-(defn git-branches2 []
-  (git/git-command git-branch-output "branch" "--no-color" "-vv"))
+; (defn git-branches2 []
+;   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
 
 
 
 (defn git-merge [action branch]
-  (git/git-command-ignore-out "merge" branch)
+  (git/git ["merge" branch])
   (git-branches))
 
 
 
 (defn git-checkout [branch action]
-  (git/git-command-ignore-out "checkout" branch)
+  (git/git ["checkout" branch])
   (git-branches))
 
 
 
 (defn git-push-it! [action branch]
-  (remcom/git-push-remote-branch "origin" branch)
+  (remcom/git-push-remote-branch ["origin" branch])
   (git-branches))
 
 
@@ -143,12 +144,12 @@
 
 
 (defn git-create-new-branch [branch]
-  (git/git-command-ignore-out "branch" branch)
+  (git/git ["branch" branch])
   (git-branches))
 
 
 (defn git-delete-branch [action branch]
-  (git/git-command-ignore-out "branch" "-D" branch)
+  (git/git ["branch" "-D" branch])
   (git-branches))
 
 
