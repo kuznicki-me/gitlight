@@ -119,7 +119,7 @@
 (defn git-commit [action filename]
   (cui/input-popup "commit message?" "commit"
                    (fn [msg]
-                     (git/git-cmd-commit msg)
+                     (git/git-commit msg)
                      (git-status))))
 
 

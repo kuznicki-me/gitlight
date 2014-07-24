@@ -44,16 +44,28 @@
 
 
 
+(def git-ignore-out
+  (object/create
+   (object/object*
+    ::git-ignore-out
+    :tags [:git-ignore-out]
+    :behaviors [::ignore.out-success
+                ::ignore.out-error])))
+
+
+
 (defn run-git-command [args obj cwd]
   (let [git-path (:git-binary @config)
-        command (str (lib/qu git-path) " " (string/join " " args))]
+        command (str (lib/qu git-path)
+                     " "
+                     (string/join " " args))]
     (exec/run-deaf obj cwd command)))
 
 
 (defn git
-  ([args] (git args ignore-out))
+  ([args] (git args git-ignore-out))
   ([args obj] (git args obj (get-git-root)))
-  ([args obj cwd] (run-command args obj cwd)))
+  ([args obj cwd] (run-git-command args obj cwd)))
 
 
 
@@ -70,7 +82,7 @@
 
 
 (defn git-commit-popup []
-  (cui/input-popup "commit message?" "commit" git-cmd-commit))
+  (cui/input-popup "commit message?" "commit" git-commit))
 
 
 (defn git-commit
@@ -123,11 +135,3 @@
 (cmd/command {:command ::git-commit
               :desc "gitlight: commit"
               :exec git-commit})
-
-(def git-ignore-out
-  (object/create
-   (object/object*
-    ::git-ignore-out
-    :tags [:git-ignore-out]
-    :behaviors [::ignore.out-success
-                ::ignore.out-error])))

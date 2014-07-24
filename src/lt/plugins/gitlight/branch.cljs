@@ -133,7 +133,7 @@
 
 
 (defn git-push-it! [action branch]
-  (remcom/git-push-remote-branch ["origin" branch])
+  (remcom/git-push-remote-branch "origin" branch)
   (git-branches))
 
 

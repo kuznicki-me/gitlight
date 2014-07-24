@@ -82,7 +82,7 @@
    title [:br]
    body [:br]
    (cui/make-button "submit" "submit" (fn [x y]
-                                        (git/git-form-commit (dom/val title) (dom/val body))
+                                        (git/git-commit (dom/val title) (dom/val body))
                                         (git-diff-update-fun)))]))
 
 
