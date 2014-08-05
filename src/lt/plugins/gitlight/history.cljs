@@ -11,11 +11,11 @@
     (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn row [[cls [command date stdout stderr]]]
-  (if-not (nil? cls)
-    [:tr {:class (name cls)}
+(defn row [[success-or-error command date stdout stderr]]
+  (if-not (nil? success-or-error)
+    [:tr {:class (name success-or-error)}
      [:th command]
-     [:td date [:br] (name cls)]
+     [:td date [:br] (name success-or-error)]
      [:td [:textarea {:disabled "disabled"} stdout]]
      [:td [:textarea {:disabled "disabled"} stderr]]]))
 
@@ -37,24 +37,35 @@
     (tabs/add-or-focus! landfill)
     (editor/set-val landfill dump)))
 
+(defn get-first [needle haystack]
+  (first (filter #(= needle (first %)) haystack)))
 
-(defui ui-fun [this]
+
+(def history-header
+  [:tr [:th] [:th] [:th "stdout"] [:th "stderr"]])
+
+
+(defui make-history-gui [this]
   (let [history (:history @this)
-        last-ok (first (drop-while #(= :error (first %)) @history))
-        last-fail (first (drop-while #(= :success (first %)) @history))]
+        dump-button (cui/make-button "dump history"
+                                     (parse-dump @history)
+                                     landfill-of-history)
+        last-ok (get-first :success @history)
+        last-fail (get-first :error @history)
+        history-rows (map row @history)]
     [:div.gitlight-command-history
-     (cui/make-button "dump history" (parse-dump @history) landfill-of-history)
+     dump-button
      [:table
-     (spacer "last ok: ")
-     (row last-ok)
-     (spacer "last failed: ")
-     (row last-fail)
-     (spacer "history: ")
-      [:tr [:th] [:th] [:th "stdout"] [:th "stderr"]]
-     (map row @history)]]))
+      (spacer "last ok: ")
+      (row last-ok)
+      (spacer "last failed: ")
+      (row last-fail)
+      (spacer "history: ")
+      history-header
+      history-rows]]))
 
 
-(def refresh (cui/make-refresh-behavior ::history-refresh ui-fun))
+(def refresh (cui/make-refresh-behavior ::history-refresh make-history-gui))
 
 
 (def tab-obj (object/object* ::history-tab
@@ -63,19 +74,15 @@
                              :history (atom [])
                              :behaviors [:lt.plugins.gitlight.common-ui/on-close-destroy
                                          refresh]
-                             :init (fn [this]
-                                     (ui-fun this))))
+                             :init make-history-gui))
 
 
 (def history-tab (object/create tab-obj))
 
 
-(def history (:history @history-tab))
-
-
-(defn limited-conj [a b]
-  (let [toomuch (:max-history @config)]
-    (take toomuch (conj a b))))
+(defn history-limited-conj [a b]
+  (let [just-enough (:max-history @config)]
+    (take just-enough (conj a b))))
 
 
 (defn command-history []
@@ -83,11 +90,15 @@
   (object/raise history-tab :refresh))
 
 
-(defn add-to-history [kw obj command stdout stderr]
+(defn add-to-history [success-or-error obj command stdout stderr]
   (if-not (nil? command)
-    (swap! history
-           limited-conj
-           [kw [command (lib/now) (.toString stdout) (.toString stderr)]])))
+    (let [history (:history @history-tab)
+          item-to-add [success-or-error
+                       command
+                       (lib/now)
+                       (str stdout)
+                       (str stderr)]]
+      (swap! history history-limited-conj item-to-add))))
 
 
 (behavior ::history-out-success
