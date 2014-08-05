@@ -228,6 +228,7 @@
 
 
 
+
 (defn side-by-side [firsts]
   (let [partitioned (partition-by first firsts)]
     (first
@@ -262,20 +263,67 @@
    content])
 
 
+(defn filler []
+  (let [file-editor (editor/->cm-ed (pool/last-active))
+        line-number (.-size (.-doc file-editor))]
+    (repeat line-number " ")))
+
+(defn dec>0 [x]
+  (if (> x 0)
+    (dec x)
+    0))
+
+(defn with-deficit [marker deficit]
+  (str marker
+       (when (> deficit 0)
+         (if (= \+ marker)
+           "-"
+           (str "-" deficit "↑")))))
+
+
+(defn make-indicator [[consumed deficit] marker]
+  (let [new-marker (with-deficit marker deficit)
+        added-new (conj consumed new-marker)]
+    (case marker
+      \-     [consumed  (inc deficit)]
+      \+     [added-new (dec>0 deficit)]
+      \space [added-new 0])))
+
+
+(defn diff-gutter [diff-lines]
+  (let [diff (map first diff-lines)]
+    (first (reduce make-indicator [[] 0] diff))))
+
+
+(defn parse-diff-gutter-out [this command stdout stderr]
+  (let [splitted (string/split-lines (.toString stdout))
+        diff-part (drop 5 splitted)]
+    (gut/show-gutter-data
+      (pool/last-active)
+      println
+      style-diff-marker
+      (if (empty? diff-part)
+        (filler)
+        (diff-gutter diff-part)))))
+
 (behavior ::parse-diff-gutter-out
           :triggers [:out]
-          :reaction (fn [this command stdout stderr]
-                      (let [parsed (drop 5 (string/split-lines (.toString stdout)))
-                            firsts (map first parsed)]
-                        (gut/show-gutter-data
-                         (pool/last-active)
-                         println
-                         style-diff-marker
-                         (if (empty? firsts)
-                           (repeat
-                            (.-size (.-doc (editor/->cm-ed (pool/last-active))))
-                            " ")
-                           (side-by-side firsts))))))
+          :reaction parse-diff-gutter-out)
+
+; (behavior ::parse-diff-gutter-out
+;           :triggers [:out]
+;           :reaction (fn [this command stdout stderr]
+;                       (let [parsed (drop 5 (string/split-lines (.toString stdout)))
+;                             firsts (map first parsed)]
+;                         (gut/show-gutter-data
+;                          (pool/last-active)
+;                          println
+;                          style-diff-marker
+;                          (if (empty? firsts)
+;                            (repeat
+;                             (.-size (.-doc (editor/->cm-ed (pool/last-active))))
+;                             " ")
+;                            (side-by-side firsts))))))
 
 
 (behavior ::diff-gutter-err
