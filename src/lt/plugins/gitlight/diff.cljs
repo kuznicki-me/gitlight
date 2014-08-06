@@ -118,28 +118,23 @@
         ])
      ]))
 
-
-
-(defn breaker [left right]
-  (let [m [(first left) (first right)]]
-    (if (some identity m)
-      (cons m (breaker (rest left) (rest right))))))
-
-
 (defn separate [fun coll]
-  (reduce (fn [[left right] line]
-            (if (fun line)
-              [(conj left line) right]
-              [left (conj right line)]))
-          [[] []]
-          coll))
+  [(filter fun coll), (filter (complement fun) coll)])
+
+(defn nil-padder [coll padding]
+  (concat coll (repeat padding nil)))
+
+(defn pad-smaller-with-nils [& args]
+  (let [counts (map count args)
+        paddings (map - (reverse counts) counts)]
+    (map nil-padder args paddings)))
 
 
 (defn columner [lines]
   (if (= \space (first (first lines)))
-    {:class "context" :cols (breaker lines lines)}
+    {:class "context" :cols (map vector lines lines)}
     (let [[left right] (separate #(= \- (first %)) lines)]
-      {:class "changed" :cols (breaker left right)})))
+      {:class "changed" :cols (apply (partial map vector) (pad-smaller-with-nils left right))})))
 
 
 
