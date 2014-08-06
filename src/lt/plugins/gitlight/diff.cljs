@@ -97,7 +97,7 @@
      (when @last-cached
        (make-commit-form))
 
-     (for [file (parse-git-diff2 output)]
+     (for [file (parse-git-diff output)]
        [:table
 
         [:tr [:td.header (:header file)]]
@@ -180,32 +180,16 @@
 
 
 (defn split-into-files [lines]
-  (split-into-headered-groups
-   lines
-   (fn [x] (nil? (re-matches #"diff --git .*" x)))
-   parse-single-git-diff
-   :filename
-   :file-diff))
-
-; (defn parse-single-git-diff2 [[fileline lines]]
-
-;   )
-
-(defn split-into-files2 [lines]
   (let [diff-regexp #"diff --git .*"
         splitter (partial re-matches diff-regexp)
         splitted-by-regexp (partition-by splitter lines)]
     (take-nth 2 (rest splitted-by-regexp))))
 
 
-(defn parse-git-diff2 [raw-data]
-  (let [lines (string/split-lines (.toString raw-data))
-        files (split-into-files2 lines)]
-    (map parse-single-git-diff files)))
-
-
 (defn parse-git-diff [raw-data]
-  (split-into-files (string/split-lines (.toString raw-data))))
+  (let [lines (string/split-lines (.toString raw-data))
+        files (split-into-files lines)]
+    (map parse-single-git-diff files)))
 
 
 
