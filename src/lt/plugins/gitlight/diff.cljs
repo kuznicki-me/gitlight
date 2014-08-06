@@ -97,18 +97,15 @@
      (when @last-cached
        (make-commit-form))
 
-     (for [file (parse-git-diff output)
-           :let [filename (:filename file)
-                 file-diff (:file-diff file)]]
+     (for [file (parse-git-diff2 output)]
        [:table
-        ;[:tr [:td.filename filename]]
 
-        [:tr [:td.header (:header file-diff)]]
+        [:tr [:td.header (:header file)]]
         [:tr
-         [:td.left [:b (:left file-diff)]]
-         [:td.right [:b (:right file-diff)]]]
+         [:td.left [:b (:left file)]]
+         [:td.right [:b (:right file)]]]
 
-        (for [changes-group (:groups file-diff)]
+        (for [changes-group (:groups file)]
           (cons [:tr.where [:td
                             {:colspan 2}
                             [:b (:location changes-group)]]]
@@ -189,6 +186,22 @@
    parse-single-git-diff
    :filename
    :file-diff))
+
+; (defn parse-single-git-diff2 [[fileline lines]]
+
+;   )
+
+(defn split-into-files2 [lines]
+  (let [diff-regexp #"diff --git .*"
+        splitter (partial re-matches diff-regexp)
+        splitted-by-regexp (partition-by splitter lines)]
+    (take-nth 2 (rest splitted-by-regexp))))
+
+
+(defn parse-git-diff2 [raw-data]
+  (let [lines (string/split-lines (.toString raw-data))
+        files (split-into-files2 lines)]
+    (map parse-single-git-diff files)))
 
 
 (defn parse-git-diff [raw-data]
