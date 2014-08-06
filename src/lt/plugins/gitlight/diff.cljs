@@ -110,11 +110,11 @@
         (for [[location content] groups]
           (cons [:tr.where [:td {:colspan 2} [:b location]]]
                 (for [line-group (partition-by #(= \space (first %)) content)
-                      :let [columned (columner line-group)]]
-                  (for [[left right](:cols columned)]
-                    [:tr {:class (:class columned)}
-                     [:td.left [:pre left]]
-                     [:td.right [:pre right]]]))))
+                      :let [[classname columns] (make-columns line-group)]]
+                  (for [[minuses pluses] columns]
+                    [:tr {:class classname}
+                     [:td.left [:pre minuses]]
+                     [:td.right [:pre pluses]]]))))
         ])
      ]))
 
@@ -124,17 +124,20 @@
 (defn nil-padder [coll padding]
   (concat coll (repeat padding nil)))
 
-(defn pad-smaller-with-nils [& args]
-  (let [counts (map count args)
+(defn pad-smaller-with-nils [left-right]
+  (let [counts (map count left-right)
         paddings (map - (reverse counts) counts)]
-    (map nil-padder args paddings)))
+    (map nil-padder left-right paddings)))
 
+(defn separate-minus-and-plus [lines]
+  (let [minus-plus (separate #(= \- (first %)) lines)
+        padded     (pad-smaller-with-nils minus-plus)]
+    (apply (partial map vector) padded)))
 
-(defn columner [lines]
+(defn make-columns [lines]
   (if (= \space (first (first lines)))
-    {:class "context" :cols (map vector lines lines)}
-    (let [[left right] (separate #(= \- (first %)) lines)]
-      {:class "changed" :cols (apply (partial map vector) (pad-smaller-with-nils left right))})))
+    ["context" (map vector lines lines)]
+    ["changed" (separate-minus-and-plus lines)]))
 
 
 
