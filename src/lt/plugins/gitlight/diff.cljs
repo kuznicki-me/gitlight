@@ -86,6 +86,60 @@
                                         (git-diff-update-fun)))]))
 
 
+(defn make-file-table [[header left right]]
+  [:table
+   [:tr [:td.header header]]
+   [:tr
+    [:td.left [:b left]]
+    [:td.right [:b right]]]])
+
+
+(defn location-row [location]
+  [:tr.where [:td {:colspan 2} [:b location]]])
+
+
+(defn separate [fun coll]
+  [(filter fun coll), (filter (complement fun) coll)])
+
+
+(defn nil-padder [coll padding]
+  (concat coll (repeat padding nil)))
+
+
+(defn pad-smaller-with-nils [left-right]
+  (let [counts (map count left-right)
+        paddings (map - (reverse counts) counts)]
+    (map nil-padder left-right paddings)))
+
+
+(defn separate-minus-and-plus [lines]
+  (let [minus-plus (separate #(= \- (first %)) lines)]
+    (pad-smaller-with-nils minus-plus)))
+
+
+(defn make-columns [lines]
+  (let [separated (separate-minus-and-plus lines)]
+    (if (= \space (first (first lines)))
+      (map (partial make-diff-row "context") lines lines)
+      (apply (partial map (partial make-diff-row "changed")) separated))))
+
+
+(defn make-diff-row [classname left right]
+  [:tr {:class classname}
+   [:td.left [:pre left]]
+   [:td.right [:pre right]]])
+
+
+(defn split-diff-into-columns [[location diff]]
+  (let [splitted-into-groups (partition-by #(= \space (first %)) diff)]
+    [(location-row location)
+     (map make-columns splitted-into-groups)]))
+
+
+(defn make-file-diff [file-diff]
+  (mapcat split-diff-into-columns file-diff))
+
+
 (defui diff-panel [this]
   (let [output (:result @this)]
     [:div.gitlight-diff
@@ -99,45 +153,11 @@
      (when @last-cached
        (make-commit-form))
 
-     (for [[header left right groups] (parse-git-diff output)]
-       [:table
+     (for [[fileinfo file-diff] (parse-git-diff output)]
+       (into (make-file-table fileinfo)
+             (make-file-diff file-diff)))]))
 
-        [:tr [:td.header header]]
-        [:tr
-         [:td.left [:b left]]
-         [:td.right [:b right]]]
 
-        (for [[location content] groups]
-          (cons [:tr.where [:td {:colspan 2} [:b location]]]
-                (for [line-group (partition-by #(= \space (first %)) content)
-                      :let [[classname columns] (make-columns line-group)]]
-                  (for [[minuses pluses] columns]
-                    [:tr {:class classname}
-                     [:td.left [:pre minuses]]
-                     [:td.right [:pre pluses]]]))))
-        ])
-     ]))
-
-(defn separate [fun coll]
-  [(filter fun coll), (filter (complement fun) coll)])
-
-(defn nil-padder [coll padding]
-  (concat coll (repeat padding nil)))
-
-(defn pad-smaller-with-nils [left-right]
-  (let [counts (map count left-right)
-        paddings (map - (reverse counts) counts)]
-    (map nil-padder left-right paddings)))
-
-(defn separate-minus-and-plus [lines]
-  (let [minus-plus (separate #(= \- (first %)) lines)
-        padded     (pad-smaller-with-nils minus-plus)]
-    (apply (partial map vector) padded)))
-
-(defn make-columns [lines]
-  (if (= \space (first (first lines)))
-    ["context" (map vector lines lines)]
-    ["changed" (separate-minus-and-plus lines)]))
 
 
 
@@ -148,7 +168,7 @@
 (defn parse-single-git-diff [lines]
   (let [[fileinfo diff-lines] (split-at 3 lines)
         groups (split-into-groups diff-lines)]
-    (conj (into [] fileinfo) groups)))
+    [fileinfo groups]))
 
 
 (defn split-into-files [lines]
