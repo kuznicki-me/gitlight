@@ -113,15 +113,17 @@
 
 
 
-(defn make-button [n f fun]
-  (button n f (if (= fun nil)
-                not-implemented-popup
-                fun)))
+(defn make-button
+  ([n f] (make-button n f not-implemented-popup))
+  ([n f fun] (button n f (if (nil? fun)
+                           not-implemented-popup
+                           fun))))
 
-(defn make-classy-button [n f fun]
-  (classy-button (str n) n f (if (= fun nil)
-                               not-implemented-popup
-                               fun)))
+(defn make-classy-button
+  ([n f] (make-button n f not-implemented-popup))
+  ([n f fun] (classy-button (str n) n f (if (nil? fun)
+                                          not-implemented-popup
+                                          fun))))
 
 
 (defn not-implemented-popup [ n f ]
