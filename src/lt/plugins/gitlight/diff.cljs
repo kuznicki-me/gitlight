@@ -89,7 +89,9 @@
 (defui diff-panel [this]
   (let [output (:result @this)]
     [:div.gitlight-diff
-     [:h1 "diff: " (if (= "" @last-filename) "whole repo" @last-filename)]
+     [:h1 "diff: " (if (= "" @last-filename)
+                     "whole repo"
+                     @last-filename)]
      (make-context)
      (make-more-context)
      (cached-toggle-button)
@@ -97,24 +99,20 @@
      (when @last-cached
        (make-commit-form))
 
-     (for [file (parse-git-diff output)]
+     (for [[header left right groups] (parse-git-diff output)]
        [:table
 
-        [:tr [:td.header (:header file)]]
+        [:tr [:td.header header]]
         [:tr
-         [:td.left [:b (:left file)]]
-         [:td.right [:b (:right file)]]]
+         [:td.left [:b left]]
+         [:td.right [:b right]]]
 
-        (for [changes-group (:groups file)]
-          (cons [:tr.where [:td
-                            {:colspan 2}
-                            [:b (:location changes-group)]]]
-                (for [line-group (:content changes-group)
-                      :let [columned (columner line-group)
-                            c (:class columned)
-                            columns (:cols columned)]]
-                  (for [[left right] columns]
-                    [:tr {:class c}
+        (for [[location content] groups]
+          (cons [:tr.where [:td {:colspan 2} [:b location]]]
+                (for [line-group (partition-by #(= \space (first %)) content)
+                      :let [columned (columner line-group)]]
+                  (for [[left right](:cols columned)]
+                    [:tr {:class (:class columned)}
                      [:td.left [:pre left]]
                      [:td.right [:pre right]]]))))
         ])
@@ -145,38 +143,14 @@
 
 
 
-(defn split-into-headered-groups [lines fun result-fun headkey contkey]
-  (when (not (empty? lines))
-    (let [fst (first lines)
-          [content leftovers] (split-with fun (rest lines))]
-    (cons {headkey fst
-           contkey (result-fun content)}
-          (split-into-headered-groups leftovers
-                                      fun
-                                      result-fun
-                                      headkey
-                                      contkey)))))
+(defn split-into-groups [file-lines]
+  (partition 2 (partition-by #(not= \@ (first %)) file-lines)))
 
 
-
-(defn split-into-groups [lines]
-  (split-into-headered-groups
-   lines
-   (fn [x] (not= "@" (first x)))
-   (fn [x] (partition-by #(= \space (first %)) x))
-   :location
-   :content))
-
-
-(defn parse-single-git-diff [data]
-  (let [[header
-         left
-         right] (take 3 data)
-        groups (split-into-groups (drop 3 data))]
-    {:header header
-     :left left
-     :right right
-     :groups groups}))
+(defn parse-single-git-diff [lines]
+  (let [[fileinfo diff-lines] (split-at 3 lines)
+        groups (split-into-groups diff-lines)]
+    (conj (into [] fileinfo) groups)))
 
 
 (defn split-into-files [lines]
