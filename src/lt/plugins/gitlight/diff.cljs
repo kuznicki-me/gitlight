@@ -227,33 +227,6 @@
   (git-diff "" true))
 
 
-
-
-(defn side-by-side [firsts]
-  (let [partitioned (partition-by first firsts)]
-    (first
-     (reduce (fn [[ok stack] part]
-               (let [[fst rst] (split-at 1 part)
-                     left (count stack)
-                     right (count part)]
-                 (case (first fst)
-                   \space  [(concat ok
-                                    (if (empty? stack)
-                                      fst
-                                      [(str " -" (count stack) "↑")])
-                                    rst)
-                            []]
-                   \- [ok part]
-                   \+ [(concat ok
-                               (map str part stack)
-                               (repeat (- right left) "+"))
-                       (repeat (- left right) "-")]
-                   \\ [ok part]
-                   )))
-             [[][]] partitioned))))
-
-
-
 (defui style-diff-marker [[p m :as content]]
   [:div {:class (cond
                  (and (= p " ") (nil? m)) "no-change"
@@ -306,24 +279,10 @@
         (filler)
         (diff-gutter diff-part)))))
 
+
 (behavior ::parse-diff-gutter-out
           :triggers [:out]
           :reaction parse-diff-gutter-out)
-
-; (behavior ::parse-diff-gutter-out
-;           :triggers [:out]
-;           :reaction (fn [this command stdout stderr]
-;                       (let [parsed (drop 5 (string/split-lines (.toString stdout)))
-;                             firsts (map first parsed)]
-;                         (gut/show-gutter-data
-;                          (pool/last-active)
-;                          println
-;                          style-diff-marker
-;                          (if (empty? firsts)
-;                            (repeat
-;                             (.-size (.-doc (editor/->cm-ed (pool/last-active))))
-;                             " ")
-;                            (side-by-side firsts))))))
 
 
 (behavior ::diff-gutter-err
