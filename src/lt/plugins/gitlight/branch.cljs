@@ -3,29 +3,63 @@
             [lt.objs.command :as cmd]
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
+            [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.remote-com :as remcom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn checkout-button [branch]
-  (cui/make_button branch "checkout branch" git-checkout))
+(defn git-branches []
+  (let [commands-args [["branch" "--no-color" "-vv"]
+                       ["remote" "-v"]
+                       ["branch" "-r" "-v"]]
+        commands-to-run (map #(partial git/git %) commands-args)]
+  (exec/runfuns git-branch-output commands-to-run)))
 
-(defn pull-button [branch]
-  (cui/make_button "pull!" branch (fn [x y] (remcom/git-pull))))
+(def update-after (partial lib/wrap-post git-branches))
+
+
+(defn git-checkout [branch]
+  (git/git ["checkout" branch]))
+
+(defn checkout-button [branch]
+  (cui/button branch (update-after git-checkout) [branch]))
+
+
+(defn git-merge [branch]
+  (git/git ["merge" branch]))
 
 (defn merge-button [branch]
-  (cui/make_button "merge" branch git-merge))
+  (cui/button "merge" (update-after git-merge) [branch]))
+
+
+(defn git-push-it! [branch]
+  (remcom/git-push-remote-branch "origin" branch))
 
 (defn push-button [branch]
-  (cui/make_button "push it!" branch git-push-it!))
+  (cui/button "push it!" (update-after git-push-it!) [branch]))
+
+
+(defn git-create-new-branch [branch]
+  (git/git ["branch" branch]))
+
+(defn git-new-branch-popup []
+  (cui/input-popup "new branch name" "create" (update-after git-create-new-branch)))
 
 (defn new-branch-button []
-  (cui/make_button "make a new branch" nil git-new-branch))
+  (cui/button "make a new branch" git-new-branch-popup))
+
+
+(defn git-delete-branch [branch]
+  (git/git ["branch" "-D" branch]))
 
 (defn delete-branch-button [branch]
-  (cui/make_button "delete" branch git-delete-branch))
+  (cui/button "delete" (update-after git-delete-branch) [branch]))
+
+
+(defn pull-button [branch]
+  (cui/button "pull!" (update-after remcom/git-pull)))
 
 
 (defn local-branches-ui [branches]
@@ -33,7 +67,9 @@
    (for [parsed (parse-data branches)
          :let [[this-one? [branch sha1 desc]] parsed]]
      [:tr
-      [:td (if this-one? "->" (delete-branch-button branch))]
+      [:td (if this-one?
+             "->"
+             (delete-branch-button branch))]
       [:td {:class (if this-one?
                      "current"
                      "not-current")} (checkout-button branch)]
@@ -106,47 +142,6 @@
 (def git-branch-output (cui/make-output-tab-object "Git branches" ::gitlight-branches branch-panel))
 
 
-
-(defn git-branches []
-  (let [commands-args [["branch" "--no-color" "-vv"]
-                       ["remote" "-v"]
-                       ["branch" "-r" "-v"]]
-        commands-to-run (map #(partial git/git %) commands-args)]
-  (exec/runfuns git-branch-output commands-to-run)))
-
-
-
-(defn git-merge [action branch]
-  (git/git ["merge" branch])
-  (git-branches))
-
-
-
-(defn git-checkout [branch action]
-  (git/git ["checkout" branch])
-  (git-branches))
-
-
-
-(defn git-push-it! [action branch]
-  (remcom/git-push-remote-branch "origin" branch)
-  (git-branches))
-
-
-
-(defn git-new-branch [action branch]
-  (cui/input-popup "new branch name" "create" git-create-new-branch))
-
-
-
-(defn git-create-new-branch [branch]
-  (git/git ["branch" branch])
-  (git-branches))
-
-
-(defn git-delete-branch [action branch]
-  (git/git ["branch" "-D" branch])
-  (git-branches))
 
 
 (cmd/command {:command ::branches
