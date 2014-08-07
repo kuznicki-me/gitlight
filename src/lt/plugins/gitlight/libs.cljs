@@ -36,3 +36,9 @@
 (cmd/command {:command ::input-test
               :desc "gitlight: input sanitize test"
               :exec popup})
+
+
+(defn wrap-post [wrapper fun]
+  (fn [& args]
+    (apply fun args)
+    (wrapper)))

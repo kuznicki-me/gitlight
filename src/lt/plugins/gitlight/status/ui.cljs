@@ -12,6 +12,7 @@
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.branch :as branch]
             [lt.plugins.gitlight.diff :as diff]
+            [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.history :as hist]
             [lt.objs.command :as cmd])
   (:require-macros [lt.macros :refer [defui behavior]]))
@@ -45,26 +46,24 @@
      status-bar))
 
 
-(defn make-button-and-update [n f fun]
-  (cui/make-classy-button n f (fn [x y] (fun x y) (back/git-status))))
-
-
+(def update-status-after (partial lib/wrap-post back/git-status))
 
 (defn open-file [action filename]
   (cli/open-paths [(str (git/get-git-root) "/" filename)] false))
 
 
-(def file-ops {:merge-conflict [["resolve" back/git-add]
-                               ["diff"   diff/git-diff-button]]
-               :not-staged [["stage" back/git-add]
-                            ["diff"   diff/git-diff-button]
-                            ["checkout" back/git-checkout-file]]
-                            ;["stash"  nil]]
-               :untracked [["add"    back/git-add]
-                           ;["ignore" nil]
-                           ["delete" back/bin-rm]]
-               :staged [["unstage" back/git-reset]
-                        ["diff"   diff/git-diff-cached-button]]})
+(def file-state->buttons
+  {:merge-conflict [["resolve" back/git-add]
+                    ["diff"   diff/git-diff-button]]
+   :not-staged [["stage" back/git-add]
+                ["diff"   diff/git-diff-button]
+                ["checkout" back/git-checkout-file]]
+   ;["stash"  nil]]
+   :untracked [["add"    back/git-add]
+               ;["ignore" nil]
+               ["delete" back/bin-rm]]
+   :staged [["unstage" back/git-reset]
+            ["diff"   diff/git-diff-cached-button]]})
 
 
 
@@ -81,12 +80,12 @@
                ;:tag    ["tag"    nil]})
 
 
-(defui file [g-name [f t]]
+(defui file [file-state [filename t]]
   [:li {:class (name t)}
-   (make-button-and-update f f open-file)
+   (cui/button filename (update-status-after open-file) filename)
    [:br]
-   (for [[bt fun] (g-name file-ops)]
-     (make-button-and-update bt f fun))
+   (for [[button-text fun] (file-state file-state->buttons)]
+     (cui/button button-text (update-status-after fun) [filename]))
    [:br]
    [:br]])
 
@@ -100,18 +99,15 @@
 
 (defui status-ui [this branch git-root]
   [:div
-   [:h1 [:nobr (str "Branch: ")
-         (make-button-and-update branch
-                                 (str "Branch menu")
-                                 (fn [x y] (branch/git-branches)))]]
+   [:h1 [:nobr (cui/button (str "Branch: " branch) branch/git-branches)]]
    [:h2 [:nobr "Root: " git-root]]
    [:br]
    (for [option-group repo-ops]
      [:div
-      (for [[bname fun] (vals option-group)]
-        (make-button-and-update bname git-root fun))])
+      (for [[button-text fun] (vals option-group)]
+        (cui/button button-text (update-status-after fun)))])
    [:br]
-   (make-button-and-update "refresh" "refresh" (fn [x y]))
+   (cui/button "refresh" (update-status-after #()))
 
    [:br]
    [:br]

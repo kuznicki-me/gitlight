@@ -12,8 +12,8 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn click-run-function-update [fun up x y]
-  (fun)
+(defn click-run-function-update [fun up & args]
+  (apply fun args)
   (up))
 
 
@@ -24,39 +24,30 @@
 (def last-cached (atom false))
 
 
-
-(defn git-diff-update-fun []
-  (git-diff @last-filename @last-cached))
-
+(def update-after (partial lib/wrap-post update-diff))
 
 
 (defn make-context []
-   [:div.context
-    (cui/make-button "-" "-" (partial click-run-function-update
-                                      #(swap! context dec)
-                                      git-diff-update-fun))
-    (str "context: " @context)
-    (cui/make-button "+" "+" (partial click-run-function-update
-                                      #(swap! context inc)
-                                      git-diff-update-fun))])
+  (let [inc-and-up (update-after #(swap! context inc))
+        dec-and-up (update-after #(swap! context dec))]
+  [:div.context
+   (cui/button "-" inc-and-up)
+   (str "context: " @context)
+   (cui/button "+" dec-and-up )]))
 
 
 (defn make-more-context []
+  (let [large-context (update-after #(reset! context 100000))
+        reset-context (update-after #(reset! context 3))])
    [:div.more-context
-    (cui/make-button "whole file" "whole file" (partial click-run-function-update
-                                                        #(reset! context 100000)
-                                                        git-diff-update-fun))
-    (cui/make-button "reset" "reset" (partial click-run-function-update
-                                              #(reset! context 3)
-                                              git-diff-update-fun))] )
+    (cui/button "whole file" large-context)
+    (cui/button "reset" reset-context)] )
 
 
 (defn cached-toggle-button []
-  (let [cached-txt (if @last-cached "unstaged changes" "staged changes")]
-    (cui/make-button cached-txt cached-txt
-                     (fn []
-                       (swap! last-cached not)
-                       (git-diff-update-fun)))))
+  (let [cached-txt (if @last-cached "unstaged changes" "staged changes")
+        update-cached (update-after #(swap! last-cached not))]
+    (cui/button cached-txt update-cached)))
 
 
 (defui commit-input []
@@ -71,15 +62,13 @@
                    :rows 10}])
 
 (defn make-commit-form []
-   (let [title (commit-input)
-         body (commit-body)]
-
-  [:div.commit-form
-   title [:br]
-   body [:br]
-   (cui/make-button "submit" "submit" (fn [x y]
-                                        (git/git-commit (dom/val title) (dom/val body))
-                                        (git-diff-update-fun)))]))
+  (let [title (commit-input)
+        body (commit-body)
+        commit-fun #(git/git-commit (dom/val title) (dom/val body))]
+    [:div.commit-form
+     title [:br]
+     body [:br]
+     (cui/button "submit" (update-after commit-fun))]))
 
 
 (defn make-file-table [[header left right]]

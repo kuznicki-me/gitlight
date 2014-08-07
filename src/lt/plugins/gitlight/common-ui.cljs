@@ -6,16 +6,19 @@
             [lt.util.dom :as dom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
+(defui button-ui [text fun args cls]
+  [:button
+   (when-not (nil? cls) {:class cls})
+   [:nobr text]]
+  :click (fn [] (apply fun args)))
 
 
-(defui button [n f fun]
-  [:button [:nobr n]]
-  :click (fn [] (fun n f)))
+(defn button
+  ([text] (button text #() nil nil))
+  ([text fun] (button text fun nil nil))
+  ([text fun args] (button text fun args nil))
+  ([text fun args cls] (button-ui text fun args cls)))
 
-
-(defui classy-button [cls n f fun]
-  [:button {:class cls} [:nobr n]]
-  :click (fn [] (fun n f)))
 
 
 (defui text-input []
@@ -108,17 +111,19 @@
 
 
 
-(defn make-button
-  ([n f] (make-button n f not-implemented-popup))
-  ([n f fun] (button n f (if (nil? fun)
-                           not-implemented-popup
-                           fun))))
 
-(defn make-classy-button
-  ([n f] (make-button n f not-implemented-popup))
-  ([n f fun] (classy-button (str n) n f (if (nil? fun)
-                                          not-implemented-popup
-                                          fun))))
+; (defn make-button
+;   ([n f] (make-button n f not-implemented-popup))
+;   ([n f fun] (button n f (if (nil? fun)
+;                            not-implemented-popup
+;                            fun))))
+
+
+; (defn make-classy-button
+;   ([n f] (make-button n f not-implemented-popup))
+;   ([n f fun] (classy-button (str n) n f (if (nil? fun)
+;                                           not-implemented-popup
+;                                           fun))))
 
 
 (defn not-implemented-popup [ n f ]

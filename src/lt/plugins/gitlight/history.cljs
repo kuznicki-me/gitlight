@@ -29,7 +29,7 @@
   (string/join "\n" (map str dump)))
 
 
-(defn landfill-of-history [action dump]
+(defn landfill-of-history [dump]
   (let [landfill (pool/create {:line-separator "\n"
                                :name "Landfill_of_History"
                                :tags [:editor.plaintext
@@ -47,9 +47,9 @@
 
 (defui make-history-gui [this]
   (let [history (:history @this)
-        dump-button (cui/make-button "dump history"
-                                     (parse-dump @history)
-                                     landfill-of-history)
+        dump-button (cui/button "dump history"
+                                landfill-of-history
+                                [(parse-dump @history)])
         last-ok (get-first :success @history)
         last-fail (get-first :error @history)
         history-rows (map row @history)]
