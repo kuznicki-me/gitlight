@@ -48,21 +48,21 @@
 
 (def update-status-after (partial lib/wrap-post back/git-status))
 
-(defn open-file [action filename]
+(defn open-file [filename]
   (cli/open-paths [(str (git/get-git-root) "/" filename)] false))
 
 
 (def file-state->buttons
-  {:merge-conflict [["resolve" back/git-add]
+  {:merge-conflict [["resolve" git/git-add]
                     ["diff"   diff/git-diff-button]]
-   :not-staged [["stage" back/git-add]
+   :not-staged [["stage" git/git-add]
                 ["diff"   diff/git-diff-button]
-                ["checkout" back/git-checkout-file]]
+                ["checkout" git/git-checkout-file]]
    ;["stash"  nil]]
-   :untracked [["add"    back/git-add]
+   :untracked [["add"    git/git-add]
                ;["ignore" nil]
                ["delete" back/bin-rm]]
-   :staged [["unstage" back/git-reset]
+   :staged [["unstage" git/git-reset]
             ["diff"   diff/git-diff-cached-button]]})
 
 
@@ -82,7 +82,7 @@
 
 (defui file [file-state [filename t]]
   [:li {:class (name t)}
-   (cui/button filename (update-status-after open-file) filename)
+   (cui/button filename (update-status-after open-file) [filename])
    [:br]
    (for [[button-text fun] (file-state file-state->buttons)]
      (cui/button button-text (update-status-after fun) [filename]))

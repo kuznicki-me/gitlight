@@ -112,24 +112,14 @@
 
 
 
-(defn git-add [action filename]
-  (git/git-add filename))
 
-
-(defn git-commit [action filename]
+(defn git-commit [filename]
   (cui/input-popup "commit message?" "commit"
                    (fn [msg]
                      (git/git-commit msg)
                      (git-status))))
 
 
-(defn git-reset [action filename]
-  (git/git-reset filename))
 
-
-(defn git-checkout-file [action filename]
-  (git/git-checkout-file filename))
-
-
-(defn bin-rm [action filename]
+(defn bin-rm [filename]
   (files/delete! (str (git/get-git-root) "/" filename)))

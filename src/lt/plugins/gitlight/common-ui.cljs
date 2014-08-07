@@ -10,7 +10,8 @@
   [:button
    (when-not (nil? cls) {:class cls})
    [:nobr text]]
-  :click (fn [] (apply fun args)))
+  :click (fn []
+           (apply fun args)))
 
 
 (defn button
