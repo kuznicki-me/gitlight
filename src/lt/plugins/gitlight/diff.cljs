@@ -63,10 +63,6 @@
   [:input.title {:type "text"
                  :size 81
            :placeholder "commit title"}])
-;;   :focus (fn []
-;;            (ctx/in! :popup.input))
-;;   :blur (fn []
-;;           (ctx/out! :popup.input)))
 
 
 (defui commit-body []

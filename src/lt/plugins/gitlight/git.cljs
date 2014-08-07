@@ -32,17 +32,6 @@
         (files/parent cwd)))))
 
 
-; (defn git-command-cwd [cwd obj args]
-;   (let [git-path (:git-binary @config)
-;         command (str (lib/qu git-path) " " (string/join " " args))]
-;     (exec/run-deaf obj cwd command)))
-
-
-; (defn git-command [obj & args]
-;   (let [cwd (get-git-root)]
-;     (apply (partial git-command-cwd obj cwd) args)))
-
-
 
 (def git-ignore-out
   (object/create

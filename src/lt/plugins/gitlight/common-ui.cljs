@@ -101,12 +101,7 @@
                                             ::merge-mult-results
                                             refresh-results]
                                 :init (fn [this]
-                                        (not-a-thing))
-                                        )
-
-;;                                 :init (fn [this]
-;;                                         (ui-fun this)))]
-       ]
+                                        (not-a-thing)))]
 
     (object/create tab-obj)))
 

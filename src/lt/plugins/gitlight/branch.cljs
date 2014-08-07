@@ -115,10 +115,6 @@
   (exec/runfuns git-branch-output commands-to-run)))
 
 
-; (defn git-branches2 []
-;   (git/git-command git-branch-output "branch" "--no-color" "-vv"))
-
-
 
 (defn git-merge [action branch]
   (git/git ["merge" branch])

@@ -100,12 +100,10 @@
 
 (defui status-ui [this branch git-root]
   [:div
-   ;[:h1 (str "test: " (.random js/Math))]
    [:h1 [:nobr (str "Branch: ")
          (make-button-and-update branch
                                  (str "Branch menu")
                                  (fn [x y] (branch/git-branches)))]]
-;;    [:h2 [:nobr "Root: " (make-button-and-update git-root "Change repo" nil)]]
    [:h2 [:nobr "Root: " git-root]]
    [:br]
    (for [option-group repo-ops]
