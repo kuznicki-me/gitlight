@@ -12,11 +12,6 @@
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 
-(defn click-run-function-update [fun up & args]
-  (apply fun args)
-  (up))
-
-
 (def context (atom 3))
 
 ; necessary for update
@@ -188,16 +183,16 @@
                         (git/git args git-diff-output))))
 
 
-(defn git-diff-button [action filename]
+(defn git-diff-button [filename]
   (git-diff filename))
 
-(defn git-diff-cached-button [action filename]
+(defn git-diff-cached-button [filename]
   (git-diff filename true))
 
-(defn git-diff-repo-button [action filename]
+(defn git-diff-repo-button [filename]
   (git-diff ""))
 
-(defn git-diff-cached-repo-button [action filename]
+(defn git-diff-cached-repo-button [filename]
   (git-diff "" true))
 
 
