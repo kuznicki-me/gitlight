@@ -92,12 +92,15 @@
 (defn raw->lines [raw-data]
   (string/split-lines (.toString raw-data)))
 
+(defn raw-fun->parsed-rows [raw fun]
+  (map (comp make-row fun) (raw->lines raw)))
+
 (defn parse-branches [raw-data]
-  (map parse-branch-line (raw->lines raw-data)))
+  (raw-fun->parsed-rows raw-data parse-branch-line))
 
 (defn local-branches-ui [raw-branches]
   [:table
-   (map make-row (parse-branches raw-branches))
+   (parse-branches raw-branches)
    [:tr
     [:td]
     [:td.new-branch (new-branch-button)]]])
@@ -105,26 +108,26 @@
 (defn parse-remote-branch-line [line]
   (let [splitted (string/split line #"\s+" 4)]
     {:class "whatever"
-     :content (map vector ["origin" "sha" "desc"] (rest splitted))})
-  )
+     :content (map vector ["origin" "sha" "desc"] (rest splitted))}))
 
 (defn parse-remote-branches [raw-data]
-  (map parse-remote-branch-line (raw->lines raw-data)))
+  (raw-fun->parsed-rows raw-data parse-remote-branch-line))
 
 (defn remote-branches-ui [raw-remote-branches]
   [:table
-   (map make-row (parse-remote-branches raw-remote-branches))])
+   (parse-remote-branches raw-remote-branches)])
 
-(defn remotes-ui [remotes]
+(defn parse-remote-line [line]
+  (let [splitted (string/split line #"\s+" 3)]
+    {:class "whatever"
+     :content (map vector ["origin" "url" "type"] splitted)}))
+
+(defn parse-remotes [raw-data]
+  (raw-fun->parsed-rows raw-data parse-remote-line))
+
+(defn remotes-ui [raw-remotes]
   [:table
-   (for [remote (string/split-lines (.toString remotes))
-         :let [[r url what] (string/split remote #"\s+" 3)]]
-     [:tr
-      [:td r]
-      [:td url]
-      [:td what]]
-     )
-   ])
+   (parse-remotes raw-remotes)])
 
 (defn stashes-ui [stashes]
   [:table
