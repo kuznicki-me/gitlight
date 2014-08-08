@@ -18,6 +18,8 @@
 (def last-filename (atom nil))
 (def last-cached (atom false))
 
+(defn update-diff []
+    (git-diff @last-filename @last-cached))
 
 (def update-after (partial lib/wrap-post update-diff))
 
