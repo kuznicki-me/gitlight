@@ -129,12 +129,17 @@
   [:table
    (parse-remotes raw-remotes)])
 
-(defn stashes-ui [stashes]
+(defn parse-stash-line [line]
+  (let [splitted (string/split line #":" 2)]
+    {:class "whatever"
+     :content (map vector ["stash" "comment"] splitted)}))
+
+(defn parse-stashes [raw-data]
+  (raw-fun->parsed-rows raw-data parse-stash-line))
+
+(defn stashes-ui [raw-stashes]
   [:table
-   (for [stash (string/split-lines (.toString stashes))]
-     [:tr
-      [:td stash]])
-   ])
+   (parse-stashes raw-stashes)])
 
 (defui branch-panel [this]
   (let [[branches remotes remote-branches stashes] (:results @this)]
@@ -150,10 +155,6 @@
      [:hr]
      [:h1 "Stashes"]
      (stashes-ui stashes)]))
-
-
-
-
 
 
 
