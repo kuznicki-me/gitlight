@@ -10,3 +10,6 @@
 
 (defn stash-apply [stash]
   (git/git ["stash" "apply" stash]))
+
+(defn stash-drop [stash]
+  (git/git ["stash" "drop" stash]))

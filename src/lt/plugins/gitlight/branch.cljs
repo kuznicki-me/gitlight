@@ -4,6 +4,7 @@
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.libs :as lib]
+            [lt.plugins.gitlight.stash :as stash]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.remote-com :as remcom])
@@ -145,9 +146,18 @@
 
 
 (defn parse-stash-line [line]
-  (let [splitted (string/split line #":" 2)]
-    {:class "whatever"
-     :content (map vector ["stash" "comment"] splitted)}))
+  (let [[stash-id desc] (string/split line #":" 2)
+        delete-button (cui/button "delete" (update-after stash/stash-drop) [stash-id])
+        apply-button (cui/button "apply" (update-after stash/stash-apply) [stash-id])
+        pop-button (cui/button "pop" (update-after stash/stash-pop) [stash-id])
+        ]
+    {:class "stashes"
+     :content [["delete" delete-button]
+               ["stash" stash-id]
+               ["apply" apply-button]
+               ["pop" pop-button]
+               ["desc" desc]]}))
+     ; :content (map vector ["stash" "desc"] splitted)}))
 
 (defn parse-stashes [raw-data]
   (raw-fun->parsed-rows raw-data parse-stash-line))
