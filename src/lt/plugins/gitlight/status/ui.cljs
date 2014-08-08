@@ -23,7 +23,7 @@
   (object/merge! sidebar/rightbar {:width width :max-width width}))
 
 
-(def group-names {:merge-conflict "Merge conflicts"
+(def state-names {:merge-conflict "Merge conflicts"
                   :not-staged "Not staged"
                   :staged     "Staged"
                   :untracked  "Untracked"
@@ -53,58 +53,60 @@
 
 
 (def file-state->buttons
-  {:merge-conflict [["resolve" git/git-add]
-                    ["diff"   diff/git-diff-button]]
-   :not-staged [["stage" git/git-add]
-                ["diff"   diff/git-diff-button]
-                ["checkout" git/git-checkout-file]]
-   ;["stash"  nil]]
-   :untracked [["add"    git/git-add]
-               ;["ignore" nil]
-               ["delete" back/bin-rm]]
-   :staged [["unstage" git/git-reset]
-            ["diff"   diff/git-diff-cached-button]]})
+  {:merge-conflict [["resolve"  git/git-add]
+                    ["diff"     diff/git-diff-button]]
+   :not-staged     [["stage"    git/git-add]
+                    ["diff"     diff/git-diff-button]
+                    ["checkout" git/git-checkout-file]]
+   :untracked      [["add"      git/git-add]
+                    ; ["ignore"   nil]
+                    ["delete"   back/bin-rm]]
+   :staged         [["unstage"  git/git-reset]
+                    ["diff"     diff/git-diff-cached-button]]})
 
 
 
-(def repo-ops [{:push   ["push"   remote/git-push]
-                :pull   ["pull"   remote/git-pull]
-                :fetch  ["fetch"  remote/git-fetch]}
-               {:commit ["quick commit" back/git-commit]
-                :cached-diff ["cached diff" diff/git-diff-cached-repo-button]}
-               {:diff   ["diff"  diff/git-diff-repo-button]
-                :inline-diff ["toggle inline diff" diff/toggle-git-diff-gutter]}
-               {:command-history ["history" hist/command-history]}])
-               ;:log    ["log"    nil]
-               ;:merge  ["merge"  nil]
-               ;:tag    ["tag"    nil]})
+(def repo-options
+  [[["push"               remote/git-push]
+    ["pull"               remote/git-pull]
+    ["fetch"              remote/git-fetch]]
+   [["quick commit"       back/git-commit]
+    ["cached diff"        diff/git-diff-cached-repo-button]
+    ; ["tag" nil]
+    ]
+   [["diff"               diff/git-diff-repo-button]
+    ["toggle inline diff" diff/toggle-git-diff-gutter]]
+   [["history"            hist/command-history]
+    ; ["log" nil]
+    ]])
 
 
-(defui file [file-state [filename t]]
-  [:li {:class (name t)}
+(defui file-ui [state-keyword [filename file-state]]
+  [:li {:class (name file-state)}
    (cui/button filename (update-status-after open-file) [filename])
    [:br]
-   (for [[button-text fun] (file-state file-state->buttons)]
-     (cui/button button-text (update-status-after fun) [filename]))
+   (for [[button-text fun] (state-keyword file-state->buttons)]
+     (cui/button button-text (update-status-after fun) [filename] button-text))
    [:br]
    [:br]])
 
 
 
-(defui group [g-name files]
-  [:li {:class (name g-name)} [:h1 (g-name group-names)]
-   [:ul.files (map (partial file g-name) files)]])
+(defui ui-for-files-in-state [state-keyword files]
+  [:li {:class (name state-keyword)}
+   [:h1 (state-keyword state-names)]
+   [:ul.files (map (partial file-ui state-keyword) files)]])
 
 
 
-(defui status-ui [this branch git-root]
+(defui status-ui [status-parsed branch git-root]
   [:div
    [:h1 [:nobr (cui/button (str "Branch: " branch) branch/git-branches)]]
    [:h2 [:nobr "Root: " git-root]]
    [:br]
-   (for [option-group repo-ops]
+   (for [opions repo-options]
      [:div
-      (for [[button-text fun] (vals option-group)]
+      (for [[button-text fun] opions]
         (cui/button button-text (update-status-after fun)))])
    [:br]
    (cui/button "refresh" (update-status-after #()))
@@ -112,9 +114,10 @@
    [:br]
    [:br]
    [:br]
-   [:ul (for [[g fs] this]
-          (if-not (zero? (count fs))
-            (group g fs)))]])
+   [:ul
+    (for [[state-keyword files] status-parsed]
+      (if-not (zero? (count files))
+        (ui-for-files-in-state state-keyword files)))]])
 
 
 
@@ -127,10 +130,10 @@
 (behavior ::update
           :desc "update status view"
           :triggers #{:refresh}
-          :reaction (fn [ obj status branch]
+          :reaction (fn [obj status-parsed branch]
                       (let [bar-dom (:content @obj)]
                         (cui/dom-truncate bar-dom) ; clear content
-                        (dom/append bar-dom (status-ui status branch (git/get-git-root)))
+                        (dom/append bar-dom (status-ui status-parsed branch (git/get-git-root)))
                         (resize-to-content (dom/parent bar-dom) bar-dom))))
 
 
