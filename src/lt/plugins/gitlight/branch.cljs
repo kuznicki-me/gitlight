@@ -145,12 +145,25 @@
    (parse-remotes raw-remotes)])
 
 
+(defn stash->branch [stash branchname]
+  (git/git ["stash" "branch" branchname stash]))
+
+(defn stash->branch-popup [stash]
+  (cui/input-popup "new branch name" "create"
+                   (update-after (partial stash->branch stash))))
 
 (defn parse-stash-line [line]
   (let [[stash-id desc] (string/split line #":" 2)
-        delete-button (cui/button "delete" (update-after stash/stash-drop) [stash-id])
-        apply-button (cui/button "apply" (update-after stash/stash-apply) [stash-id])
+        delete-button (cui/button "delete"
+                                  (update-after stash/stash-drop)
+                                  [stash-id])
+        apply-button (cui/button "apply"
+                                 (update-after stash/stash-apply)
+                                 [stash-id])
         pop-button (cui/button "pop" (update-after stash/stash-pop) [stash-id])
+        branch-the-stash-button (cui/button "branch"
+                                            stash->branch-popup
+                                            [stash-id])
         diff-stash-button (cui/button "diff" diff/git-diff [nil nil stash-id])]
     {:class "stashes"
      :content [["delete" delete-button]
@@ -158,6 +171,7 @@
                ["diff" diff-stash-button]
                ["apply" apply-button]
                ["pop" pop-button]
+               ["branch" branch-the-stash-button]
                ["desc" desc]]}))
 
 (defn parse-stashes [raw-data]
