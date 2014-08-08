@@ -2,11 +2,11 @@
   (:require [lt.plugins.gitlight.git :as git]))
 
 
-(defn git-fetch []
+(defn stash []
   (git/git ["stash"]))
 
-(defn git-pop [stash]
-  (git/git ["pop"] stash))
+(defn stash-pop [stash]
+  (git/git ["stash" "pop" stash]))
 
-(defn git-apply [stash]
-  (git/git ["apply"] stash))
+(defn stash-apply [stash]
+  (git/git ["stash" "apply" stash]))

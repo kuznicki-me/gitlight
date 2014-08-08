@@ -12,6 +12,7 @@
             [lt.plugins.gitlight.common-ui :as cui]
             [lt.plugins.gitlight.branch :as branch]
             [lt.plugins.gitlight.diff :as diff]
+            [lt.plugins.gitlight.stash :as stash]
             [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.history :as hist]
             [lt.objs.command :as cmd])
@@ -78,7 +79,10 @@
     ["toggle inline diff" diff/toggle-git-diff-gutter]]
    [["history"            hist/command-history]
     ; ["log" nil]
-    ]])
+    ]
+   [["stash"              stash/stash]
+    ["apply"              stash/stash-apply]
+    ["pop"                stash/stash-pop]]])
 
 
 (defui file-ui [state-keyword [filename file-state]]
