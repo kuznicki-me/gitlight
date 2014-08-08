@@ -105,12 +105,12 @@ textarea {
   background-color: #737373;
 }
 
-.gitlight-diff table tr.changed td.left {
+.gitlight-diff table tr.changes td.left {
 
   background-color: #2964db;
 }
 
-.gitlight-diff table tr.changed td.right {
+.gitlight-diff table tr.changes td.right {
   background-color: #468e2a;
 }
 

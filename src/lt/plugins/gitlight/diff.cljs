@@ -23,14 +23,18 @@
 
 (def update-after (partial lib/wrap-post update-diff))
 
+(defn dec>0 [x]
+  (if (> x 0)
+    (dec x)
+    0))
 
 (defn make-context []
   (let [inc-and-up (update-after #(swap! context inc))
-        dec-and-up (update-after #(swap! context dec))]
+        dec-and-up (update-after #(swap! context dec>0))]
   [:div.context
    (cui/button "-" dec-and-up)
    (str "context: " @context)
-   (cui/button "+" inc-and-up )]))
+   (cui/button "+" inc-and-up)]))
 
 
 (defn make-more-context []
@@ -100,10 +104,12 @@
 
 
 (defn make-columns [lines]
-  (let [separated (separate-minus-and-plus lines)]
+  (let [separated (separate-minus-and-plus lines)
+        make-context-row #(make-diff-row "context" %1 %1)
+        make-changes-row (partial make-diff-row "changes")]
     (if (= \space (first (first lines)))
-      (map (partial make-diff-row "context") lines lines)
-      (apply (partial map (partial make-diff-row "changed")) separated))))
+      (map make-context-row lines)
+      (apply (partial map make-changes-row) separated))))
 
 
 (defn make-diff-row [classname left right]
@@ -212,10 +218,6 @@
         line-number (.-size (.-doc file-editor))]
     (repeat line-number " ")))
 
-(defn dec>0 [x]
-  (if (> x 0)
-    (dec x)
-    0))
 
 (defn with-deficit [marker deficit]
   (str marker
