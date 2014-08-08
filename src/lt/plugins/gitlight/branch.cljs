@@ -21,11 +21,13 @@
 (def update-after (partial lib/wrap-post git-branches))
 
 
+
 (defn git-checkout [branch]
   (git/git ["checkout" branch]))
 
 (defn checkout-button [branch]
   (cui/button branch (update-after git-checkout) [branch]))
+
 
 
 (defn git-merge [branch]
@@ -35,11 +37,13 @@
   (cui/button "merge" (update-after git-merge) [branch]))
 
 
+
 (defn git-push-it! [branch]
   (remcom/git-push-remote-branch "origin" branch))
 
 (defn push-button [branch]
   (cui/button "push it!" (update-after git-push-it!) [branch]))
+
 
 
 (defn git-create-new-branch [branch]
@@ -52,6 +56,7 @@
   (cui/button "make a new branch" git-new-branch-popup))
 
 
+
 (defn git-delete-branch [branch]
   (git/git ["branch" "-D" branch]))
 
@@ -59,8 +64,11 @@
   (cui/button "delete" (update-after git-delete-branch) [branch]))
 
 
+
 (defn pull-button [branch]
   (cui/button "pull!" (update-after remcom/git-pull)))
+
+
 
 (defn make-field [[the-class content]]
   [:td {:class the-class} content])
@@ -68,6 +76,13 @@
 (defn make-row [fields]
   [:tr {:class (:class fields)}
    (map make-field (:content fields))])
+
+(defn raw->lines [raw-data]
+  (string/split-lines (.toString raw-data)))
+
+(defn raw-fun->parsed-rows [raw fun]
+  (map (comp make-row fun) (raw->lines raw)))
+
 
 (defn make-active-part [active? branch]
   (if active?
@@ -89,12 +104,6 @@
                     ["push" (push-button branch)]
                     ["desc" desc])}))
 
-(defn raw->lines [raw-data]
-  (string/split-lines (.toString raw-data)))
-
-(defn raw-fun->parsed-rows [raw fun]
-  (map (comp make-row fun) (raw->lines raw)))
-
 (defn parse-branches [raw-data]
   (raw-fun->parsed-rows raw-data parse-branch-line))
 
@@ -104,6 +113,8 @@
    [:tr
     [:td]
     [:td.new-branch (new-branch-button)]]])
+
+
 
 (defn parse-remote-branch-line [line]
   (let [splitted (string/split line #"\s+" 4)]
@@ -117,6 +128,8 @@
   [:table
    (parse-remote-branches raw-remote-branches)])
 
+
+
 (defn parse-remote-line [line]
   (let [splitted (string/split line #"\s+" 3)]
     {:class "whatever"
@@ -129,6 +142,8 @@
   [:table
    (parse-remotes raw-remotes)])
 
+
+
 (defn parse-stash-line [line]
   (let [splitted (string/split line #":" 2)]
     {:class "whatever"
@@ -140,6 +155,8 @@
 (defn stashes-ui [raw-stashes]
   [:table
    (parse-stashes raw-stashes)])
+
+
 
 (defui branch-panel [this]
   (let [[branches remotes remote-branches stashes] (:results @this)]
