@@ -28,17 +28,17 @@
   (let [inc-and-up (update-after #(swap! context inc))
         dec-and-up (update-after #(swap! context dec))]
   [:div.context
-   (cui/button "-" inc-and-up)
+   (cui/button "-" dec-and-up)
    (str "context: " @context)
-   (cui/button "+" dec-and-up )]))
+   (cui/button "+" inc-and-up )]))
 
 
 (defn make-more-context []
-  (let [large-context (update-after #(reset! context 100000))
-        reset-context (update-after #(reset! context 3))])
+  (let [enlarge-context (update-after #(reset! context 100000))
+        reset-context (update-after #(reset! context 3))]
    [:div.more-context
-    (cui/button "whole file" large-context)
-    (cui/button "reset" reset-context)] )
+    (cui/button "whole file" enlarge-context)
+    (cui/button "reset" reset-context)]))
 
 
 (defn cached-toggle-button []
