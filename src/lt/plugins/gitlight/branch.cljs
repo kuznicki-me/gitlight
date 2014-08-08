@@ -69,7 +69,7 @@
   [:tr {:class (:class fields)}
    (map make-field (:content fields))])
 
-(defn make-prepend [active? branch]
+(defn make-active-part [active? branch]
   (if active?
     [["this-one" "->"]
      ["checkout" (checkout-button branch)]
@@ -84,34 +84,36 @@
         to_cut  (subs line 2)
         [branch sha1 desc] (string/split to_cut #"\s+" 3)]
     {:class current-or-not
-     :content (conj (make-prepend active? branch)
+     :content (conj (make-active-part active? branch)
                     ["sha" sha1]
                     ["push" (push-button branch)]
                     ["desc" desc])}))
 
-(defn parse-branches [raw-data]
-  (let [lines (string/split-lines (.toString raw-data))]
-    (map parse-branch-line lines)))
+(defn raw->lines [raw-data]
+  (string/split-lines (.toString raw-data)))
 
-(defn local-branches-ui [branches]
+(defn parse-branches [raw-data]
+  (map parse-branch-line (raw->lines raw-data)))
+
+(defn local-branches-ui [raw-branches]
   [:table
-   (map make-row (parse-branches branches))
+   (map make-row (parse-branches raw-branches))
    [:tr
     [:td]
     [:td.new-branch (new-branch-button)]]])
 
-(defn remote-branches-ui [remote-branches]
+(defn parse-remote-branch-line [line]
+  (let [splitted (string/split line #"\s+" 4)]
+    {:class "whatever"
+     :content (map vector ["origin" "sha" "desc"] (rest splitted))})
+  )
+
+(defn parse-remote-branches [raw-data]
+  (map parse-remote-branch-line (raw->lines raw-data)))
+
+(defn remote-branches-ui [raw-remote-branches]
   [:table
-   (for [branch (string/split-lines (.toString remote-branches))
-         :let [[_ branch-name h tail] (string/split branch #"\s+" 4)]
-         ]
-     [:tr
-      [:td branch-name]
-      [:td h]
-      [:td tail]
-      ]
-     )
-   ])
+   (map make-row (parse-remote-branches raw-remote-branches))])
 
 (defn remotes-ui [remotes]
   [:table
