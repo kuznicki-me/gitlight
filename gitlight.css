@@ -64,11 +64,11 @@ textarea {
   background-color: #114682;
 }
 
-.gitlight-branches table td.current button  {
+.gitlight-branches table tr.current td.checkout button  {
   background-color: #7e9100;
 }
 
-.gitlight-branches table td.not-current button  {
+.gitlight-branches table tr.not-current td.checkout button  {
   background-color: #005000;
 }
 

@@ -13,7 +13,8 @@
 (defn git-branches []
   (let [commands-args [["branch" "--no-color" "-vv"]
                        ["remote" "-v"]
-                       ["branch" "-r" "-v"]]
+                       ["branch" "-r" "-v"]
+                       ["stash" "list"]]
         commands-to-run (map #(partial git/git %) commands-args)]
   (exec/runfuns git-branch-output commands-to-run)))
 
@@ -61,24 +62,40 @@
 (defn pull-button [branch]
   (cui/button "pull!" (update-after remcom/git-pull)))
 
+(defn make-field [[the-class content]]
+  [:td {:class the-class} content])
+
+(defn make-row [fields]
+  [:tr {:class (:class fields)}
+   (map make-field (:content fields))])
+
+(defn make-prepend [active? branch]
+  (if active?
+    [["this-one" "->"]
+     ["checkout" (checkout-button branch)]
+     ["pull"     (pull-button branch)]]
+    [["delete"   (delete-branch-button branch)]
+     ["checkout" (checkout-button branch)]
+     ["merge"    (merge-button branch)]]))
+
+(defn parse-branch-line [line]
+  (let [active? (= \* (first line))
+        current-or-not (if active? "current" "not-current")
+        to_cut  (subs line 2)
+        [branch sha1 desc] (string/split to_cut #"\s+" 3)]
+    {:class current-or-not
+     :content (conj (make-prepend active? branch)
+                    ["sha" sha1]
+                    ["push" (push-button branch)]
+                    ["desc" desc])}))
+
+(defn parse-branches [raw-data]
+  (let [lines (string/split-lines (.toString raw-data))]
+    (map parse-branch-line lines)))
 
 (defn local-branches-ui [branches]
   [:table
-   (for [parsed (parse-data branches)
-         :let [[this-one? [branch sha1 desc]] parsed]]
-     [:tr
-      [:td (if this-one?
-             "->"
-             (delete-branch-button branch))]
-      [:td {:class (if this-one?
-                     "current"
-                     "not-current")} (checkout-button branch)]
-      (if this-one?
-        [:td.pull (pull-button branch)]
-        [:td.merge (merge-button branch)])
-      [:td sha1]
-      [:td.push (push-button branch)]
-      [:td desc]])
+   (map make-row (parse-branches branches))
    [:tr
     [:td]
     [:td.new-branch (new-branch-button)]]])
@@ -107,9 +124,15 @@
      )
    ])
 
+(defn stashes-ui [stashes]
+  [:table
+   (for [stash (string/split-lines (.toString stashes))]
+     [:tr
+      [:td stash]])
+   ])
 
 (defui branch-panel [this]
-  (let [[branches remotes remote-branches] (:results @this)]
+  (let [[branches remotes remote-branches stashes] (:results @this)]
     [:div.gitlight-branches
      [:h1 "Branches"]
      (local-branches-ui branches)
@@ -119,22 +142,12 @@
      [:div ]
      [:h1 "Remotes"]
      (remotes-ui remotes)
-
-     ]))
-
-
-
-(defn git-branch-splitter [line]
-  (let [active? (= \* (first line))
-        to_cut  (subs line 2)
-        splitted (string/split to_cut #"\s+" 3)]
-      [active? splitted]))
+     [:hr]
+     [:h1 "Stashes"]
+     (stashes-ui stashes)]))
 
 
 
-(defn parse-data [data]
-  (let [lines (string/split-lines (.toString data))]
-    (map git-branch-splitter lines)))
 
 
 
