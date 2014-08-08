@@ -4,6 +4,7 @@
             [clojure.string :as string]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.libs :as lib]
+            [lt.plugins.gitlight.diff :as diff]
             [lt.plugins.gitlight.stash :as stash]
             [lt.plugins.gitlight.execute :as exec]
             [lt.plugins.gitlight.common-ui :as cui]
@@ -150,14 +151,14 @@
         delete-button (cui/button "delete" (update-after stash/stash-drop) [stash-id])
         apply-button (cui/button "apply" (update-after stash/stash-apply) [stash-id])
         pop-button (cui/button "pop" (update-after stash/stash-pop) [stash-id])
-        ]
+        diff-stash-button (cui/button "diff" diff/git-diff [nil nil stash-id])]
     {:class "stashes"
      :content [["delete" delete-button]
                ["stash" stash-id]
+               ["diff" diff-stash-button]
                ["apply" apply-button]
                ["pop" pop-button]
                ["desc" desc]]}))
-     ; :content (map vector ["stash" "desc"] splitted)}))
 
 (defn parse-stashes [raw-data]
   (raw-fun->parsed-rows raw-data parse-stash-line))

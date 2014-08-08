@@ -17,9 +17,10 @@
 ; necessary for update
 (def last-filename (atom nil))
 (def last-cached (atom false))
+(def last-commit (atom nil))
 
 (defn update-diff []
-    (git-diff @last-filename @last-cached))
+    (git-diff @last-filename @last-cached @last-commit))
 
 (def update-after (partial lib/wrap-post update-diff))
 
@@ -181,14 +182,17 @@
 
 
 (defn git-diff
-  ([filepath] (git-diff filepath false))
-  ([filepath cached?] (let [contextstr (str "-U" @context)
-                            args ["diff" "--no-color" contextstr
-                                  (when cached? "--cached")
-                                  "--" filepath]]
-                        (reset! last-filename filepath)
-                        (reset! last-cached cached?)
-                        (git/git args git-diff-output))))
+  ([filepath] (git-diff filepath false nil))
+  ([filepath cached?] (git-diff filepath cached? nil))
+  ([filepath cached? commit] (let [contextstr (str "-U" @context)
+                                   args ["diff" "--no-color" contextstr
+                                         commit
+                                         (when cached? "--cached")
+                                         "--" filepath]]
+                               (reset! last-filename filepath)
+                               (reset! last-cached cached?)
+                               (reset! last-commit commit)
+                               (git/git args git-diff-output))))
 
 
 (defn git-diff-button [filename]
