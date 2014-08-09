@@ -6,6 +6,7 @@
             [lt.objs.tabs :as tabs]
             [lt.util.dom :as dom]
             [lt.objs.cli :as cli]
+            [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.status.back :as back]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.remote-com :as remote]
@@ -46,8 +47,10 @@
   (= (:active @sidebar/rightbar)
      status-bar))
 
+(defn update-with-timeout []
+  (js/setTimeout back/git-status (:git-timeout @config)))
 
-(def update-status-after (partial lib/wrap-post back/git-status))
+(def update-status-after (partial lib/wrap-post update-with-timeout))
 
 (defn open-file [filename]
   (cli/open-paths [(str (git/get-git-root) "/" filename)] false))

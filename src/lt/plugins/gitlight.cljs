@@ -12,7 +12,9 @@
     ::config
     :tags #{::config}
     :max-history 64
-    :git-binary "git")))
+    :git-binary "git"
+    :git-timeout 100)))
+
 
 
 

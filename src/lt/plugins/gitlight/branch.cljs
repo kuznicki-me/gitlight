@@ -2,6 +2,7 @@
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
             [clojure.string :as string]
+            [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.git :as git]
             [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.diff :as diff]
@@ -20,7 +21,11 @@
         commands-to-run (map #(partial git/git %) commands-args)]
   (exec/runfuns git-branch-output commands-to-run)))
 
-(def update-after (partial lib/wrap-post (fn [] (js/setTimeout git-branches 100))))
+
+(defn update-with-timeout []
+  (js/setTimeout git-branches (:git-timeout @config)))
+
+(def update-after (partial lib/wrap-post update-with-timeout))
 
 
 
