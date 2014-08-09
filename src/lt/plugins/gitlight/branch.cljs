@@ -20,7 +20,7 @@
         commands-to-run (map #(partial git/git %) commands-args)]
   (exec/runfuns git-branch-output commands-to-run)))
 
-(def update-after (partial lib/wrap-post git-branches))
+(def update-after (partial lib/wrap-post (fn [] (js/setTimeout git-branches 100))))
 
 
 
