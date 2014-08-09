@@ -169,7 +169,7 @@
         branch-the-stash-button (cui/button "branch"
                                             stash->branch-popup
                                             [stash-id])
-        diff-stash-button (cui/button "diff" diff/git-diff [nil nil stash-id])]
+        diff-stash-button (cui/button "diff" stash/stash-show [stash-id])]
     {:class "stashes"
      :content [["delete" delete-button]
                ["stash" stash-id]
@@ -183,8 +183,11 @@
   (raw-fun->parsed-rows raw-data parse-stash-line))
 
 (defn stashes-ui [raw-stashes]
-  [:table
-   (parse-stashes raw-stashes)])
+  (let [clear-button (cui/button "clear" (update-after stash/stash-clear))]
+    [:table
+     (parse-stashes raw-stashes)
+     [:tr
+      [:td {:class "clear"} clear-button]]]))
 
 
 
