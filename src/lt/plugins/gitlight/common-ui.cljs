@@ -3,6 +3,7 @@
             [lt.objs.tabs :as tabs]
             [lt.objs.popup :as popup]
             [lt.objs.context :as ctx]
+            [clojure.string :as string]
             [lt.util.dom :as dom])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
@@ -110,23 +111,6 @@
     (object/create tab-obj)))
 
 
-
-
-
-; (defn make-button
-;   ([n f] (make-button n f not-implemented-popup))
-;   ([n f fun] (button n f (if (nil? fun)
-;                            not-implemented-popup
-;                            fun))))
-
-
-; (defn make-classy-button
-;   ([n f] (make-button n f not-implemented-popup))
-;   ([n f fun] (classy-button (str n) n f (if (nil? fun)
-;                                           not-implemented-popup
-;                                           fun))))
-
-
 (defn not-implemented-popup [ n f ]
   (popup/popup!
    {:header "Not yet implemented..."
@@ -142,3 +126,8 @@
                         (when (= (count (:objs @ts)) 1)
                           (tabs/rem-tabset ts)))
                       (object/raise this :destroy)))
+
+
+
+(defn raw->lines [raw-data]
+  (string/split-lines (.toString raw-data)))

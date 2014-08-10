@@ -1,6 +1,7 @@
 (ns lt.plugins.gitlight.log
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
+            ; [clojure.string :as string]
             ; [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.git :as git]
             ; [lt.plugins.gitlight.libs :as lib]
@@ -8,10 +9,19 @@
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
+(defn breakup-into-commits [lines]
+  lines)
+
+(defn parse-git-log [raw-logs]
+  (breakup-into-commits (cui/raw->lines raw-logs)))
+
+(defn one-commit-ui [commit]
+  [:p commit])
+
 (defui log-panel [this]
   (let [logs (:result @this)]
     [:div.gitlight-log
-     logs]))
+     (map one-commit-ui (parse-git-log logs))]))
 
 
 (def git-log-output (cui/make-output-tab-object "Git log"

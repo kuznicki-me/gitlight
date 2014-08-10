@@ -92,6 +92,10 @@ textarea {
   overflow: scroll;
 }
 
+.gitlight-log {
+  overflow: scroll;
+}
+
 .gitlight-diff table {
   margin-bottom: 30px;
 }

@@ -84,11 +84,9 @@
   [:tr {:class (:class fields)}
    (map make-field (:content fields))])
 
-(defn raw->lines [raw-data]
-  (string/split-lines (.toString raw-data)))
 
 (defn raw-fun->parsed-rows [raw fun]
-  (map (comp make-row fun) (raw->lines raw)))
+  (map (comp make-row fun) (cui/raw->lines raw)))
 
 
 (defn make-active-part [active? branch]
