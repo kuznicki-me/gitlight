@@ -167,7 +167,7 @@
         branch-the-stash-button (cui/button "branch"
                                             stash->branch-popup
                                             [stash-id])
-        diff-stash-button (cui/button "diff" stash/stash-show [stash-id])]
+        diff-stash-button (cui/button "diff" diff/git-diff [nil nil stash-id])]
     {:class "stashes"
      :content [["delete" delete-button]
                ["stash" stash-id]

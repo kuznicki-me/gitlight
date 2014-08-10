@@ -1,22 +1,35 @@
 (ns lt.plugins.gitlight.log
   (:require [lt.object :as object]
             [lt.objs.command :as cmd]
-            ; [clojure.string :as string]
+            [clojure.string :as string]
             ; [lt.plugins.gitlight :refer [config]]
             [lt.plugins.gitlight.git :as git]
             ; [lt.plugins.gitlight.libs :as lib]
-            ; [lt.plugins.gitlight.diff :as diff]
+            [lt.plugins.gitlight.diff :as diff]
             [lt.plugins.gitlight.common-ui :as cui])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
 (defn breakup-into-commits [lines]
-  lines)
+  (let [commit-regexp #"commit .*"
+        splitter (partial re-matches commit-regexp)
+        splitted-by-regexp (partition-by splitter lines)]
+    (partition 2 splitted-by-regexp)))
 
 (defn parse-git-log [raw-logs]
   (breakup-into-commits (cui/raw->lines raw-logs)))
 
-(defn one-commit-ui [commit]
-  [:p commit])
+(defn make-commit-line [commit-line]
+  (let [[text shasum] (string/split (first commit-line) #"\s+" 2)]
+   [:p text
+    (cui/button shasum
+                diff/git-diff
+                [nil nil shasum]
+                "shasum")]))
+
+(defn one-commit-ui [[commit content]]
+  [:div.commit
+   (make-commit-line commit)
+   [:pre (string/join "\n" content)]])
 
 (defui log-panel [this]
   (let [logs (:result @this)]

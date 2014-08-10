@@ -96,6 +96,20 @@ textarea {
   overflow: scroll;
 }
 
+.gitlight-log div.commit {
+  margin-bottom: 30px
+}
+
+.gitlight-log div.commit p {
+  color: #e9cd11;
+  font-weight: bold;
+}
+
+.gitlight-log div.commit p button.shasum {
+  /* background-color: #e9cd11; */
+  font-weight: bold;
+}
+
 .gitlight-diff table {
   margin-bottom: 30px;
 }
