@@ -14,6 +14,7 @@
             [lt.plugins.gitlight.branch :as branch]
             [lt.plugins.gitlight.diff :as diff]
             [lt.plugins.gitlight.stash :as stash]
+            [lt.plugins.gitlight.log :as log]
             [lt.plugins.gitlight.libs :as lib]
             [lt.plugins.gitlight.history :as hist]
             [lt.objs.command :as cmd])
@@ -81,7 +82,7 @@
    [["diff"               diff/git-diff-repo-button]
     ["toggle inline diff" diff/toggle-git-diff-gutter]]
    [["history"            hist/command-history]
-    ; ["log" nil]
+    ["log"                log/git-log]
     ]
    [["stash"              stash/stash]
     ["apply"              stash/stash-apply]
