@@ -1,3 +1,17 @@
+version 0.0.9
+=============
+
+New Features:
+ * Garbage day!  Clean out useless and pointless stuff, change around lots of
+   code.  Probably not as visible as adding something new, but still very
+   satisfying to clean up the atrocities I had commited earlier.  Hopefully
+   more to come.
+ * Stashing!  Stash, apply, pop&drop, diff&branch.  No custom message, though.
+ * Log, although only a simple one first.  Though there is a fun little button
+   to diff your current repo with the logged version, so be sure to check it
+   out.
+
+
 version 0.0.8
 =============
 
