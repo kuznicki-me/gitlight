@@ -9,17 +9,12 @@ It requires git installed.
 
 
 #Configuration
+Put this configuration into your user behaviour file.
 
-If git command is on your PATH, it should hopefully work.
+If git command is on your PATH, the following user behaviour should (hopefully) work.
 
-Default config:
-
-    {:+ {
-        :app [
-           (:lt.plugins.gitlight/config {:git-binary "git"
-                                         :max-history 64})
-        ]
-    }
+    [:app :lt.plugins.gitlight/config {:git-binary "git"
+                                       :max-history 64}]
 
 Which means that we shall try to run process "git", and we will try to remember
 64 last git commands and their outputs.
@@ -27,19 +22,11 @@ Which means that we shall try to run process "git", and we will try to remember
 We advise to add some shortcuts in your user keymap, for instance this one
 toggles gitlight status:
 
-    {:+ {
-         :editor {
-                 "alt-shift-s" [:gitlight-status-toggle]
-         }
-
-     }}
+    [:editor "alt-shift-s" :gitlight-status-toggle]
 
 You can also turn some unwanted behaviors off, like so:
 
-    {:- {
-      :git-status-out [(:lt.plugins.gitlight.status.back/git-status-out-failure-verbose)]
-     }}
-
+    [:git-status-out :-lt.plugins.gitlight.status.back/git-status-out-failure-verbose]
 
 #fail
 
@@ -57,11 +44,8 @@ On Linux and Mac try:
 And then set Your configuration to whatever it returns (for example
 "/usr/bin/git") like so:
 
-    {:+ {
-        :app [
-           (:lt.plugins.gitlight/config {:git-binary "/usr/bin/git"})
-        ]
-    }
+    [:app :lt.plugins.gitlight/config {:git-binary "/usr/bin/git"
+                                       :max-history 64}]
 
 on Windows remember about doubling the \, so when you are (for example) using
 GitHub, binary files are usually located in place like:
