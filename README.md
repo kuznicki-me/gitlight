@@ -26,8 +26,7 @@ toggles gitlight status:
 
 You can also turn some unwanted behaviors off, like so:
 
-    [:editor :-git-status-out]
-    [:editor :-lt.plugins.gitlight.status.back/git-status-out-failure-verbose]
+    [:git-status-out :-lt.plugins.gitlight.status.back/git-status-out-failure-verbose]
 
 #fail
 
